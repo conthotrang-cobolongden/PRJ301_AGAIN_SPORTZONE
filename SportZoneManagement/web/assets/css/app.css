@@ -1,0 +1,1317 @@
+/* ==========================================================================
+   SportZone — app.css
+   Nguồn chuẩn: design-system/sportzone/MASTER.md
+   Pattern UI: design-system/sportzone/preview/design-review-kit.html (đã duyệt)
+   Quy tắc: class tự thêm prefix sz-; modifier trạng thái is-* (QUY-TAC mục 4.3)
+   ========================================================================== */
+
+/* ===== 1. DESIGN TOKENS (MASTER mục 2) ===== */
+:root {
+    /* 2.1 Brand & surface */
+    --sz-ink: #10261c;
+    --sz-green: #1b5e3b;
+    --sz-green-dark: #0f3d2e;
+    --sz-gold: #e0b322;
+    --sz-gold-hover: #f0c53a;
+    --sz-cream: #f4f1e8;
+    --sz-line: #d7d2c4;
+    --sz-tennis: #2f7d4a;
+    --sz-pickle: #c45c16;
+    --sz-muted-ink: #5c6b60;
+    /* 2.2 Semantic */
+    --sz-success-bg: #e3f4ea;
+    --sz-success-fg: #1e6b3c;
+    --sz-warn-bg: #fff3cd;
+    --sz-warn-fg: #8a6d12;
+    --sz-info-bg: #dcecff;
+    --sz-info-fg: #1b4f8a;
+    --sz-danger-bg: #f8d7da;
+    --sz-danger-fg: #842029;
+    --sz-muted-bg: #f1f1f1;
+    --sz-muted-fg: #5c5c5c;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--sz-cream);
+    color: var(--sz-ink);
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+/* ===== 2. HEADER / NAV (demo kit C1: nav trắng, chữ đậm, hover xanh) ===== */
+.sz-header {
+    background: #fff;
+    border-bottom: 1px solid rgba(16, 38, 28, 0.08);
+    box-shadow: 0 2px 12px rgba(16, 38, 28, 0.05);
+}
+
+.sz-header .navbar {
+    padding: 0.85rem 0;
+}
+
+.sz-header .navbar-brand,
+.sz-header .nav-link {
+    color: var(--sz-ink);
+    font-weight: 600;
+    font-size: 0.93rem;
+}
+
+.sz-header .nav-link:hover {
+    color: var(--sz-green);
+}
+
+.sz-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    margin-right: 0.45rem;
+    border-radius: 11px;
+    background: var(--sz-gold);
+    color: var(--sz-ink);
+    font-weight: 800;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+
+.sz-name {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.sz-main {
+    flex: 1 0 auto;
+}
+
+/* ===== 3. HERO + HOME (demo kit C1: hero card bo góc + đường kẻ sân) ===== */
+.sz-hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(900px 420px at 85% -20%, rgba(224, 179, 34, 0.18), transparent 60%),
+        var(--sz-green-dark);
+    color: #fff;
+    border-radius: 1.5rem;
+    padding: 3.2rem 2.2rem;
+    margin-top: 1.5rem;
+}
+
+/* Đường kẻ sân trang trí (demo kit C1) */
+.sz-hero .court-lines {
+    position: absolute;
+    inset: auto -60px -120px auto;
+    width: 520px;
+    height: 340px;
+    border: 2px solid rgba(255, 255, 255, 0.09);
+    border-radius: 8px;
+    transform: rotate(-8deg);
+    pointer-events: none;
+}
+
+.sz-hero .court-lines::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.sz-hero .court-lines::after {
+    content: "";
+    position: absolute;
+    inset: 40px 70px;
+    border: 2px solid rgba(255, 255, 255, 0.07);
+}
+
+.sz-hero h1 {
+    font-size: clamp(2.1rem, 4.5vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    margin: 0;
+}
+
+.sz-hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.sz-hero-pill .pill-tag {
+    background: #fff;
+    color: var(--sz-ink);
+    border-radius: 999px;
+    padding: 0.15rem 0.7rem;
+    font-weight: 750;
+    font-size: 0.78rem;
+}
+
+.sz-lead {
+    max-width: 42rem;
+    font-size: 1.08rem;
+    opacity: 0.85;
+    margin-top: 1rem;
+}
+
+.sz-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Card thống kê nhanh trên nền hero (số sân theo loại) */
+.sz-hero-stat {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 1.25rem;
+    padding: 1.1rem 1.3rem;
+}
+
+.sz-hero-stat .num {
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--sz-gold);
+}
+
+.sz-hero-stat .lbl {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+.sz-kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--sz-gold);
+    margin-bottom: 0.6rem;
+}
+
+/* Kicker trên nền sáng: gold không đủ contrast 4.5:1 trên cream → dùng green (MASTER 2.3) */
+.sz-kicker-dark {
+    color: var(--sz-green);
+}
+
+.sz-section {
+    padding: 3rem 0;
+}
+
+/* Nhãn đề mục in hoa (demo kit: section-label) */
+.section-label {
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sz-muted-ink);
+    margin: 0 0 0.8rem;
+}
+
+/* Số bước mờ trong khối "Quy trình" trang chủ */
+.sz-process-num {
+    font-size: 2rem;
+    font-weight: 800;
+    opacity: 0.25;
+    line-height: 1;
+}
+
+/* ===== 4. NÚT (demo kit P0: pill bo tròn, hover nhấc nhẹ) ===== */
+.btn-sz {
+    background: var(--sz-gold);
+    color: var(--sz-ink);
+    border: 0;
+    border-radius: 999px;
+    padding: 0.65rem 1.7rem;
+    font-weight: 700;
+    transition: all 0.18s ease;
+}
+
+.btn-sz:hover {
+    background: var(--sz-gold-hover);
+    color: var(--sz-ink);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(224, 179, 34, 0.3);
+}
+
+.btn-sz:disabled,
+.btn-sz.disabled {
+    background: #e5e0d0;
+    color: #9a9484;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-sz.btn-sm {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.9rem;
+}
+
+.btn-sz.btn-lg {
+    padding: 0.8rem 2.2rem;
+    font-size: 1.05rem;
+}
+
+/* Nút viền trắng — chỉ dùng trên nền đậm (hero) */
+.btn-sz-ghost {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: 999px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.18s ease;
+}
+
+.btn-sz-ghost:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-sz-ghost.btn-sm {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.9rem;
+}
+
+.btn-sz-ghost.btn-lg {
+    padding: 0.8rem 2.2rem;
+    font-size: 1.05rem;
+}
+
+/* Nút viền xanh trên nền sáng */
+.btn-sz-outline {
+    background: transparent;
+    color: var(--sz-green);
+    border: 1px solid var(--sz-green);
+    border-radius: 999px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.18s ease;
+}
+
+.btn-sz-outline:hover {
+    background: var(--sz-green);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-sz-outline.btn-sm {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.9rem;
+}
+
+/* Nút hành động nguy hiểm (hủy booking...) */
+.btn-sz-danger {
+    background: transparent;
+    color: var(--sz-danger-fg);
+    border: 1px solid #d9a2a8;
+    border-radius: 999px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.18s ease;
+}
+
+.btn-sz-danger:hover {
+    background: var(--sz-danger-bg);
+    color: var(--sz-danger-fg);
+}
+
+.btn-sz-danger.btn-sm {
+    padding: 0.4rem 1.1rem;
+    font-size: 0.9rem;
+}
+
+.btn-sz:focus-visible,
+.btn-sz-outline:focus-visible,
+.btn-sz-danger:focus-visible,
+.btn-sz-ghost:focus-visible {
+    outline: 2px solid var(--sz-green);
+    outline-offset: 2px;
+}
+
+/* Giữ class Bootstrap cũ (login/register P2) đồng bộ màu */
+.btn-outline-success {
+    --bs-btn-color: var(--sz-green);
+    --bs-btn-border-color: var(--sz-green);
+    --bs-btn-hover-bg: var(--sz-green);
+    --bs-btn-hover-border-color: var(--sz-green);
+    --bs-btn-active-bg: var(--sz-green-dark);
+    --bs-btn-active-border-color: var(--sz-green-dark);
+    border-radius: 999px;
+}
+
+/* Nút icon tròn trong bảng hành động (demo kit P0) */
+.btn-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--sz-line);
+    background: #fff;
+    color: var(--sz-muted-ink);
+    font-size: 0.9rem;
+    padding: 0;
+    transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(16, 38, 28, 0.12);
+}
+
+.btn-icon.tint-warn { background: #fff8e1; border-color: #f0e0a8; color: var(--sz-warn-fg); }
+.btn-icon.tint-danger { background: #fdecee; border-color: #eec3c8; color: var(--sz-danger-fg); }
+.btn-icon.tint-success { background: var(--sz-success-bg); border-color: #bfe3cd; color: var(--sz-success-fg); }
+
+/* ===== 5. CARD (demo kit P0: bo 1.25rem, viền mờ) ===== */
+.sz-card {
+    position: relative;
+    height: 100%;
+    padding: 1.6rem;
+    background: #fff;
+    border: 1px solid rgba(16, 38, 28, 0.06);
+    border-radius: 1.25rem;
+    box-shadow: 0 10px 24px rgba(16, 38, 28, 0.05);
+}
+
+.sz-card h2 {
+    margin-top: 0.7rem;
+    font-size: 1.45rem;
+}
+
+.sz-card .stretched-link {
+    font-weight: 600;
+    color: var(--sz-green);
+    text-decoration: none;
+}
+
+.sz-card-lg {
+    border-radius: 1.5rem;
+}
+
+.sz-card-soft {
+    background: #f6f3ea;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(16, 38, 28, 0.05);
+    padding: 1.4rem;
+}
+
+.sz-card-clickable,
+.hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sz-card-clickable:hover,
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 32px rgba(16, 38, 28, 0.12);
+}
+
+.sz-card-muted {
+    background: #faf8f2;
+}
+
+.sz-price {
+    font-weight: 700;
+    color: var(--sz-green-dark);
+}
+
+.card-title-sz {
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-title-sz svg {
+    color: var(--sz-green);
+}
+
+/* ===== 6. BADGE TRẠNG THÁI (demo kit P0 — định nghĩa 1 lần, dùng toàn app) ===== */
+.sz-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.32em 0.85em;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.sz-badge-tennis { background: rgba(47, 125, 74, 0.13); color: var(--sz-tennis); }
+.sz-badge-pickle { background: rgba(196, 92, 22, 0.13); color: var(--sz-pickle); }
+.sz-badge-available { background: var(--sz-success-bg); color: var(--sz-success-fg); }
+.sz-badge-active { background: var(--sz-success-bg); color: var(--sz-success-fg); }
+.sz-badge-paid { background: var(--sz-success-bg); color: var(--sz-success-fg); }
+.sz-badge-completed { background: var(--sz-success-bg); color: var(--sz-success-fg); }
+.sz-badge-booked { background: var(--sz-warn-bg); color: var(--sz-warn-fg); }
+.sz-badge-pending { background: var(--sz-warn-bg); color: var(--sz-warn-fg); }
+.sz-badge-unpaid { background: var(--sz-warn-bg); color: var(--sz-warn-fg); }
+.sz-badge-frozen { background: var(--sz-warn-bg); color: var(--sz-warn-fg); }
+.sz-badge-confirmed { background: var(--sz-info-bg); color: var(--sz-info-fg); }
+.sz-badge-cancelled { background: var(--sz-danger-bg); color: var(--sz-danger-fg); }
+.sz-badge-closed,
+.sz-badge-maintenance,
+.sz-badge-unavailable,
+.sz-badge-noshow { background: var(--sz-muted-bg); color: var(--sz-muted-fg); }
+/* Booking chưa có invoice (U16) — phân biệt rõ với Unpaid */
+.sz-badge-none { background: #fff; border: 1px dashed var(--sz-line); color: var(--sz-muted-ink); }
+.sz-badge-gold { background: var(--sz-gold); color: var(--sz-ink); }
+.sz-badge-dark { background: var(--sz-ink); color: #fff; }
+
+/* ===== 7. PAGE HEADER (MASTER 5.4) ===== */
+.sz-pagehead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.sz-pagehead h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.sz-lead-sm {
+    color: var(--sz-muted-ink);
+    margin: 0.35rem 0 0;
+    max-width: 46rem;
+}
+
+.sz-back-link {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    color: var(--sz-muted-ink);
+    text-decoration: none;
+    font-size: 0.92rem;
+}
+
+.sz-back-link:hover {
+    color: var(--sz-green);
+}
+
+/* ===== 8. TABS / FILTER PILLS (demo kit P0: khay pill, active = xanh) ===== */
+.sz-tabs {
+    gap: 0.25rem;
+    display: inline-flex;
+    flex-wrap: wrap;
+    background: #fff;
+    border: 1px solid var(--sz-line);
+    border-radius: 999px;
+    padding: 4px;
+}
+
+.sz-tabs .nav-link {
+    border-radius: 999px;
+    border: 0;
+    background: transparent;
+    color: var(--sz-muted-ink);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.45rem 1.15rem;
+    transition: all 0.15s ease;
+}
+
+.sz-tabs .nav-link:hover:not(.active) {
+    background: rgba(27, 94, 59, 0.08);
+    color: var(--sz-green);
+}
+
+.sz-tabs .nav-link.active {
+    background: var(--sz-green);
+    color: #fff;
+}
+
+.sz-tabs .sz-count,
+.filter-pill .sz-count {
+    display: inline-block;
+    min-width: 1.4rem;
+    padding: 0.1em 0.55em;
+    margin-left: 0.3rem;
+    border-radius: 999px;
+    background: rgba(16, 38, 28, 0.08);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.sz-tabs .nav-link.active .sz-count,
+.filter-pill.active .sz-count {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* ===== 9. COURT CARD (demo kit C3) ===== */
+.sz-court-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.sz-court-body {
+    padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.sz-court-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+}
+
+/* Placeholder gradient theo loại sân khi ImageURL null (demo kit C3) */
+.sz-court-img-ph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.sz-court-img-ph.ph-tennis {
+    background: linear-gradient(140deg, #2f7d4a, #14432a);
+}
+
+.sz-court-img-ph.ph-pickle {
+    background: linear-gradient(140deg, #c45c16, #7c3a0d);
+}
+
+/* Chip loại sân / trạng thái nổi trên góc ảnh (demo kit C3) */
+.sz-court-chips {
+    position: relative;
+}
+
+.sz-court-chips .chip-type {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+}
+
+.sz-court-chips .chip-status {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+}
+
+/* Sân không khả dụng: làm hơi chìm ảnh */
+.sz-court-off .sz-court-img,
+.sz-court-off .sz-court-img-ph {
+    filter: grayscale(0.4);
+}
+
+.sz-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--sz-muted-ink);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ===== 10. GRID KHUNG GIỜ + PILL CHỌN NGÀY (demo kit C4) ===== */
+.date-pill-row {
+    display: flex;
+    gap: 0.4rem;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+}
+
+.date-pill {
+    display: block;
+    border: 1px solid var(--sz-line);
+    background: #fff;
+    border-radius: 0.9rem;
+    padding: 0.5rem 0.95rem;
+    text-align: center;
+    cursor: pointer;
+    min-width: 74px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: var(--sz-ink);
+    transition: all 0.13s ease;
+}
+
+.date-pill small {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 650;
+    letter-spacing: 0.06em;
+    color: var(--sz-muted-ink);
+    text-transform: uppercase;
+}
+
+.date-pill b {
+    font-size: 1.05rem;
+}
+
+.date-pill:hover:not(.active) {
+    border-color: var(--sz-green);
+    color: var(--sz-ink);
+}
+
+.date-pill.active {
+    background: var(--sz-ink);
+    border-color: var(--sz-ink);
+    color: #fff;
+}
+
+.date-pill.active small {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.sz-slot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 0.5rem;
+}
+
+.sz-slot {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    padding: 0.55rem 0.25rem;
+    border: 1px solid var(--sz-line);
+    border-radius: 0.65rem;
+    background: #fff;
+    color: var(--sz-ink);
+    text-decoration: none;
+    text-align: center;
+    transition: background 0.13s ease, border-color 0.13s ease, transform 0.13s ease;
+}
+
+.sz-slot-time {
+    font-weight: 750;
+    font-size: 0.95rem;
+}
+
+.sz-slot-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--sz-muted-ink);
+}
+
+.sz-slot.is-available {
+    border-color: #9cc8ab;
+    cursor: pointer;
+}
+
+.sz-slot.is-available:hover {
+    background: var(--sz-success-bg);
+    border-color: var(--sz-tennis);
+    transform: translateY(-1px);
+}
+
+.sz-slot.is-available .sz-slot-label { color: var(--sz-success-fg); }
+
+.sz-slot.is-booked {
+    background: var(--sz-warn-bg);
+    border-color: #efe0ac;
+    color: var(--sz-warn-fg);
+    cursor: not-allowed;
+}
+
+.sz-slot.is-booked .sz-slot-label { color: inherit; opacity: 0.75; }
+
+.sz-slot.is-closed,
+.sz-slot.is-past {
+    background: var(--sz-muted-bg);
+    color: var(--sz-muted-fg);
+    cursor: not-allowed;
+}
+
+.sz-slot.is-past { opacity: 0.55; }
+
+.sz-slot.is-selected {
+    background: var(--sz-green);
+    border-color: var(--sz-green);
+    color: #fff;
+}
+
+.sz-slot.is-selected .sz-slot-label { color: rgba(255, 255, 255, 0.85); }
+
+/* Radio ẩn sau ô slot trong form đặt sân */
+.sz-slot-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+a.sz-slot:focus-visible,
+label.sz-slot:has(.sz-slot-radio:focus-visible),
+.date-pill:focus-visible {
+    outline: 2px solid var(--sz-green);
+    outline-offset: 2px;
+}
+
+.sz-slot-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+    margin-top: 0.9rem;
+    font-size: 0.8rem;
+    color: var(--sz-muted-ink);
+}
+
+.sz-slot-legend .swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    border: 1px solid var(--sz-line);
+    margin-right: 0.35rem;
+    vertical-align: -2px;
+}
+
+.swatch-available { background: #fff; border-color: #9cc8ab !important; }
+.swatch-booked { background: var(--sz-warn-bg); border-color: #efe0ac !important; }
+.swatch-closed { background: var(--sz-muted-bg); }
+.swatch-selected { background: var(--sz-green); border-color: var(--sz-green) !important; }
+
+/* ===== 11. EMPTY STATE (demo kit P0: icon tròn nền kem) ===== */
+.sz-empty {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: #faf8f2;
+    border: 1px dashed var(--sz-line);
+    border-radius: 1.25rem;
+}
+
+.sz-empty .icon-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #f1efe7;
+    display: grid;
+    place-items: center;
+    margin: 0 auto 1rem;
+    color: #8a8577;
+}
+
+.sz-empty svg {
+    color: #8a8577;
+    margin-bottom: 0.75rem;
+}
+
+.sz-empty .icon-circle svg {
+    margin-bottom: 0;
+}
+
+.sz-empty h2 {
+    font-size: 1.2rem;
+    font-weight: 750;
+    margin: 0 0 0.4rem;
+}
+
+.sz-empty p {
+    color: var(--sz-muted-ink);
+    margin-bottom: 1rem;
+}
+
+/* ===== 12. ALERT (mềm, bo góc — demo kit alert-soft) ===== */
+.alert {
+    border: 0;
+    border-radius: 1rem;
+    font-size: 0.92rem;
+}
+
+.alert-success { background: rgba(30, 107, 60, 0.1); color: var(--sz-success-fg); }
+.alert-danger { background: rgba(132, 32, 41, 0.09); color: var(--sz-danger-fg); }
+.alert-warning { background: rgba(138, 109, 18, 0.12); color: var(--sz-warn-fg); }
+.alert-info { background: rgba(27, 79, 138, 0.1); color: var(--sz-info-fg); }
+
+/* ===== 13. FORM (demo kit P0: input không viền, nền kem, focus ring xanh) ===== */
+.form-control,
+.form-select,
+.sz-input {
+    border: 1px solid transparent;
+    background: #f6f3ea;
+    border-radius: 1rem;
+    padding: 0.7rem 1rem;
+    color: var(--sz-ink);
+    transition: all 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+.sz-input:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--sz-green);
+    box-shadow: 0 0 0 4px rgba(27, 94, 59, 0.12);
+}
+
+.form-control::placeholder,
+.sz-input::placeholder {
+    color: #a49e8d;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid,
+.sz-input.is-invalid {
+    border-color: #c9545f;
+    background: #fdf3f4;
+}
+
+.form-control-sm {
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.75rem;
+}
+
+.form-label-sz,
+.form-label {
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--sz-ink);
+    margin-bottom: 0.35rem;
+}
+
+.form-hint,
+.form-text {
+    font-size: 0.78rem;
+    color: var(--sz-muted-ink);
+    margin-top: 0.3rem;
+}
+
+.form-check-input:checked {
+    background-color: var(--sz-green);
+    border-color: var(--sz-green);
+}
+
+.form-check-input:focus {
+    border-color: var(--sz-green);
+    box-shadow: 0 0 0 3px rgba(27, 94, 59, 0.12);
+}
+
+/* ===== 14. BẢNG (MASTER 5.5 + demo kit table-wrap) ===== */
+.table-wrap {
+    border-radius: 1.25rem;
+    overflow: hidden;
+    border: 1px solid rgba(16, 38, 28, 0.06);
+    box-shadow: 0 10px 24px rgba(16, 38, 28, 0.05);
+    background: #fff;
+}
+
+table.table {
+    background: #fff;
+    border-color: var(--sz-line);
+    margin-bottom: 0;
+}
+
+.sz-table thead th {
+    background: #f6f3ea;
+    color: var(--sz-muted-ink);
+    font-size: 0.73rem;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--sz-line);
+    padding: 0.8rem 1rem;
+    white-space: nowrap;
+}
+
+.sz-table tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid #f1efe7;
+    vertical-align: middle;
+    font-size: 0.93rem;
+}
+
+.sz-table tbody tr {
+    transition: background 0.12s ease;
+}
+
+.sz-table tbody tr:hover {
+    background: #fbfaf5;
+}
+
+.sz-table .num {
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.sz-table .mid {
+    text-align: center;
+}
+
+.sz-table .row-muted td {
+    color: var(--sz-muted-fg);
+}
+
+.sz-code {
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", monospace;
+    font-size: 0.88em;
+}
+
+/* Mobile: bảng chuyển thành card stack, td hiện label qua data-label */
+@media (max-width: 767.98px) {
+    .sz-table-cards thead { display: none; }
+    .sz-table-cards,
+    .sz-table-cards tbody,
+    .sz-table-cards tr,
+    .sz-table-cards td { display: block; width: 100%; }
+    .sz-table-cards tr {
+        border: 1px solid var(--sz-line);
+        border-radius: 0.75rem;
+        background: #fff;
+        padding: 0.5rem 0.9rem;
+        margin-bottom: 0.75rem;
+    }
+    .sz-table-cards td {
+        border: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.35rem 0;
+        text-align: left !important;
+    }
+    .sz-table-cards td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--sz-muted-ink);
+        font-size: 0.85rem;
+    }
+    .sz-table-cards td.sz-td-actions { justify-content: flex-end; }
+    .sz-table-cards td.sz-td-actions::before { content: none; }
+}
+
+/* ===== 15. FORM ĐẶT SÂN (pages/booking.md) ===== */
+.sz-step-label {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 700;
+    margin-bottom: 0.65rem;
+}
+
+.sz-step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--sz-ink);
+    color: var(--sz-gold);
+    font-size: 0.85rem;
+    font-weight: 800;
+    flex: 0 0 auto;
+}
+
+.sz-summary-card {
+    position: sticky;
+    top: 1rem;
+}
+
+.sz-summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.4rem 0;
+}
+
+.sz-summary-row .lbl {
+    color: var(--sz-muted-ink);
+}
+
+.sz-summary-row .val {
+    font-weight: 600;
+    text-align: right;
+}
+
+.sz-total-row {
+    border-top: 2px solid var(--sz-line);
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    font-weight: 750;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.sz-service-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--sz-line);
+    border-radius: 1rem;
+    background: #fff;
+    transition: all 0.15s ease;
+}
+
+.sz-service-row + .sz-service-row {
+    margin-top: 0.5rem;
+}
+
+.sz-service-row.checked {
+    border-color: var(--sz-green);
+    background: rgba(27, 94, 59, 0.05);
+}
+
+.sz-service-row .form-check {
+    flex: 1;
+    margin: 0;
+}
+
+.sz-service-row .sz-svc-price {
+    color: var(--sz-muted-ink);
+    font-size: 0.88rem;
+    white-space: nowrap;
+}
+
+.sz-qty {
+    width: 4.5rem;
+    text-align: center;
+}
+
+/* ===== 16. TRANG CHI TIẾT (booking/invoice detail) ===== */
+.sz-kv {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px dashed var(--sz-line);
+    margin: 0;
+    font-size: 0.93rem;
+}
+
+.sz-kv dt {
+    color: var(--sz-muted-ink);
+    font-weight: 500;
+}
+
+.sz-kv dd {
+    font-weight: 650;
+    margin: 0;
+    text-align: right;
+}
+
+.sz-kv-total {
+    border-bottom: 0;
+    border-top: 2px solid var(--sz-ink);
+    margin-top: 0.4rem;
+    padding-top: 0.7rem;
+    font-size: 1.15rem;
+}
+
+.sz-kv-total dd {
+    font-weight: 800;
+    color: var(--sz-green-dark);
+}
+
+.sz-action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* ===== 17. HÓA ĐƠN "GIẤY" (pages/invoices.md + demo kit C9) ===== */
+.sz-invoice-paper {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.4rem;
+}
+
+.sz-invoice-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    border-bottom: 2px solid var(--sz-ink);
+    padding-bottom: 1.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.sz-invoice-head .sz-inv-title {
+    text-align: right;
+}
+
+.sz-invoice-head h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* ===== 18. HỒ SƠ (demo kit C10) ===== */
+.sz-avatar,
+.avatar {
+    border-radius: 50%;
+    background: var(--sz-green-dark);
+    color: #fff;
+    display: inline-grid;
+    place-items: center;
+    font-weight: 750;
+    flex-shrink: 0;
+}
+
+.sz-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    margin: 0 auto 0.75rem;
+}
+
+.avatar-80 { width: 80px; height: 80px; font-size: 2rem; }
+.avatar-42 { width: 42px; height: 42px; font-size: 1rem; }
+.avatar-40 { width: 40px; height: 40px; font-size: 0.95rem; }
+
+.sz-profile-side {
+    text-align: center;
+}
+
+.sz-profile-side .sz-meta {
+    justify-content: center;
+}
+
+.sz-form-narrow {
+    max-width: 540px;
+    margin: 0 auto;
+}
+
+/* ===== 19. STAT CARD + KPI (demo kit P0/A1 — dùng cho dashboard sau này) ===== */
+.stat-card {
+    background: #fff;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(16, 38, 28, 0.06);
+    box-shadow: 0 8px 20px rgba(16, 38, 28, 0.05);
+    padding: 1.35rem;
+    height: 100%;
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+}
+
+.stat-card .stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+}
+
+.stat-card .stat-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sz-muted-ink);
+}
+
+.stat-card .stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.stat-card.border-accent { border-top: 4px solid var(--sz-gold); }
+.stat-card.border-green { border-top: 4px solid var(--sz-green); }
+
+/* Icon KPI gradient 55px — giữ 6 màu SaaS của bản cũ (A1) */
+.kpi-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 18px;
+    color: #fff;
+    font-size: 1.45rem;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+
+.g-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.g-success { background: linear-gradient(135deg, #10b981, #059669); }
+.g-danger { background: linear-gradient(135deg, #f43f5e, #e11d48); }
+.g-warning { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.g-info { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+.g-purple { background: linear-gradient(135deg, #a855f7, #7e22ce); }
+
+/* ===== 20. FOOTER + ERROR (demo kit C1: footer card bo góc nền ink) ===== */
+.sz-footer {
+    background: var(--sz-ink);
+    color: #cfd8d2;
+    border-radius: 1.25rem;
+    padding: 2.5rem 2rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+.sz-footer h6 {
+    color: #fff;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.sz-footer a {
+    color: #cfd8d2;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.sz-footer a:hover {
+    color: var(--sz-gold);
+}
+
+.sz-footer .sz-footer-line {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.sz-error h1 {
+    max-width: 18ch;
+}
+
+/* ===== 21. REDUCED MOTION (checklist skill) ===== */
+@media (prefers-reduced-motion: reduce) {
+    .sz-card-clickable,
+    .hover-lift,
+    .sz-slot,
+    .stat-card,
+    .btn {
+        transition: none;
+    }
+    .sz-card-clickable:hover,
+    .hover-lift:hover,
+    .sz-slot.is-available:hover,
+    .stat-card:hover,
+    .btn-sz:hover,
+    .btn-sz-outline:hover,
+    .btn-sz-ghost:hover {
+        transform: none;
+    }
+}
