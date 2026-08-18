@@ -55,14 +55,13 @@ Mỗi phase: **BE xong và test được (DAO + Servlet trả data)** rồi mớ
 ### 2.3 Cấu trúc thư mục đề xuất
 
 ```text
-src/java/com/sportzone/      (NetBeans: src/java, không phải src/main/java)
+src/java/                    (NetBeans: src/java, không phải src/main/java)
   model/          Account, Court, TimeSlot, Booking, Invoice, Service, ...
   dao/            *DAO + DBUtils
   service/        BookingService, InvoiceService, AuthService  (rule nghiệp vụ)
   controller/     *Servlet (auth, user, admin)
   filter/         AuthFilter, RoleFilter, EncodingFilter
-  util/           PasswordUtil, CsrfUtil, Validation, DateUtil
-src/java/com/sportzone/dao/db.properties.example  (template; copy thành db.properties local, không commit password thật)
+  utils/          PasswordUtil, CsrfUtil, Validation, DateUtil
 
 web/                         (NetBeans web root)
   WEB-INF/
@@ -185,7 +184,7 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 #### BE
 
 - NetBeans Ant WAR, `mssql-jdbc` + JSTL trong `web/WEB-INF/lib`
-- `DBUtils.getConnection()` đọc `db.properties` (không hard-code password vào class)
+- `DBUtils.getConnection()` dùng trực tiếp URL/user/password trong class theo cấu hình local đã chốt
 - `PasswordUtil.sha256Hex(String)` — phải ra đúng hash seed
 - `CsrfUtil`, `Validation` (email, phone VN, required, range)
 - `EncodingFilter` UTF-8
@@ -421,7 +420,7 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 
 #### Tài liệu
 
-- Cập nhật `README.md`: chạy SQL, cấu hình `db.properties`, Tomcat, account demo
+- Cập nhật `README.md`: chạy SQL, cấu hình kết nối trong `DBUtils`, Tomcat, account demo
 - Cập nhật `docs/tien-do.md`
 
 **Done khi:** checklist mục 6 bên dưới pass; sẵn sàng record demo.

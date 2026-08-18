@@ -21,7 +21,7 @@ Còn:
 
 Mất hoàn toàn:
 - ❌ Toàn bộ `src/java` (controller, dao, model, service, filter, util) — kể cả P1+P2.
-- ❌ `web.xml`, `db.properties`, `assets/css/app.css` (header.jsp vẫn link tới app.css → sẽ 404 CSS).
+- ❌ `web.xml`, cấu hình kết nối DB, `assets/css/app.css` (header.jsp vẫn link tới app.css → sẽ 404 CSS).
 
 Tham khảo: repo git cũ ở root (HEAD `58bf45f`) còn nguyên code P1+P2 đã test pass — chỉ dùng để đối chiếu, không restore.
 
@@ -33,21 +33,20 @@ Làm trong `repository\PRJ301_AGAIN_SPORTZONE\SportZoneManagement\SportZoneManag
 
 | # | File | Vai trò |
 |---|---|---|
-| 1 | `src/java/com/sportzone/dao/db.properties.example` | Template connection; copy thành `db.properties` local và không commit mật khẩu |
-| 2 | `dao/DBUtils.java` | `getConnection()` đọc db.properties |
-| 3 | `util/PasswordUtil.java` | SHA-256 hex UTF-8 — phải khớp hash seed |
-| 4 | `util/AppConstants.java` | Hằng số role/status/session key |
-| 5 | `util/Views.java` | Đường dẫn JSP tập trung |
-| 6 | `util/CsrfUtil.java` | Token session + validate |
-| 7 | `util/Validation.java` | Validate email/phone/password |
-| 8 | `util/DateUtil.java` | Xử lý ngày/giờ cho slot |
-| 9 | `util/SessionUtil.java` | Đọc account/role/frozen từ session |
-| 10 | 9 file `model/` | Account, Role, Court, CourtType, TimeSlot, Service, Booking, BookingService, Invoice (theo ERD v3 — Booking KHÔNG có courtId) |
-| 11 | `filter/EncodingFilter.java` | UTF-8 `/*` |
-| 12 | `web/WEB-INF/web.xml` | Khai báo filter/servlet/error-page/session-timeout 30 |
-| 13 | `controller/HealthServlet.java` | `/health` kiểm tra nối DB |
-| 14 | `web/assets/css/app.css` | Viết lại từ token trong design-review-kit.html |
-| 15 | Rà soát `layout/header.jsp` + `footer.jsp` | Khớp contract session (`account`, `roleName`, `frozen`, `csrfToken`) |
+| 1 | `dao/DBUtils.java` | `getConnection()` dùng trực tiếp cấu hình SQL Server đã chốt |
+| 2 | `utils/PasswordUtil.java` | SHA-256 hex UTF-8 — phải khớp hash seed |
+| 3 | `utils/AppConstants.java` | Hằng số role/status/session key |
+| 4 | `utils/Views.java` | Đường dẫn JSP tập trung |
+| 5 | `utils/CsrfUtil.java` | Token session + validate |
+| 6 | `utils/Validation.java` | Validate email/phone/password |
+| 7 | `utils/DateUtil.java` | Xử lý ngày/giờ cho slot |
+| 8 | `utils/SessionUtil.java` | Đọc account/role/frozen từ session |
+| 9 | 9 file `model/` | Account, Role, Court, CourtType, TimeSlot, Service, Booking, BookingService, Invoice (theo ERD v3 — Booking KHÔNG có courtId) |
+| 10 | `filter/EncodingFilter.java` | UTF-8 `/*` |
+| 11 | `web/WEB-INF/web.xml` | Khai báo filter/servlet/error-page/session-timeout 30 |
+| 12 | `controller/HealthServlet.java` | `/health` kiểm tra nối DB |
+| 13 | `web/assets/css/app.css` | Viết lại từ token trong design-review-kit.html |
+| 14 | Rà soát `layout/header.jsp` + `footer.jsp` | Khớp contract session (`account`, `roleName`, `frozen`, `csrfToken`) |
 
 **Definition of Done P1:** build WAR sạch, deploy Tomcat 9, `/health` trả OK + nối được `SportZoneDB`, layout home render đúng design (không 404 CSS), hash của `Admin@123`/`User@123` khớp seed.
 
@@ -67,8 +66,8 @@ Mỗi phase: tao trình từng file → mày duyệt → ghi log `LOG-LAM-VIEC.m
 2. **ERD v3:** `Bookings` không có `CourtID` — mọi truy vấn sân của booking phải JOIN qua `TimeSlots`. Code P1+P2 cũ trong git dựa schema cũ, khi tham khảo phải tỉnh táo điểm này.
 3. **app.css phải viết lại từ design kit** (1371 dòng HTML chứa toàn bộ token + component CSS) — đây là việc thuộc P1 vì mọi trang đang link tới nó.
 4. **Seed chỉ có 8 khung giờ/ngày** (06–09, 16–21) trong khi design A4 vẽ 16 giờ 06–22 — demo vẫn chạy đúng, không cần sửa DB.
-5. **db.properties cũ dùng user `sportzone`/`SportZone@123`** — cần chắc chắn login này tồn tại trong SQL Server của mày, nếu không thì đổi sang SA.
+5. **Kết nối local đã chốt dùng `sa/12345` trực tiếp trong `dao/DBUtils.java`** — chỉ phù hợp môi trường học tập/local, không dùng cho production.
 
 ## Hành động ngay sau khi duyệt
 
-KHÔNG code gì thêm (theo yêu cầu của mày). Chờ mày ra lệnh bắt đầu file đầu tiên của P1 (đề xuất: `db.properties` + `DBUtils.java`).
+P1 đã được bắt đầu từ `dao/DBUtils.java` và hoàn tất foundation trên `feature/foundation`.

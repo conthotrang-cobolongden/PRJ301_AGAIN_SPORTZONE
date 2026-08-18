@@ -13,7 +13,7 @@
 
 | Key | Kiểu | Nội dung |
 |-----|------|----------|
-| `account` | `com.sportzone.model.Account` | Tài khoản đăng nhập, **đã set `passwordHash = null` trước khi lưu** |
+| `account` | `model.Account` | Tài khoản đăng nhập, **đã set `passwordHash = null` trước khi lưu** |
 | `roleName` | `String` | `"Admin"` hoặc `"User"` |
 | `frozen` | `Boolean` | `true` nếu `Accounts.Status = 'Frozen'` |
 

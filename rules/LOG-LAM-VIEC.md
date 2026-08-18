@@ -5,6 +5,22 @@
 
 ---
 
+## [2026-08-18] — CODEX — Rút gọn package và cấu hình DB theo yêu cầu
+
+**Task:** Bỏ `com.sportzone`, dùng package ngắn và chuyển cấu hình kết nối vào thẳng `DBUtils.java`.
+**Trạng thái:** Đã sửa code, test, `web.xml` và tài liệu; chờ kết quả verify cuối.
+
+### Đã làm
+- [x] Chuyển source sang `dao`, `utils`, `controller`, `filter`, `model`.
+- [x] Chuyển test sang package tương ứng và đổi test DB thành `DBUtilsContractTest`.
+- [x] Xóa toàn bộ file cấu hình DB riêng; `dao.DBUtils` dùng trực tiếp `sa/12345` cho local SQL Server.
+- [x] Đồng bộ class name trong `web.xml`, tài liệu kế hoạch và tài liệu Phase 2.
+
+### Lưu ý
+- Credential DB hiện được Git track trong Java theo yêu cầu; cấu hình này chỉ dành cho môi trường học tập/local.
+
+---
+
 ## [2026-08-18 23:27] — CODEX — Hoàn tất Phase 1 foundation trên branch feature/foundation
 
 **Task:** Dựng lại toàn bộ nền tảng P1 theo ERD v3 và `CODING_CONVENTION.md`, build WAR và smoke test thật trên Tomcat 9.
@@ -22,13 +38,12 @@
 ### File đã tạo / sửa
 | File | Loại | Tóm tắt thay đổi |
 |------|------|------------------|
-| `SportZoneManagement/src/java/com/sportzone/dao/db.properties.example` | Mới | Template JDBC an toàn; `db.properties` thật bị ignore |
-| `SportZoneManagement/src/java/com/sportzone/dao/DBUtils.java` | Mới | Đọc properties, nạp driver, mở connection |
-| `SportZoneManagement/src/java/com/sportzone/util/*.java` | Mới | 8 utility nền tảng, gồm `HealthCheck` |
-| `SportZoneManagement/src/java/com/sportzone/model/*.java` | Mới | 9 model ERD v3 |
-| `SportZoneManagement/src/java/com/sportzone/filter/EncodingFilter.java` | Mới | UTF-8 cho toàn app |
-| `SportZoneManagement/src/java/com/sportzone/controller/HomeServlet.java` | Mới | `/home` U19 |
-| `SportZoneManagement/src/java/com/sportzone/controller/HealthServlet.java` | Mới | `/health` kiểm tra DB/schema/hash |
+| `SportZoneManagement/src/java/dao/DBUtils.java` | Mới | Nạp driver, mở connection |
+| `SportZoneManagement/src/java/utils/*.java` | Mới | 8 utility nền tảng, gồm `HealthCheck` |
+| `SportZoneManagement/src/java/model/*.java` | Mới | 9 model ERD v3 |
+| `SportZoneManagement/src/java/filter/EncodingFilter.java` | Mới | UTF-8 cho toàn app |
+| `SportZoneManagement/src/java/controller/HomeServlet.java` | Mới | `/home` U19 |
+| `SportZoneManagement/src/java/controller/HealthServlet.java` | Mới | `/health` kiểm tra DB/schema/hash |
 | `SportZoneManagement/web/WEB-INF/web.xml` | Mới | Filter, servlet, error page, timeout 30 phút |
 | `SportZoneManagement/web/assets/css/app.css` | Mới | Design system xanh–gold và component JSP |
 | `SportZoneManagement/web/index.jsp` | Sửa | Forward `/home` không dùng scriptlet |
@@ -38,7 +53,7 @@
 ### Chưa làm / tồn đọng
 - Chưa triển khai P2 Auth; đây là phase tiếp theo sau khi review/merge P1.
 - Chưa push hoặc merge branch.
-- File local `db.properties` đang dùng `sa/12345` chỉ phục vụ smoke test và không được Git track.
+- Cấu hình kết nối sau refactor nằm trực tiếp trong `dao/DBUtils.java` theo yêu cầu mới.
 
 ### Ghi chú cho model còn lại
 - Dùng `SessionUtil` với đúng key `account`, `roleName`, `frozen`, `csrfToken`; không lưu `passwordHash` trong session.
