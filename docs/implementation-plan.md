@@ -3,7 +3,7 @@
 **Môn:** PRJ301 — Assignment cá nhân  
 **Sinh viên:** Nguyễn Hoàng Tùng (SE203366)  
 **Hệ thống:** Quản lý tổ hợp sân Tennis + Pickleball  
-**Trạng thái hiện hành (18/08):** working copy mới phải làm lại từ P1; code P1–P4 ngày 17/08 chỉ còn là lịch sử tham khảo. Hiện trạng chi tiết: [`../rules/new-plan-0954.md`](../rules/new-plan-0954.md).
+**Trạng thái hiện hành (18/08):** P1 đã được dựng lại và verify trên `feature/foundation`; bước tiếp theo là review/merge rồi dựng P2 Auth trên `feature/auth`. Code P2–P4 ngày 17/08 chỉ còn là lịch sử tham khảo.
 **Ngày soạn:** 2026-08-17  
 
 Tài liệu chức năng: [`admin-user-features.md`](admin-user-features.md)  
@@ -17,7 +17,7 @@ Schema: [`../sql/01_SportZoneDB_Schema.sql`](../sql/01_SportZoneDB_Schema.sql)
 Xây Java web đầy đủ **A1–A33 + U1–U19** trên schema đã chốt, chạy được trên Tomcat + SQL Server, đủ demo và nộp bài.
 
 Phần đã xong (không làm lại): phân tích chức năng, schema, seed, ERD v3 và JSP/design đã giữ lại.
-Phần phải làm lại trong working copy mới: P1 trở đi, bắt đầu từ cấu hình DB và nền tảng Java; chi tiết theo `rules/new-plan-0954.md`.
+Phần phải làm lại trong working copy mới: P2 trở đi; P1 đã hoàn tất trên `feature/foundation`.
 
 ---
 
@@ -55,14 +55,13 @@ Mỗi phase: **BE xong và test được (DAO + Servlet trả data)** rồi mớ
 ### 2.3 Cấu trúc thư mục đề xuất
 
 ```text
-src/java/com/sportzone/      (NetBeans: src/java, không phải src/main/java)
+src/java/                    (NetBeans: src/java, không phải src/main/java)
   model/          Account, Court, TimeSlot, Booking, Invoice, Service, ...
   dao/            *DAO + DBUtils
   service/        BookingService, InvoiceService, AuthService  (rule nghiệp vụ)
   controller/     *Servlet (auth, user, admin)
   filter/         AuthFilter, RoleFilter, EncodingFilter
-  util/           PasswordUtil, CsrfUtil, Validation, DateUtil
-src/java/com/sportzone/dao/db.properties  (classpath, không commit password thật khi nộp)
+  utils/          PasswordUtil, CsrfUtil, Validation, DateUtil
 
 web/                         (NetBeans web root)
   WEB-INF/
@@ -185,7 +184,7 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 #### BE
 
 - NetBeans Ant WAR, `mssql-jdbc` + JSTL trong `web/WEB-INF/lib`
-- `DBUtils.getConnection()` đọc `db.properties` (không hard-code password vào class)
+- `DBUtils.getConnection()` dùng trực tiếp URL/user/password trong class theo cấu hình local đã chốt
 - `PasswordUtil.sha256Hex(String)` — phải ra đúng hash seed
 - `CsrfUtil`, `Validation` (email, phone VN, required, range)
 - `EncodingFilter` UTF-8
@@ -421,7 +420,7 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 
 #### Tài liệu
 
-- Cập nhật `README.md`: chạy SQL, cấu hình `db.properties`, Tomcat, account demo
+- Cập nhật `README.md`: chạy SQL, cấu hình kết nối trong `DBUtils`, Tomcat, account demo
 - Cập nhật `docs/tien-do.md`
 
 **Done khi:** checklist mục 6 bên dưới pass; sẵn sàng record demo.
