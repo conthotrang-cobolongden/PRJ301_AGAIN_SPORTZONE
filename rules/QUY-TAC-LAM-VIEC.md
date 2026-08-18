@@ -14,14 +14,10 @@
 | Model | Vai trò | Phạm vi phụ trách | Được sửa | Không được sửa |
 |-------|---------|-------------------|----------|----------------|
 | **Qwen** | Thiết kế UI/UX | Giao diện, layout, màu sắc, typography, CSS, cấu trúc JSP (phần trình bày), design spec | `web/assets/css/*`, `web/assets/img/*`, markup/trình bày trong JSP, `design-system/*`, tài liệu design | Logic Java (Servlet, DAO, Service, Filter), nghiệp vụ, SQL |
-| **Deepseek** | Xử lý logic code | Java backend + logic trong JSP: Servlet, DAO, Service, Filter, util, validate, transaction, SQL | `src/java/**`, `web.xml`, phần logic JSTL/scriptlet trong JSP, `sql/*` | Tự ý đổi thiết kế giao diện (màu, layout, spacing) khi chưa có spec của Qwen |
+| **Qwen** | Xử lý logic code | Java backend + logic trong JSP: Servlet, DAO, Service, Filter, util, validate, transaction, SQL | `src/java/**`, `web.xml`, phần logic JSTL/scriptlet trong JSP, `sql/*` | Tự ý đổi thiết kế giao diện (màu, layout, spacing) khi chưa có spec của Qwen |
 
 **Nguyên tắc ranh giới:**
-
-- Qwen thiết kế → Deepseek hiện thực. Qwen không viết logic Java; Deepseek không tự "sáng tạo" giao diện ngoài spec.
-- File JSP là nơi 2 bên gặp nhau: **Qwen sở hữu markup/CSS class**, **Deepseek sở hữu dữ liệu bind vào** (JSTL `c:`, EL `${}`, scriptlet). Khi một bên cần sửa phần của bên kia trong JSP, ghi chú vào log (mục 3) để bên kia biết.
-- Khi chưa rõ ranh giới → hỏi người dùng (chủ repo), không tự quyết.
-
+updating...
 ---
 
 ## 2. Quy trình làm việc (bắt buộc với cả 2)
@@ -89,7 +85,7 @@ Mục tiêu: mở bất kỳ file nào lên cũng hiểu **ai viết, viết cho
 - Mọi hàm/class/khối giao diện quan trọng gắn **tag chức năng** theo ID trong `docs/admin-user-features.md` (ví dụ `A27`, `U10`, `U13`) để truy vết ngược về yêu cầu.
 - Không ghi nguồn gốc ("copy từ StackOverflow", "AI sinh ra") vào comment.
 
-### 4.2 Với Deepseek (Java / JSP logic / SQL)
+### 4.2 Với Qwen (Java / JSP logic / SQL)
 
 - **Class:** Javadoc ngắn nêu nhiệm vụ + tag chức năng.
   ```java
@@ -125,7 +121,7 @@ Người dùng giao việc
    │     3. (Nếu được giao) dựng luôn markup JSP + CSS theo spec
    │     4. Báo cáo vào LOG, tag "Ghi chú cho Deepseek" nêu rõ biến cần bind
    │
-   └─► DEEPSEEK:
+   └─► QWEN:
          1. Đọc spec của Qwen + LOG trước khi code
          2. Viết Servlet/DAO/Service + bind dữ liệu đúng chỗ Qwen đánh dấu
          3. KHÔNG đổi class/layout; nếu spec bất khả thi (thiếu dữ liệu, trùng
@@ -220,7 +216,7 @@ design-system/
 - [ ] Form có chỗ cho CSRF hidden field + hiển thị lỗi field
 - [ ] Đã ghi entry LOG + ghi chú chỗ chờ Deepseek bind
 
-**Deepseek:**
+**Qwen:**
 - [ ] Compile sạch, không warning
 - [ ] Test thật trên Tomcat theo Definition of Done của phase (không nói "chắc là chạy")
 - [ ] CSRF validate mọi POST; ownership check (user không thấy dữ liệu người khác)
@@ -229,4 +225,4 @@ design-system/
 
 ---
 
-*File này là hợp đồng làm việc của 2 model. Muốn sửa quy tắc → hỏi người dùng trước.*
+*File này là hợp đồng làm việc của model. Muốn sửa quy tắc → hỏi người dùng trước.*
