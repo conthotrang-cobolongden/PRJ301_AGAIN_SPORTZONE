@@ -144,7 +144,7 @@ Trích từ `docs/implementation-plan.md` — cả 2 model phải giữ nguyên 
 3. `Unpaid`/`Paid`/`Cancelled` **chỉ** nằm trên `Invoices.PaymentStatus`.
 4. Hết hạn + đã có hóa đơn → giữ `Unpaid`; chưa có hóa đơn → hủy booking, không invent dòng Unpaid.
 5. Hủy booking có hóa đơn → invoice `Cancelled` trong cùng transaction.
-6. `Bookings.CourtID` phải khớp `TimeSlots.CourtID`.
+6. `Bookings` không có `CourtID`; sân của booking phải suy ra duy nhất qua `Bookings.TimeSlotID → TimeSlots.CourtID`, không tin `courtId` từ form.
 7. Snapshot giá khi đặt (`CourtPriceAtOrder`, `PriceAtOrder`, `TotalAmount`).
 8. Chống double-book bằng transaction + unique index, không check-then-act.
 9. Account `Frozen` đăng nhập được nhưng không đặt sân / không báo chuyển khoản.

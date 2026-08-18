@@ -4,7 +4,7 @@
 **Database:** `SportZoneDB`
 **Nguồn chân lý:** `sql/01_SportZoneDB_Schema.sql` (cột + ràng buộc) — tài liệu này luôn bám theo schema
 **Cập nhật:** 2026-08-17
-**Bản cũ:** [`erd-archive/`](erd-archive/) — lưu để truy vết, **không dùng**
+**Bản cũ:** từng được lưu trong `erd-archive/` để truy vết nhưng không có trong working copy hiện tại; **không dùng**
 
 > **9 thực thể, 8 quan hệ.** Đây là bản đầy đủ nhất: mọi cột + kiểu dữ liệu + ràng buộc + cardinality + hướng dẫn vẽ.
 >
@@ -493,7 +493,7 @@ WHERE b.BookingID = @BookingID;
 | **v3 (hiện hành)** | 17/08/2026 | **Bỏ `Bookings.CourtID` + quan hệ `Courts → Bookings`; còn 8 quan hệ; gộp toàn bộ vào file này** |
 | v3.1 | 17/08/2026 | `BookingServices`: bỏ khóa surrogate `BookingServiceID`, PK composite `(BookingID, ServiceID)` |
 
-File cũ lưu trong [`erd-archive/`](erd-archive/): `logic-erd.v1-deprecated.md`, `logic-erd.md`, `erd-chi-tiet.md`, `erd.png` (bản vẽ tay cũ — còn thiếu Services + 2 đường nối), `final_erd_170826.vpp` (+ `.bak`).
+Các bản cũ từng nằm trong `erd-archive/`: `logic-erd.v1-deprecated.md`, `logic-erd.md`, `erd-chi-tiet.md`, `erd.png` (bản vẽ tay cũ — còn thiếu Services + 2 đường nối). Thư mục archive không có trong working copy hiện tại; không dùng các tên này làm nguồn tham chiếu.
 
 ---
 

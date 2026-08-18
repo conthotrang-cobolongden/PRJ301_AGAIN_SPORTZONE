@@ -12,15 +12,24 @@
 |----------|------------|---------|
 | Phân tích chức năng Admin / User | **Xong** | `docs/admin-user-features.md` — đã khớp ERD chốt |
 | Schema + seed SQL Server | **Xong** | `sql/01`, `sql/02` — comment khớp 1:0..1 invoice |
-| Logic ERD (tài liệu) | **Xong — chốt 14/08/2026** | `docs/logic-erd.md` |
-| Ảnh ERD nộp bài | **Đang làm** | `docs/erd.png` — tự vẽ theo bản chốt; còn thiếu Services + 2 đường nối |
-| Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + logic-erd |
-| Java web (Servlet / JSP / Filter) | **P1 xong (17/08)** | Scaffold BE + FE layout + `/health`; WAR đã build. Chi tiết ở mục 17/08 bên dưới |
-| Phase 2 — Auth & phân quyền | **Xong (17/08)** | Code + smoke test 6/6 DoD pass trên Tomcat. Kế hoạch: [`phase-2-auth.md`](phase-2-auth.md) |
-| Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **Code xong (17/08), chờ test** | BE + FE theo demo kit đã duyệt; compile sạch. Chi tiết mục bên dưới |
-| CRUD + phân quyền + thanh toán | Chưa bắt đầu | Từ P5 trở đi theo kế hoạch 6 phase |
+| Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
+| Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
+| Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
+| Java web (Servlet / JSP / Filter) | **Phải làm lại từ P1 (18/08)** | Working copy mới mất `src/java`, `web.xml`, `db.properties`, `app.css`; xem `rules/new-plan-0954.md` |
+| Phase 2 — Auth & phân quyền | **Đặc tả còn, code phải dựng lại** | Bản cũ từng smoke test 6/6 ngày 17/08; không còn là trạng thái code hiện hành |
+| Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **JSP/design còn, backend phải dựng lại** | Entry 17/08 bên dưới là lịch sử trước khi mất code |
+| Phase 5–9 | Chưa bắt đầu trong working copy mới | Làm tuần tự sau khi P1–P4 được dựng lại và verify |
 
-**Ước lượng:** phân tích + database ~ **35%** assignment. Hôm nay chốt xong phần mô hình dữ liệu trên giấy.
+**Nguồn trạng thái hiện hành:** `rules/new-plan-0954.md`. Các entry ngày 17/08 bên dưới được giữ nguyên làm lịch sử, không phản ánh code đang còn trong working copy mới.
+
+---
+
+## 2026-08-18 — Đồng bộ tài liệu theo working copy mới và ERD v3
+
+- Chốt `sql/01_SportZoneDB_Schema.sql` + `docs/erd-file/erd.md` là nguồn chuẩn dữ liệu: 9 bảng, 8 quan hệ, `Bookings` không có `CourtID`, unique index `UQ_Bookings_Slot_Active`.
+- Chốt `rules/new-plan-0954.md` là nguồn chuẩn hiện trạng: JSP/design còn; Java backend, `web.xml`, `db.properties`, `app.css` phải dựng lại từ P1.
+- Các kết quả build/smoke test ngày 17/08 là lịch sử của code cũ, không được dùng để kết luận working copy hiện tại đã hoàn thành P1–P4.
+- Bước tiếp theo: khởi tạo lịch sử Git cho working repository mới, sau đó làm P1 theo thứ tự `db.properties` → `DBUtils.java` và từng file một.
 
 ---
 
@@ -145,6 +154,8 @@ Scaffold app Java web theo `implementation-plan.md`, đối chiếu Definition o
 ---
 
 ## 2026-08-14 — Chốt ERD và quán triệt tài liệu
+
+> **Ghi chú lịch sử:** mục này mô tả ERD v2 tại thời điểm 14/08. ERD v3 ngày 17/08 đã bỏ `Bookings.CourtID` và quan hệ trực tiếp `Courts → Bookings`; bản hiện hành là [`erd-file/erd.md`](erd-file/erd.md).
 
 ### Mục tiêu ngày
 

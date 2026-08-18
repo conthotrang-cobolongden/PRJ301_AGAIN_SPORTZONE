@@ -57,7 +57,7 @@ In Java login, hash the input password with SHA-256 and compare to `PasswordHash
 | `BookingServices` | Booking line items | with Booking |
 | `Invoices` | Invoice + payment status/method (optional) | Yes |
 
-Cardinality (ERD): [`docs/logic-erd.md`](../docs/logic-erd.md).
+Cardinality (ERD v3): [`docs/erd-file/erd.md`](../docs/erd-file/erd.md).
 
 | Relationship | Cardinality |
 |--------------|-------------|
@@ -65,11 +65,12 @@ Cardinality (ERD): [`docs/logic-erd.md`](../docs/logic-erd.md).
 | CourtTypes → Courts | 1 : 1..N (2 types fixed; each has courts) |
 | Courts → TimeSlots | 1 : 0..N |
 | Accounts → Bookings | 1 : 0..N |
-| Courts → Bookings | 1 : 0..N |
 | TimeSlots → Bookings | 1 : 0..N (active ≈ 0..1) |
 | Bookings → Invoices | **1 : 0..1** (created when collection starts) |
 | Bookings → BookingServices | 1 : 0..N |
 | Services → BookingServices | 1 : 0..N |
+
+Không có FK trực tiếp `Courts → Bookings`; sân của booking được suy ra qua `Bookings.TimeSlotID → TimeSlots.CourtID`.
 
 ## Fixed inventory
 

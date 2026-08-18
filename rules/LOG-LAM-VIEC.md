@@ -5,6 +5,42 @@
 
 ---
 
+## [2026-08-18 22:44] — CODEX — Đồng bộ tài liệu theo hiện trạng mới và ERD v3
+
+**Task:** Đồng bộ `rules`, `docs`, `sql` để loại bỏ mâu thuẫn giữa lịch sử P1–P4, working copy mới và schema ERD v3.
+**Trạng thái:** Xong — chỉ sửa tài liệu, không sửa code/SQL schema và không chạy build.
+
+### Đã làm
+- [x] Chốt `sql/01_SportZoneDB_Schema.sql` + `docs/erd-file/erd.md` là nguồn chuẩn dữ liệu: `Bookings` không có `CourtID`, sân suy ra qua `TimeSlotID`, index chống trùng là `UQ_Bookings_Slot_Active`.
+- [x] Chốt `rules/new-plan-0954.md` là nguồn chuẩn hiện trạng: working copy mới phải làm lại từ P1; kết quả P1–P4 ngày 17/08 chỉ là lịch sử.
+- [x] Sửa link ERD cũ/hỏng, ghi rõ archive không có trong working copy và cập nhật mô tả Phase 5 theo schema v3.
+- [x] Giữ nguyên các entry lịch sử, đồng thời thêm cảnh báo để không nhầm chúng với trạng thái code hiện hành.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `docs/implementation-plan.md` | Sửa | Cập nhật trạng thái reset P1, link ERD v3, rule booking và transaction P5 |
+| `docs/tien-do.md` | Sửa | Cập nhật bảng tổng quan và thêm mốc đồng bộ 18/08 |
+| `docs/phase-2-auth.md` | Sửa | Đánh dấu đặc tả còn nhưng code P2 phải dựng lại |
+| `docs/admin-user-features.md` | Sửa | Sửa link ERD hiện hành |
+| `docs/erd-file/erd.md` | Sửa | Bỏ link archive không tồn tại, giữ ghi chú lịch sử dạng văn bản |
+| `rules/QUY-TAC-LAM-VIEC.md` | Sửa | Thay rule `Bookings.CourtID` cũ bằng quan hệ suy ra qua TimeSlot |
+| `sql/README.md` | Sửa | Bỏ quan hệ trực tiếp Courts→Bookings, sửa link ERD |
+| `rules/LOG-LAM-VIEC.md` | Sửa | Thêm entry này |
+
+### Chưa làm / tồn đọng
+- Chưa khởi tạo Git hoặc dựng lại P1; chờ user giao task tiếp theo.
+- Chưa chạy build/test vì task chỉ đồng bộ tài liệu.
+
+### Ghi chú cho model còn lại
+- Khi dựng backend, không thêm `courtId` vào model/persistence của `Booking`; JOIN `Bookings → TimeSlots → Courts` khi cần thông tin sân.
+- Không dùng trạng thái “P1–P4 đã xong” trong các entry 17/08 để suy ra hiện trạng working copy.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+
 ## [2026-08-17 23:55] — QWEN — Phase 1 (P3+P4): Xem sân & Hồ sơ — BE + FE theo demo kit
 
 **Task:** Triển khai P3 (U7–U9 xem sân/slot) + P4 (U4–U6 hồ sơ/mật khẩu) theo kế hoạch 6 phase đã duyệt; FE restyle theo demo kit `design-review-kit.html` (đã duyệt trước đó).

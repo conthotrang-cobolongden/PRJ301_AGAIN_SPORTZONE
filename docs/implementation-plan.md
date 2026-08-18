@@ -3,11 +3,11 @@
 **Môn:** PRJ301 — Assignment cá nhân  
 **Sinh viên:** Nguyễn Hoàng Tùng (SE203366)  
 **Hệ thống:** Quản lý tổ hợp sân Tennis + Pickleball  
-**Trạng thái:** P1 + P2 đã xong (17/08) — tiếp theo P3/P4 ([`phase-2-auth.md`](phase-2-auth.md))  
+**Trạng thái hiện hành (18/08):** working copy mới phải làm lại từ P1; code P1–P4 ngày 17/08 chỉ còn là lịch sử tham khảo. Hiện trạng chi tiết: [`../rules/new-plan-0954.md`](../rules/new-plan-0954.md).
 **Ngày soạn:** 2026-08-17  
 
 Tài liệu chức năng: [`admin-user-features.md`](admin-user-features.md)  
-ERD chốt: [`logic-erd.md`](logic-erd.md)  
+ERD chốt v3: [`erd-file/erd.md`](erd-file/erd.md)
 Schema: [`../sql/01_SportZoneDB_Schema.sql`](../sql/01_SportZoneDB_Schema.sql)
 
 ---
@@ -16,8 +16,8 @@ Schema: [`../sql/01_SportZoneDB_Schema.sql`](../sql/01_SportZoneDB_Schema.sql)
 
 Xây Java web đầy đủ **A1–A33 + U1–U19** trên schema đã chốt, chạy được trên Tomcat + SQL Server, đủ demo và nộp bài.
 
-Phần đã xong (không làm lại): phân tích chức năng, schema, seed, logic ERD.  
-Phần còn lại: ảnh ERD + toàn bộ app.
+Phần đã xong (không làm lại): phân tích chức năng, schema, seed, ERD v3 và JSP/design đã giữ lại.
+Phần phải làm lại trong working copy mới: P1 trở đi, bắt đầu từ cấu hình DB và nền tảng Java; chi tiết theo `rules/new-plan-0954.md`.
 
 ---
 
@@ -62,7 +62,7 @@ src/java/com/sportzone/      (NetBeans: src/java, không phải src/main/java)
   controller/     *Servlet (auth, user, admin)
   filter/         AuthFilter, RoleFilter, EncodingFilter
   util/           PasswordUtil, CsrfUtil, Validation, DateUtil
-src/java/db.properties       (classpath, không commit password thật khi nộp)
+src/java/com/sportzone/dao/db.properties  (classpath, không commit password thật khi nộp)
 
 web/                         (NetBeans web root)
   WEB-INF/
@@ -116,9 +116,9 @@ JSP nằm dưới `WEB-INF/views/` — client không gọi JSP trực tiếp, ch
 3. `Unpaid` / `Paid` / `Cancelled` **chỉ** nằm trên `Invoices.PaymentStatus`.
 4. Hết hạn + đã có HĐ → giữ `Unpaid`. Chưa có HĐ → hủy booking, không invent dòng Unpaid.
 5. Hủy booking (A23 / U13): nếu có HĐ thì set invoice `Cancelled` (A30) trong cùng transaction.
-6. `Bookings.CourtID` **phải khớp** `TimeSlots.CourtID` của slot được chọn.
+6. `Bookings` **không có `CourtID`**. Sân của booking luôn suy ra qua `Bookings.TimeSlotID → TimeSlots.CourtID`; backend không được tin `courtId` từ form để ghi booking.
 7. Snapshot giá: `CourtPriceAtOrder`, `PriceAtOrder`, `TotalAmount = CourtPriceAtOrder + ServiceTotalAtOrder`.
-8. Chống double-book: transaction + bắt lỗi unique index `UQ_Bookings_Court_Slot_Active`.
+8. Chống double-book: transaction + bắt lỗi unique index `UQ_Bookings_Slot_Active`.
 9. Account `Frozen` đăng nhập được (xem hồ sơ / HĐ cũ) nhưng **không** đặt / không báo chuyển khoản.
 10. CourtTypes + số sân cố định. Admin **không** tạo/xóa loại sân, **không** tạo/xóa sân.
 11. User không Confirm / Complete / NoShow.
@@ -270,11 +270,11 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 
 #### BE (transaction bắt buộc)
 
-`BookingService.create(accountId, courtId, timeSlotId, serviceLines)`:
+`BookingService.create(accountId, timeSlotId, serviceLines)`:
 
 1. Account Active (không Frozen)
-2. Court `Available`
-3. Slot thuộc đúng court, status `Available`, chưa qua giờ
+2. Đọc slot theo `timeSlotId`, JOIN sang Court; Court phải `Available`
+3. Slot status `Available`, chưa qua giờ; không nhận `courtId` từ client làm nguồn dữ liệu
 4. Snapshot `CourtPriceAtOrder`, cộng service (`PriceAtOrder`, `Quantity`)
 5. Insert Booking `Pending` — **không** insert Invoice
 6. Insert `BookingServices` nếu có
@@ -499,7 +499,7 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 | Rủi ro | Xử lý |
 |--------|--------|
 | Unique index double-book | Catch SQL exception, không tin check-then-act |
-| `CourtID` lệch `TimeSlot.CourtID` | Service luôn copy court từ slot, không tin form |
+| Client gửi `courtId` không khớp slot | Service bỏ qua `courtId` cho persistence; luôn suy ra Court qua `TimeSlotID` |
 | Quên CSRF trên 1 form | Phase 9 grep mọi POST |
 | Scope creep (chart, upload, PDF) | Cắt; print CSS thay PDF |
 | Tomcat 10 vs 9 nhầm package | Chốt D2 trước khi scaffold |

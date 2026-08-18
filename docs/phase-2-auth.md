@@ -1,8 +1,8 @@
 # Phase 2 — Auth & phân quyền (A1 A2 U1 U2 U3)
 
-**Trạng thái:** Xong — code + smoke test 6/6 DoD pass trên Tomcat 9 (17/08)  
+**Trạng thái hiện hành (18/08):** đặc tả đã chốt; code P2 từng smoke test 6/6 ngày 17/08 nhưng đã mất khỏi working copy mới và phải dựng lại sau P1. Xem [`../rules/new-plan-0954.md`](../rules/new-plan-0954.md).
 **Ngày soạn:** 2026-08-17  
-**Phụ thuộc:** P1 đã xong (scaffold, DBUtils, PasswordUtil, CsrfUtil, layout)  
+**Phụ thuộc hiện hành:** phải dựng lại và verify P1 (scaffold, DBUtils, PasswordUtil, CsrfUtil, layout) trước khi dựng lại P2.
 **Chưa làm trong phase này:** đổi mật khẩu, sửa profile (để P4); chặn đặt sân của Frozen (để P5); chặn báo chuyển khoản của Frozen (để P6).
 
 ---

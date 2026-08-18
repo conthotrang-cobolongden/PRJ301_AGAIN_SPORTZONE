@@ -179,7 +179,7 @@
 ## 4. Invoice & Payment Status (shared)  
 ## Trạng thái hóa đơn & thanh toán (dùng chung)
 
-**Cardinality:** một booking có **0 hoặc 1** hóa đơn. Chi tiết ERD: [`logic-erd.md`](logic-erd.md).
+**Cardinality:** một booking có **0 hoặc 1** hóa đơn. Chi tiết ERD v3: [`erd-file/erd.md`](erd-file/erd.md).
 
 | Field | Values (EN) | Giá trị (VI) | Nằm ở |
 |-------|-------------|--------------|--------|
