@@ -8,13 +8,14 @@
 ## [2026-08-18] — CODEX — Rút gọn package và cấu hình DB theo yêu cầu
 
 **Task:** Bỏ `com.sportzone`, dùng package ngắn và chuyển cấu hình kết nối vào thẳng `DBUtils.java`.
-**Trạng thái:** Đã sửa code, test, `web.xml` và tài liệu; chờ kết quả verify cuối.
+**Trạng thái:** Xong — Ant build, 6 targeted tests và Tomcat smoke đều pass.
 
 ### Đã làm
 - [x] Chuyển source sang `dao`, `utils`, `controller`, `filter`, `model`.
 - [x] Chuyển test sang package tương ứng và đổi test DB thành `DBUtilsContractTest`.
 - [x] Xóa toàn bộ file cấu hình DB riêng; `dao.DBUtils` dùng trực tiếp `sa/12345` cho local SQL Server.
 - [x] Đồng bộ class name trong `web.xml`, tài liệu kế hoạch và tài liệu Phase 2.
+- [x] Build 21 source bằng JDK 8; chạy 6 test; smoke `/`, `/home`, `/health`, CSS đều HTTP 200.
 
 ### Lưu ý
 - Credential DB hiện được Git track trong Java theo yêu cầu; cấu hình này chỉ dành cho môi trường học tập/local.
