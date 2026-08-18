@@ -1,0 +1,4 @@
+# Copy file nay thanh db.properties va dien mat khau local. Khong commit db.properties.
+db.url=jdbc:sqlserver://localhost:1433;databaseName=SportZoneDB;encrypt=true;trustServerCertificate=true
+db.username=sa
+db.password=

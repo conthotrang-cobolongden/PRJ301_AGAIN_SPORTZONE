@@ -15,12 +15,22 @@
 | Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
 | Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
 | Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
-| Java web (Servlet / JSP / Filter) | **Phải làm lại từ P1 (18/08)** | Working copy mới mất `src/java`, `web.xml`, `db.properties`, `app.css`; xem `rules/new-plan-0954.md` |
-| Phase 2 — Auth & phân quyền | **Đặc tả còn, code phải dựng lại** | Bản cũ từng smoke test 6/6 ngày 17/08; không còn là trạng thái code hiện hành |
+| Java web (Servlet / JSP / Filter) | **P1 đã dựng lại và verify (18/08)** | Branch `feature/foundation`: WAR build sạch, Tomcat smoke `/`, `/home`, `/health`, CSS đều pass |
+| Phase 2 — Auth & phân quyền | **Tiếp theo** | Dựng lại trên `feature/auth` sau khi P1 được review/merge |
 | Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **JSP/design còn, backend phải dựng lại** | Entry 17/08 bên dưới là lịch sử trước khi mất code |
 | Phase 5–9 | Chưa bắt đầu trong working copy mới | Làm tuần tự sau khi P1–P4 được dựng lại và verify |
 
 **Nguồn trạng thái hiện hành:** `rules/new-plan-0954.md`. Các entry ngày 17/08 bên dưới được giữ nguyên làm lịch sử, không phản ánh code đang còn trong working copy mới.
+
+---
+
+## 2026-08-18 (23:27) — Hoàn tất dựng lại Phase 1
+
+- Branch: `feature/foundation`, worktree cô lập `.worktrees/foundation`.
+- 21 file Java compile sạch bằng NetBeans Ant + JDK 1.8.0_172; tạo `dist/SportZoneManagement.war`.
+- 6 targeted tests pass: DB properties/connection, utility, CSRF/session, 9 model ERD v3, encoding filter, health check.
+- Tomcat 9 smoke pass: `/`, `/home`, `/health`, `/assets/css/app.css` đều HTTP 200; DB `SportZoneDB` OK, đủ 9 bảng, hash seed đúng.
+- Bước tiếp theo: review/merge P1 rồi dựng lại P2 Auth trên `feature/auth`.
 
 ---
 

@@ -1,5 +1,7 @@
 # BÁO CÁO: NÊN BẮT ĐẦU LẠI TỪ ĐÂU
 
+> **Cập nhật 18/08/2026 23:27:** Phase 1 đã được dựng lại và verify trên branch `feature/foundation` (Ant JDK 8 + 6 targeted tests + Tomcat smoke). Các mục “mất hoàn toàn” và “bắt đầu lại từ P1” bên dưới là baseline trước khi triển khai. Bước tiếp theo là review/merge P1 rồi dựng P2 trên `feature/auth`.
+
 ## 1. Ngữ cảnh đã nắm (tóm tắt)
 
 - **Dự án:** PRJ301 SportZone — quản lý tổ hợp sân Tennis + Pickleball (cố định 2 loại × 5 sân), 2 role Admin/User, chức năng A1–A33 + U1–U19.
@@ -31,7 +33,7 @@ Làm trong `repository\PRJ301_AGAIN_SPORTZONE\SportZoneManagement\SportZoneManag
 
 | # | File | Vai trò |
 |---|---|---|
-| 1 | `src/java/com/sportzone/dao/db.properties` | Connection string SQL Server |
+| 1 | `src/java/com/sportzone/dao/db.properties.example` | Template connection; copy thành `db.properties` local và không commit mật khẩu |
 | 2 | `dao/DBUtils.java` | `getConnection()` đọc db.properties |
 | 3 | `util/PasswordUtil.java` | SHA-256 hex UTF-8 — phải khớp hash seed |
 | 4 | `util/AppConstants.java` | Hằng số role/status/session key |

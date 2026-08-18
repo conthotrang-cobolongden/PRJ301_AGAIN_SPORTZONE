@@ -5,6 +5,50 @@
 
 ---
 
+## [2026-08-18 23:27] — CODEX — Hoàn tất Phase 1 foundation trên branch feature/foundation
+
+**Task:** Dựng lại toàn bộ nền tảng P1 theo ERD v3 và `CODING_CONVENTION.md`, build WAR và smoke test thật trên Tomcat 9.
+**Trạng thái:** Xong — targeted tests, Ant build JDK 8 và runtime smoke đều pass.
+
+### Đã làm
+- [x] Tạo cấu hình DB classpath + `DBUtils`; kết nối thật `SportZoneDB` bằng JDBC.
+- [x] Tạo utility nền tảng: password SHA-256, constants, view paths, validation, date/time, CSRF và session.
+- [x] Tạo 9 model khớp ERD v3; `Booking` không có `courtID`, `BookingService` dùng khóa ghép.
+- [x] Tạo `EncodingFilter`, `HomeServlet`, `HealthServlet`, `HealthCheck` và `web.xml` Servlet 3.1.
+- [x] Khôi phục `app.css` từ design review kit và bổ sung contract class đang dùng trong 17 JSP.
+- [x] Xóa scriptlet redirect khỏi `index.jsp`, thay bằng `<jsp:forward>`.
+- [x] Build WAR bằng NetBeans Ant + JDK 1.8.0_172; smoke Tomcat 9 trên base sạch.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/com/sportzone/dao/db.properties.example` | Mới | Template JDBC an toàn; `db.properties` thật bị ignore |
+| `SportZoneManagement/src/java/com/sportzone/dao/DBUtils.java` | Mới | Đọc properties, nạp driver, mở connection |
+| `SportZoneManagement/src/java/com/sportzone/util/*.java` | Mới | 8 utility nền tảng, gồm `HealthCheck` |
+| `SportZoneManagement/src/java/com/sportzone/model/*.java` | Mới | 9 model ERD v3 |
+| `SportZoneManagement/src/java/com/sportzone/filter/EncodingFilter.java` | Mới | UTF-8 cho toàn app |
+| `SportZoneManagement/src/java/com/sportzone/controller/HomeServlet.java` | Mới | `/home` U19 |
+| `SportZoneManagement/src/java/com/sportzone/controller/HealthServlet.java` | Mới | `/health` kiểm tra DB/schema/hash |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Mới | Filter, servlet, error page, timeout 30 phút |
+| `SportZoneManagement/web/assets/css/app.css` | Mới | Design system xanh–gold và component JSP |
+| `SportZoneManagement/web/index.jsp` | Sửa | Forward `/home` không dùng scriptlet |
+| `SportZoneManagement/test/**` | Mới | 6 targeted contract/integration test |
+| `.gitignore` | Sửa | Bỏ qua worktree và output NetBeans |
+
+### Chưa làm / tồn đọng
+- Chưa triển khai P2 Auth; đây là phase tiếp theo sau khi review/merge P1.
+- Chưa push hoặc merge branch.
+- File local `db.properties` đang dùng `sa/12345` chỉ phục vụ smoke test và không được Git track.
+
+### Ghi chú cho model còn lại
+- Dùng `SessionUtil` với đúng key `account`, `roleName`, `frozen`, `csrfToken`; không lưu `passwordHash` trong session.
+- Mọi truy vấn sân của Booking phải JOIN qua `TimeSlots`; không thêm `courtID` vào Booking.
+
+### Cần người dùng quyết định
+- Review/merge `feature/foundation`, sau đó mở `feature/auth` từ `dev` đã nhận P1.
+
+---
+
 ## [2026-08-18 22:44] — CODEX — Đồng bộ tài liệu theo hiện trạng mới và ERD v3
 
 **Task:** Đồng bộ `rules`, `docs`, `sql` để loại bỏ mâu thuẫn giữa lịch sử P1–P4, working copy mới và schema ERD v3.
