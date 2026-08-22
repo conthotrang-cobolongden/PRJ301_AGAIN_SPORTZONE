@@ -47,24 +47,32 @@ public final class AccountDAOContractTest {
             require(inserted != null, "Inserted account must be reloadable by ID");
             require("User".equals(inserted.getRoleName()), "Inserted account must have User role");
 
+            java.time.LocalDateTime previousLastLogin = inserted.getLastLoginAt();
             accountDAO.updateLastLogin(accountID);
             Account updated = accountDAO.findById(accountID);
             require(updated.getLastLoginAt() != null, "Last login timestamp must be updated");
+            require(previousLastLogin == null
+                    || updated.getLastLoginAt().isAfter(previousLastLogin),
+                    "Last login timestamp must advance after update");
         } finally {
-            if (accountID > 0) {
-                deleteContractAccount(accountID);
-            }
+            deleteContractAccount(accountID, email);
         }
 
         System.out.println("AccountDAOContractTest PASSED");
     }
 
-    private static void deleteContractAccount(int accountID) throws Exception {
-        String sql = "DELETE FROM Accounts WHERE AccountID = ? "
-                + "AND Email LIKE 'phase2-%@sportzone.local'";
+    private static void deleteContractAccount(int accountID, String email) throws Exception {
+        String sql = accountID > 0
+                ? "DELETE FROM Accounts WHERE AccountID = ? AND Email = ?"
+                : "DELETE FROM Accounts WHERE Email = ?";
         try (Connection connection = DBUtils.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, accountID);
+            if (accountID > 0) {
+                statement.setInt(1, accountID);
+                statement.setString(2, email);
+            } else {
+                statement.setString(1, email);
+            }
             statement.executeUpdate();
         }
     }

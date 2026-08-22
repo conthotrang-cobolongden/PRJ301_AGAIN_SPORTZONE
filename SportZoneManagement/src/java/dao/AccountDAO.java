@@ -66,24 +66,52 @@ public class AccountDAO {
         String sql = "INSERT INTO Accounts "
                 + "(RoleID, Email, Phone, PasswordHash, FullName, Status) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection connection = DBUtils.getConnection();
-                PreparedStatement statement = connection.prepareStatement(
+        try (Connection connection = DBUtils.getConnection()) {
+            boolean originalAutoCommit = connection.getAutoCommit();
+            SQLException failure = null;
+            try {
+                connection.setAutoCommit(false);
+                int accountID;
+                try (PreparedStatement statement = connection.prepareStatement(
                         sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setInt(1, account.getRoleID());
-            statement.setString(2, account.getEmail());
-            statement.setString(3, account.getPhone());
-            statement.setString(4, account.getPasswordHash());
-            statement.setString(5, account.getFullName());
-            statement.setString(6, account.getStatus());
-            statement.executeUpdate();
+                    statement.setInt(1, account.getRoleID());
+                    statement.setString(2, account.getEmail());
+                    statement.setString(3, account.getPhone());
+                    statement.setString(4, account.getPasswordHash());
+                    statement.setString(5, account.getFullName());
+                    statement.setString(6, account.getStatus());
+                    statement.executeUpdate();
 
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);
+                    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                        if (!generatedKeys.next()) {
+                            throw new SQLException(
+                                    "Inserting account failed: no generated key returned");
+                        }
+                        accountID = generatedKeys.getInt(1);
+                    }
+                }
+                connection.commit();
+                return accountID;
+            } catch (SQLException exception) {
+                failure = exception;
+                try {
+                    connection.rollback();
+                } catch (SQLException rollbackException) {
+                    exception.addSuppressed(rollbackException);
+                }
+                throw exception;
+            } finally {
+                try {
+                    connection.setAutoCommit(originalAutoCommit);
+                } catch (SQLException restoreException) {
+                    if (failure != null) {
+                        failure.addSuppressed(restoreException);
+                    } else {
+                        throw restoreException;
+                    }
                 }
             }
         }
-        throw new SQLException("Inserting account failed: no generated key returned");
     }
 
     public void updateLastLogin(int accountID) throws SQLException {
