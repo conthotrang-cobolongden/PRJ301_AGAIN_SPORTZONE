@@ -11,8 +11,8 @@
                 <p class="sz-kicker">SportZone</p>
                 <h2>Đăng nhập</h2>
 
-                <c:if test="${not empty error}">
-                    <div class="alert alert-danger"><c:out value="${error}"/></div>
+                <c:if test="${not empty errorMessage}">
+                    <div class="alert alert-danger"><c:out value="${errorMessage}"/></div>
                 </c:if>
 
                 <form method="post" action="${ctx}/login" novalidate>
