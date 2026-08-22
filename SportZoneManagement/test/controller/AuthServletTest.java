@@ -1,5 +1,6 @@
 package controller;
 
+import dao.AccountDAO;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.sql.SQLException;
@@ -30,6 +31,12 @@ public final class AuthServletTest {
         testLoginFailureUsesGenericMessageAndKeepsEmailOnly();
         testLoginSuccessStoresSafeSessionAndConsumesSavedTarget();
         testLoginSuccessDefaultsToHomeForAdminAndUser();
+        testRegisterGetCreatesCsrfAndForwards();
+        testRegisterPostRejectsInvalidCsrfWithoutCallingService();
+        testRegisterValidationPreservesOnlyNameEmailPhone();
+        testRegisterUniqueViolationBecomesFriendlyFieldError();
+        testRegisterSuccessLogsInAndRedirectsHome();
+        testLogoutInvalidatesWholeSessionAndRedirectsHome();
         System.out.println("AuthServletTest PASSED");
     }
 
@@ -157,10 +164,177 @@ public final class AuthServletTest {
         }
     }
 
+    private static void testRegisterGetCreatesCsrfAndForwards() throws Exception {
+        Fixture fixture = new Fixture("/SportZone");
+
+        new TestRegisterServlet(new FakeAuthService()).get(
+                fixture.request, fixture.response);
+
+        Object csrfToken = fixture.sessionData.get(AppConstants.SESSION_CSRF_TOKEN);
+        require(csrfToken instanceof String && !((String) csrfToken).isEmpty(),
+                "GET /register must create a CSRF token");
+        require(Views.REGISTER.equals(fixture.forwardedPath),
+                "GET /register must forward to Views.REGISTER");
+        require(fixture.redirectLocation == null,
+                "Logged-out GET /register must not redirect");
+
+        Fixture loggedIn = new Fixture("/SportZone");
+        loggedIn.sessionData.put(AppConstants.SESSION_ACCOUNT,
+                account(AppConstants.ROLE_USER, AppConstants.ACCOUNT_ACTIVE));
+
+        new TestRegisterServlet(new FakeAuthService()).get(
+                loggedIn.request, loggedIn.response);
+
+        require("/SportZone/home".equals(loggedIn.redirectLocation),
+                "Logged-in GET /register must redirect to context /home");
+        require(loggedIn.forwardedPath == null,
+                "Logged-in GET /register must not forward to the register view");
+    }
+
+    private static void testRegisterPostRejectsInvalidCsrfWithoutCallingService()
+            throws Exception {
+        Fixture fixture = new Fixture("/SportZone");
+        fixture.sessionData.put(AppConstants.SESSION_CSRF_TOKEN, "expected-token");
+        fixture.parameters.put(CsrfUtil.PARAMETER_NAME, "wrong-token");
+        fixture.parameters.put("fullName", "Member");
+        fixture.parameters.put("email", "member@sportzone.local");
+        fixture.parameters.put("phone", "0901234567");
+        fixture.parameters.put("password", "Strong@123");
+        fixture.parameters.put("confirmPassword", "Strong@123");
+        FakeAuthService authService = new FakeAuthService();
+
+        new TestRegisterServlet(authService).post(fixture.request, fixture.response);
+
+        require(fixture.errorStatus == HttpServletResponse.SC_FORBIDDEN,
+                "Invalid register CSRF must return HTTP 403");
+        require(authService.registerCalls == 0,
+                "Invalid register CSRF must not call AuthService.register");
+        require(authService.registerDao.calls == 0,
+                "Invalid register CSRF must not call the DAO");
+        require(!fixture.requestedParameters.contains("fullName")
+                        && !fixture.requestedParameters.contains("email")
+                        && !fixture.requestedParameters.contains("phone")
+                        && !fixture.requestedParameters.contains("password")
+                        && !fixture.requestedParameters.contains("confirmPassword"),
+                "Invalid register CSRF must return before reading form fields");
+    }
+
+    private static void testRegisterValidationPreservesOnlyNameEmailPhone()
+            throws Exception {
+        Fixture fixture = validPostFixture("/SportZone");
+        fixture.parameters.put("fullName", "  ");
+        fixture.parameters.put("email", "not-an-email");
+        fixture.parameters.put("phone", "0123");
+        fixture.parameters.put("password", "short-secret");
+        fixture.parameters.put("confirmPassword", "different-secret");
+        FakeRegistrationDAO dao = new FakeRegistrationDAO();
+
+        new TestRegisterServlet(new AuthService(dao)).post(
+                fixture.request, fixture.response);
+
+        require(Views.REGISTER.equals(fixture.forwardedPath),
+                "Invalid registration must forward back to Views.REGISTER");
+        Object errors = fixture.requestAttributes.get(
+                AppConstants.ATTRIBUTE_FIELD_ERRORS);
+        require(errors instanceof Map && !((Map<?, ?>) errors).isEmpty(),
+                "Invalid registration must expose field errors");
+        require("  ".equals(fixture.requestAttributes.get("fullName")),
+                "Invalid registration must preserve fullName");
+        require("not-an-email".equals(fixture.requestAttributes.get("email")),
+                "Invalid registration must preserve email");
+        require("0123".equals(fixture.requestAttributes.get("phone")),
+                "Invalid registration must preserve phone");
+        require(!fixture.requestAttributes.containsKey("password")
+                        && !fixture.requestAttributes.containsKey("confirmPassword"),
+                "Registration errors must never retain either password field");
+        require(dao.calls == 0,
+                "Syntactically invalid registration must not call the DAO");
+        require(fixture.sessionData.get(AppConstants.SESSION_CSRF_TOKEN) instanceof String,
+                "Invalid registration must leave a CSRF token available for retry");
+    }
+
+    private static void testRegisterUniqueViolationBecomesFriendlyFieldError()
+            throws Exception {
+        Fixture fixture = validRegisterFixture("/SportZone");
+        FakeRegistrationDAO dao = new FakeRegistrationDAO();
+        dao.insertFailure = new SQLException("duplicate", "23000");
+
+        new TestRegisterServlet(new AuthService(dao)).post(
+                fixture.request, fixture.response);
+
+        Object rawErrors = fixture.requestAttributes.get(
+                AppConstants.ATTRIBUTE_FIELD_ERRORS);
+        require(rawErrors instanceof Map,
+                "Duplicate insert must render field errors");
+        Map<?, ?> errors = (Map<?, ?>) rawErrors;
+        require("Email hoặc số điện thoại đã được sử dụng".equals(errors.get("email")),
+                "SQLState 23000 must become the friendly duplicate field error");
+        require(errors.size() == 1 && new ArrayList<>(errors.keySet()).get(0).equals("email"),
+                "Duplicate insert error must be an ordered email field error");
+        require(Views.REGISTER.equals(fixture.forwardedPath),
+                "Duplicate insert must return to Views.REGISTER");
+        require(!fixture.requestAttributes.containsKey("password")
+                        && !fixture.requestAttributes.containsKey("confirmPassword"),
+                "Duplicate errors must never retain either password field");
+        require(dao.insertCalls == 1,
+                "Duplicate race must be raised by the insert path");
+    }
+
+    private static void testRegisterSuccessLogsInAndRedirectsHome()
+            throws Exception {
+        Fixture fixture = validRegisterFixture("/SportZone");
+        FakeRegistrationDAO dao = new FakeRegistrationDAO();
+        Account created = account(AppConstants.ROLE_USER, AppConstants.ACCOUNT_ACTIVE);
+        created.setPasswordHash("must-not-enter-session");
+        dao.idResult = created;
+
+        new TestRegisterServlet(new AuthService(dao)).post(
+                fixture.request, fixture.response);
+
+        require(fixture.sessionData.get(AppConstants.SESSION_ACCOUNT) == created,
+                "Successful registration must log in the created account");
+        require(created.getPasswordHash() == null,
+                "Successful registration must clear the session account password hash");
+        require(AppConstants.ROLE_USER.equals(
+                fixture.sessionData.get(AppConstants.SESSION_ROLE_NAME)),
+                "Successful registration must use SessionUtil role state");
+        require(Boolean.FALSE.equals(fixture.sessionData.get(AppConstants.SESSION_FROZEN)),
+                "Successful registration must use SessionUtil frozen state");
+        require("/SportZone/home".equals(fixture.redirectLocation),
+                "Successful registration must redirect to context /home");
+    }
+
+    private static void testLogoutInvalidatesWholeSessionAndRedirectsHome()
+            throws Exception {
+        Fixture fixture = new Fixture("/SportZone");
+        fixture.sessionData.put(AppConstants.SESSION_ACCOUNT,
+                account(AppConstants.ROLE_USER, AppConstants.ACCOUNT_ACTIVE));
+        fixture.sessionData.put("unrelatedSessionState", "must-also-be-removed");
+
+        new TestLogoutServlet().get(fixture.request, fixture.response);
+
+        require(fixture.sessionInvalidated,
+                "Logout must invalidate the entire existing session");
+        require(fixture.sessionData.isEmpty(),
+                "Session invalidation must remove all session state");
+        require("/SportZone/home".equals(fixture.redirectLocation),
+                "Logout must redirect to context /home");
+    }
+
     private static Fixture validPostFixture(String contextPath) {
         Fixture fixture = new Fixture(contextPath);
         fixture.sessionData.put(AppConstants.SESSION_CSRF_TOKEN, "valid-token");
         fixture.parameters.put(CsrfUtil.PARAMETER_NAME, "valid-token");
+        return fixture;
+    }
+
+    private static Fixture validRegisterFixture(String contextPath) {
+        Fixture fixture = validPostFixture(contextPath);
+        fixture.parameters.put("fullName", "New Member");
+        fixture.parameters.put("email", "new.member@sportzone.local");
+        fixture.parameters.put("phone", "0901234567");
+        fixture.parameters.put("password", "Strong@123");
+        fixture.parameters.put("confirmPassword", "Strong@123");
         return fixture;
     }
 
@@ -205,11 +379,45 @@ public final class AuthServletTest {
         }
     }
 
+    private static final class TestRegisterServlet extends RegisterServlet {
+        TestRegisterServlet(AuthService authService) {
+            super(authService);
+        }
+
+        void get(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+            super.doGet(request, response);
+        }
+
+        void post(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+            super.doPost(request, response);
+        }
+    }
+
+    private static final class TestLogoutServlet extends LogoutServlet {
+        void get(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+            super.doGet(request, response);
+        }
+    }
+
     private static final class FakeAuthService extends AuthService {
+        private final FakeRegistrationDAO registerDao;
         private Account result;
         private int calls;
+        private int registerCalls;
         private String email;
         private String password;
+
+        FakeAuthService() {
+            this(new FakeRegistrationDAO());
+        }
+
+        private FakeAuthService(FakeRegistrationDAO registerDao) {
+            super(registerDao);
+            this.registerDao = registerDao;
+        }
 
         @Override
         public Account login(String email, String password) throws SQLException {
@@ -217,6 +425,48 @@ public final class AuthServletTest {
             this.email = email;
             this.password = password;
             return result;
+        }
+
+        @Override
+        public RegisterResult register(String fullName, String email, String phone,
+                String password, String confirmPassword) throws SQLException {
+            registerCalls++;
+            return null;
+        }
+    }
+
+    private static final class FakeRegistrationDAO extends AccountDAO {
+        private int calls;
+        private int insertCalls;
+        private Account idResult;
+        private SQLException insertFailure;
+
+        @Override
+        public boolean existsByEmail(String email) {
+            calls++;
+            return false;
+        }
+
+        @Override
+        public boolean existsByPhone(String phone) {
+            calls++;
+            return false;
+        }
+
+        @Override
+        public int insert(Account account) throws SQLException {
+            calls++;
+            insertCalls++;
+            if (insertFailure != null) {
+                throw insertFailure;
+            }
+            return 101;
+        }
+
+        @Override
+        public Account findById(int accountID) {
+            calls++;
+            return idResult;
         }
     }
 
@@ -231,6 +481,7 @@ public final class AuthServletTest {
         private String forwardedPath;
         private String redirectLocation;
         private int errorStatus = -1;
+        private boolean sessionInvalidated;
 
         Fixture(String contextPath) {
             session = (HttpSession) Proxy.newProxyInstance(
@@ -244,6 +495,10 @@ public final class AuthServletTest {
                                 return null;
                             case "removeAttribute":
                                 sessionData.remove((String) args[0]);
+                                return null;
+                            case "invalidate":
+                                sessionInvalidated = true;
+                                sessionData.clear();
                                 return null;
                             default:
                                 return defaultValue(method.getReturnType());
