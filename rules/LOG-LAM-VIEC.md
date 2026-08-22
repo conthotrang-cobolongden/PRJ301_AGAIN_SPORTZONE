@@ -5,6 +5,41 @@
 
 ---
 
+## [2026-08-22 23:23] — CODEX — Hoàn tất Phase 2 Auth & phân quyền
+
+**Task:** Triển khai A1, A2, U1, U2, U3 trên branch `codex/phase-2-auth` theo kế hoạch TDD.
+**Trạng thái:** Xong — compile, 12 contract tests, WAR deploy và 11/11 smoke scenarios đều pass.
+
+### Đã làm
+- [x] Thêm đăng nhập, đăng ký, đăng xuất; CSRF cho POST và session không lưu password hash.
+- [x] Thêm `AuthFilter`, `RoleFilter`, saved GET target và Admin authorization 403.
+- [x] Thêm Account DAO/AuthService, mapping servlet/filter và chuẩn hóa lỗi login JSP.
+- [x] Verify JDK 8: `ant clean compile-test` thành công; 12/12 test pass (`DBUtils`, `AccountDAO`, foundation/web/health, auth web, model, encoding/auth/role filter, service, controller).
+- [x] `ant dist` và deploy Tomcat 9 thành công; WAR `2,058,025` byte.
+- [x] User xác nhận 11/11 smoke scenarios pass: 4 seed login, Frozen banner, generic login error, CSRF 403, đăng ký/duplicate, saved redirect, Admin 403 và logout.
+
+### File đã tạo / sửa
+- `SportZoneManagement/src/java/dao/AccountDAO.java`
+- `SportZoneManagement/src/java/service/AuthService.java`
+- `SportZoneManagement/src/java/controller/LoginServlet.java`
+- `SportZoneManagement/src/java/controller/RegisterServlet.java`
+- `SportZoneManagement/src/java/controller/LogoutServlet.java`
+- `SportZoneManagement/src/java/filter/AuthFilter.java`
+- `SportZoneManagement/src/java/filter/RoleFilter.java`
+- `SportZoneManagement/test/dao/AccountDAOContractTest.java`
+- `SportZoneManagement/test/service/AuthServiceTest.java`
+- `SportZoneManagement/test/controller/AuthServletTest.java`
+- `SportZoneManagement/test/filter/AuthFilterTest.java`
+- `SportZoneManagement/test/filter/RoleFilterTest.java`
+- `SportZoneManagement/test/utils/AuthWebContractTest.java`
+- `SportZoneManagement/web/WEB-INF/web.xml`
+- `SportZoneManagement/web/WEB-INF/views/auth/login.jsp`
+
+### Chưa làm / tồn đọng
+- Không còn lỗi Phase 2 đã biết; Phase 3/4 là hạng mục tiếp theo.
+
+---
+
 ## [2026-08-18] — CODEX — Rút gọn package và cấu hình DB theo yêu cầu
 
 **Task:** Bỏ `com.sportzone`, dùng package ngắn và chuyển cấu hình kết nối vào thẳng `DBUtils.java`.
