@@ -98,6 +98,10 @@ public class AuthService {
 
         int accountID = accountDAO.insert(account);
         Account insertedAccount = accountDAO.findById(accountID);
+        if (insertedAccount == null) {
+            throw new SQLException(
+                    "Inserted account could not be reloaded: accountID=" + accountID);
+        }
         return new RegisterResult(errors, insertedAccount);
     }
 

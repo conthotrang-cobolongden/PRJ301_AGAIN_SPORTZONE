@@ -21,6 +21,7 @@ public final class AuthServiceTest {
         testRegisterNormalizesAndCreatesActiveUser();
         testRegisterRejectsEveryInvalidFieldWithoutInsert();
         testRegisterReportsDuplicateEmailAndPhone();
+        testRegisterFailsWhenInsertedAccountCannotBeReloaded();
         System.out.println("AuthServiceTest PASSED");
     }
 
@@ -188,6 +189,28 @@ public final class AuthServiceTest {
                 && "0901234567".equals(dao.phoneExistenceLookups.get(0)),
                 "Duplicate phone lookup must use normalized phone");
         require(dao.insertedAccounts.isEmpty(), "Duplicate registration must not insert");
+    }
+
+    private static void testRegisterFailsWhenInsertedAccountCannotBeReloaded() throws Exception {
+        FakeAccountDAO dao = new FakeAccountDAO();
+        dao.generatedID = 91;
+        dao.idResult = null;
+
+        boolean reloadFailureReported = false;
+        try {
+            new AuthService(dao).register("Reload User", "reload@sportzone.local",
+                    "0901234567", "Strong@123", "Strong@123");
+        } catch (SQLException exception) {
+            reloadFailureReported = exception.getMessage() != null
+                    && exception.getMessage().contains("91");
+        }
+
+        require(reloadFailureReported,
+                "Missing inserted account reload must throw SQLException naming generated ID");
+        require(dao.insertedAccounts.size() == 1,
+                "Reload invariant must be checked after the account is inserted");
+        require(dao.idLookups.size() == 1 && dao.idLookups.get(0) == 91,
+                "Reload invariant must query the generated account ID exactly once");
     }
 
     private static Account account(int id, String email, String phone,
