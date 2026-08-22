@@ -67,10 +67,8 @@ public class AccountDAO {
                 + "(RoleID, Email, Phone, PasswordHash, FullName, Status) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DBUtils.getConnection()) {
-            boolean originalAutoCommit = connection.getAutoCommit();
-            SQLException failure = null;
+            connection.setAutoCommit(false);
             try {
-                connection.setAutoCommit(false);
                 int accountID;
                 try (PreparedStatement statement = connection.prepareStatement(
                         sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -92,24 +90,13 @@ public class AccountDAO {
                 }
                 connection.commit();
                 return accountID;
-            } catch (SQLException exception) {
-                failure = exception;
+            } catch (SQLException | RuntimeException | Error exception) {
                 try {
                     connection.rollback();
                 } catch (SQLException rollbackException) {
                     exception.addSuppressed(rollbackException);
                 }
                 throw exception;
-            } finally {
-                try {
-                    connection.setAutoCommit(originalAutoCommit);
-                } catch (SQLException restoreException) {
-                    if (failure != null) {
-                        failure.addSuppressed(restoreException);
-                    } else {
-                        throw restoreException;
-                    }
-                }
             }
         }
     }

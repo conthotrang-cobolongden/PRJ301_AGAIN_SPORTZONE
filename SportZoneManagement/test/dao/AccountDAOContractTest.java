@@ -55,24 +55,20 @@ public final class AccountDAOContractTest {
                     || updated.getLastLoginAt().isAfter(previousLastLogin),
                     "Last login timestamp must advance after update");
         } finally {
-            deleteContractAccount(accountID, email);
+            if (accountID > 0) {
+                deleteContractAccount(accountID, email);
+            }
         }
 
         System.out.println("AccountDAOContractTest PASSED");
     }
 
     private static void deleteContractAccount(int accountID, String email) throws Exception {
-        String sql = accountID > 0
-                ? "DELETE FROM Accounts WHERE AccountID = ? AND Email = ?"
-                : "DELETE FROM Accounts WHERE Email = ?";
+        String sql = "DELETE FROM Accounts WHERE AccountID = ? AND Email = ?";
         try (Connection connection = DBUtils.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
-            if (accountID > 0) {
-                statement.setInt(1, accountID);
-                statement.setString(2, email);
-            } else {
-                statement.setString(1, email);
-            }
+            statement.setInt(1, accountID);
+            statement.setString(2, email);
             statement.executeUpdate();
         }
     }
