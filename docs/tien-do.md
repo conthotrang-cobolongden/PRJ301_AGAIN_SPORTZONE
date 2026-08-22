@@ -15,12 +15,22 @@
 | Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
 | Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
 | Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
-| Java web (Servlet / JSP / Filter) | **P1 đã dựng lại và verify (18/08)** | Branch `feature/foundation`: WAR build sạch, Tomcat smoke `/`, `/home`, `/health`, CSS đều pass |
-| Phase 2 — Auth & phân quyền | **Tiếp theo** | Dựng lại trên `feature/auth` sau khi P1 được review/merge |
-| Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **JSP/design còn, backend phải dựng lại** | Entry 17/08 bên dưới là lịch sử trước khi mất code |
+| Java web (Servlet / JSP / Filter) | **P1+P2 đã dựng lại và verify** | Branch `codex/phase-2-auth`: clean WAR, 12/12 contract và Tomcat smoke đều pass |
+| Phase 2 — Auth & phân quyền | **Xong — verify 2026-08-22 23:23** | A1, A2, U1, U2, U3; login/register/logout, CSRF, AuthFilter và RoleFilter |
+| Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **Tiếp theo** | JSP/design còn; dựng lại backend trên nền P1+P2 đã verify |
 | Phase 5–9 | Chưa bắt đầu trong working copy mới | Làm tuần tự sau khi P1–P4 được dựng lại và verify |
 
 **Nguồn trạng thái hiện hành:** `rules/new-plan-0954.md`. Các entry ngày 17/08 bên dưới được giữ nguyên làm lịch sử, không phản ánh code đang còn trong working copy mới.
+
+---
+
+## 2026-08-22 (23:23) — Hoàn tất dựng lại Phase 2 Auth & phân quyền
+
+- Branch `codex/phase-2-auth`; triển khai `AccountDAO`, `AuthService`, login/register/logout, `AuthFilter` và `RoleFilter`.
+- `ant clean compile-test` thành công; 12/12 contract/integration tests pass.
+- `ant dist` và deploy Tomcat 9 thành công; WAR `2,058,025` byte.
+- User xác nhận 11/11 smoke scenarios pass, gồm 4 seed account, Frozen, CSRF 403, đăng ký/duplicate, saved redirect, Admin 403 và logout.
+- Việc tiếp theo: dựng lại Phase 3/4 — xem sân, slot, hồ sơ và đổi mật khẩu.
 
 ---
 
