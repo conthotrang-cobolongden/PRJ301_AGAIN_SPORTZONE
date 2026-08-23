@@ -15,12 +15,26 @@
 | Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
 | Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
 | Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
-| Java web (Servlet / JSP / Filter) | **P1+P2 đã dựng lại và verify** | Branch `codex/phase-2-auth`: clean WAR, 12/12 contract và Tomcat smoke đều pass |
+| Java web (Servlet / JSP / Filter) | **P1–P3 đã dựng lại và verify** | Phase 3 trên branch `codex/phase-3-courts`: targeted tests, Clean and Build và Tomcat smoke đều pass |
 | Phase 2 — Auth & phân quyền | **Xong — verify 2026-08-22 23:23** | A1, A2, U1, U2, U3; login/register/logout, CSRF, AuthFilter và RoleFilter |
-| Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **Tiếp theo** | JSP/design còn; dựng lại backend trên nền P1+P2 đã verify |
+| Phase 3 — Xem sân & lịch | **Xong — verify 2026-08-23** | U7, U8, U9 và count sân U19; `/courts`, `/court`, lịch 7 ngày |
+| Phase 4 — Hồ sơ (U4–U6) | **Tiếp theo** | Dựng profile, cập nhật thông tin và đổi mật khẩu trên nền P1–P3 |
 | Phase 5–9 | Chưa bắt đầu trong working copy mới | Làm tuần tự sau khi P1–P4 được dựng lại và verify |
 
 **Nguồn trạng thái hiện hành:** `rules/new-plan-0954.md`. Các entry ngày 17/08 bên dưới được giữ nguyên làm lịch sử, không phản ánh code đang còn trong working copy mới.
+
+---
+
+## 2026-08-23 (13:22) — Hoàn tất Phase 3 Xem sân & lịch
+
+- Branch: `codex/phase-3-courts`.
+- Hoàn tất U7: danh sách 10 sân active, filter Tennis/Pickleball và hiển thị đúng trạng thái Maintenance/Unavailable.
+- Hoàn tất U8: chi tiết sân gồm loại, giá, vị trí, mô tả, ảnh/placeholder và chặn hành động đặt khi sân không Available.
+- Hoàn tất U9: lịch theo ngày trong cửa sổ 7 ngày, đủ trạng thái Available/Booked/Closed và đánh dấu slot đã qua.
+- Hoàn thiện phần U19: số sân Tennis/Pickleball trên `/home` lấy từ database thay vì hard-code.
+- Thêm contract/integration tests cho model, DAO, servlet, routing và JSP; giữ `/courts`, `/court` là public routes.
+- Người dùng xác nhận targeted tests, Clean and Build, deploy Tomcat 9 và smoke các route `/home`, `/courts`, `/court` đều pass.
+- Việc tiếp theo: Phase 4 hồ sơ cá nhân và đổi mật khẩu (U4–U6).
 
 ---
 

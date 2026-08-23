@@ -90,25 +90,25 @@
                                 <c:choose>
                                     <c:when test="${s.status == 'Available' && court.status == 'Available' && !s.past}">
                                         <a class="sz-slot is-available" href="${ctx}/booking/create?courtId=${court.courtId}&date=${selectedDate}&slotId=${s.timeSlotId}">
-                                            <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                            <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                             <span class="sz-slot-label"><fmt:formatNumber value="${court.pricePerHour}" type="number" groupingUsed="true"/> đ</span>
                                         </a>
                                     </c:when>
                                     <c:when test="${s.past}">
                                         <span class="sz-slot is-past">
-                                            <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                            <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                             <span class="sz-slot-label">Đã qua</span>
                                         </span>
                                     </c:when>
                                     <c:when test="${s.status == 'Booked'}">
                                         <span class="sz-slot is-booked">
-                                            <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                            <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                             <span class="sz-slot-label">Đã đặt</span>
                                         </span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="sz-slot is-closed">
-                                            <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                            <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                             <span class="sz-slot-label">Đóng</span>
                                         </span>
                                     </c:otherwise>

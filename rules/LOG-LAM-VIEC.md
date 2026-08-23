@@ -5,6 +5,52 @@
 
 ---
 
+## [2026-08-23 13:22] — CODEX — Hoàn tất Phase 3 Xem sân & lịch
+
+**Task:** Triển khai Phase 3 theo Code Guidance Mode: U7 xem/lọc danh sách sân, U8 xem chi tiết sân, U9 xem lịch slot theo ngày và phần số lượng sân của U19.
+**Trạng thái:** Xong — người dùng đã áp dụng code, xác nhận targeted tests, Clean and Build và Tomcat smoke đều pass.
+
+### Đã làm
+- [x] Tạo `CourtDAO` đọc sân active, JOIN `CourtTypes`, filter Tennis/Pickleball, xem được sân Maintenance và đếm sân cho `/home`.
+- [x] Tạo `TimeSlotDAO` đọc đủ `Available`, `Booked`, `Closed` theo sân + ngày và sắp xếp theo giờ bắt đầu.
+- [x] Tạo `CourtsServlet` cho public `GET /courts`; whitelist filter và bind đúng contract JSP.
+- [x] Tạo `CourtDetailServlet` cho public `GET /court`; validate ID, clamp ngày `[hôm nay, hôm nay + 6]`, sinh 7 `DateOption` và đánh dấu slot đã qua bằng `Clock`.
+- [x] Thay count hard-code trên `HomeServlet` bằng dữ liệu thật từ `CourtDAO`.
+- [x] Bổ sung JavaBeans alias `courtId`, `imageUrl`, `timeSlotId` để JSP EL đọc đúng.
+- [x] Sửa `court/detail.jsp` không truyền `LocalTime` vào `fmt:formatDate`; giữ nguyên layout/CSS.
+- [x] Thêm mapping `/courts`, `/court` trong `web.xml`; hai route giữ public, không thêm vào `AuthFilter`.
+- [x] Cấu hình project dùng JDK 8 và JDBC JAR trên compile/test runtime classpath.
+- [x] Thực hiện các vòng RED → GREEN cho model/view model, DAO, servlet, routing và JSP contract; người dùng xác nhận test và smoke runtime pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/dao/CourtDAO.java` | Mới | U7/U8/U19 — list, filter, detail và count sân active |
+| `SportZoneManagement/src/java/dao/TimeSlotDAO.java` | Mới | U9 — slot theo sân + ngày, đủ ba trạng thái |
+| `SportZoneManagement/src/java/controller/CourtsServlet.java` | Mới | Public `GET /courts` |
+| `SportZoneManagement/src/java/controller/CourtDetailServlet.java` | Mới | Public `GET /court`, date window và past-slot |
+| `SportZoneManagement/src/java/controller/HomeServlet.java` | Sửa | Count Tennis/Pickleball từ database |
+| `SportZoneManagement/src/java/model/Court.java` | Sửa | JavaBeans alias cho JSP EL |
+| `SportZoneManagement/src/java/model/TimeSlot.java` | Sửa | Alias `timeSlotId`, giữ view flag `past` |
+| `SportZoneManagement/src/java/model/DateOption.java` | Mới | View model cho dãy 7 ngày |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Khai báo/mapping hai servlet Phase 3 |
+| `SportZoneManagement/web/WEB-INF/views/court/detail.jsp` | Sửa | Render `LocalTime` an toàn bằng `c:out` |
+| `SportZoneManagement/nbproject/*` | Sửa | Explicit JDK 8 và JDBC compile/test classpath |
+| `SportZoneManagement/test/**` | Mới/Sửa | Contract/integration tests Phase 3 |
+
+### Chưa làm / tồn đọng
+- Phase 4 hồ sơ cá nhân và đổi mật khẩu (U4–U6) là hạng mục tiếp theo.
+- Link `/booking/create` là điểm nối cho Phase 5; Phase 3 chưa triển khai đặt sân.
+
+### Ghi chú cho model còn lại
+- `TimeSlotDAO` Phase 3 chỉ đọc lịch; chưa thêm CRUD admin hoặc transaction method của Phase 5/P7.
+- `selectedDateObj` là `java.sql.Date` cho JSTL; `slot.startTime` là `LocalTime` và JSP render bằng `c:out`.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+
 ## [2026-08-22 23:23] — CODEX — Hoàn tất Phase 2 Auth & phân quyền
 
 **Task:** Triển khai A1, A2, U1, U2, U3 trên branch `codex/phase-2-auth` theo kế hoạch TDD.
