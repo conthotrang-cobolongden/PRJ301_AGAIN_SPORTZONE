@@ -88,6 +88,20 @@ When the user asks to implement a feature:
 - The user is responsible for applying the provided code.
 - After the user applies the code, assist with review, debugging, or verification on request.
 
+## 2.2. UI Rebuild Safety — MANDATORY
+
+Before any redesign, restyle, responsive rebuild, component rewrite, or JSP/CSS/JavaScript presentation change:
+
+- Read `rules/UI-REBUILD-GUARDRAILS.md` completely.
+- Default to **Contract-Preserving UI Rebuild**.
+- Preserve URL, HTTP method, form action, input name, hidden field, CSRF, request/session attribute, EL property, JSTL business condition, status code, role visibility, JavaScript hook, and backend behavior.
+- Treat Java, SQL, `web.xml`, dependency, build, and environment files as locked for UI-only work.
+- Create a contract snapshot before changing JSP markup.
+- If the requested UI requires any contract change, stop and use the Contract Change Gate from `UI-REBUILD-GUARDRAILS.md` before editing.
+- Do not claim a UI rebuild is complete until static contract comparison and relevant runtime smoke checks have been performed or explicitly left for the user.
+
+The user's explicit approval for a coordinated UI + backend change may override this boundary only for the specific contract and scope approved.
+
 ## 3. Scope Boundary — MANDATORY
 
 The user-defined file/folder scope is a hard boundary.

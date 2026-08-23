@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Đặt sân trực tuyến & Quản lý lịch thi đấu thể thao Tennis & Pickleball." />
+  <title>SportZone — Đặt Sân &amp; Lịch Sử Booking</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro + Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================================
+       SPORTZONE BOOKING DESIGN SYSTEM (UI/UX PRO MAX)
+       ======================================================== */
+    :root{
+      --ink:#0b1911;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --gold:#caa54b;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#fffdfa;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --line-strong:rgba(11,25,17,.18);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --danger-border:#fecaca;
+      --warning:#d97706;
+      --warning-bg:#fffbeb;
+      --warning-border:#fde68a;
+      --success:#15803d;
+      --success-bg:#f0fdf4;
+      --success-border:#bbf7d0;
+      --info:#0284c7;
+      --info-bg:#f0f9ff;
+      --info-border:#bae6fd;
+      --shadow-sm:0 8px 24px rgba(11,25,17,.06);
+      --shadow:0 20px 50px rgba(11,25,17,.1);
+      --shadow-lg:0 30px 80px rgba(11,25,17,.16);
+      --radius-sm:12px;
+      --radius:20px;
+      --radius-lg:28px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 80% 15%, rgba(27,94,59,.07), transparent 40%),
+        radial-gradient(circle at 15% 75%, rgba(202,165,75,.07), transparent 35%),
+        linear-gradient(180deg, #fffdfa 0%, #f7f4ed 100%);
+      padding:100px 0 80px;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* NAVBAR */
+    .sz-nav{
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:900;
+      background:rgba(255,253,250,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--line);
+      height:76px;
+      display:flex;
+      align-items:center;
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+    .brand-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.02em;
+      font-family:"Montserrat",sans-serif;
+    }
+    .brand-logo svg{width:36px;height:36px}
+    .brand-logo .zone{color:var(--green)}
+
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-link{font-size:14px;font-weight:700;color:var(--muted);transition:.2s}
+    .nav-link:hover,.nav-link.active{color:var(--green)}
+
+    /* TOP DEMO SWITCHER */
+    .demo-view-switcher{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:32px;
+    }
+    .btn-view-tab{
+      border:1.5px solid var(--line);
+      background:rgba(255,255,255,.8);
+      padding:8px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-view-tab.active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+      box-shadow:0 4px 14px rgba(11,25,17,.2);
+    }
+
+    /* BADGE PILLS */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .sz-badge-pending{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-confirmed{background:var(--info-bg);color:var(--info);border:1px solid var(--info-border)}
+    .sz-badge-completed{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-cancelled{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+    .sz-badge-paid{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-unpaid{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-none{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+
+    /* BACKEND OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-10px;
+      left:10px;
+      background:#d97706;
+      color:#fff;
+      font-size:9.5px;
+      font-weight:800;
+      padding:2px 7px;
+      border-radius:5px;
+      z-index:30;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:2px;
+      position:relative;
+    }
+
+    /* CARDS & FORMS */
+    .sz-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:28px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:24px;
+    }
+    .step-num{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      background:var(--green);
+      color:#fff;
+      font-size:12.5px;
+      font-weight:800;
+      margin-right:8px;
+    }
+
+    /* TIME SLOT RADIO MATRIX */
+    .slot-grid-radio{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+    .slot-radio-label{
+      border:1.5px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:14px 8px;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s;
+      display:flex;
+      flex-direction:column;
+    }
+    .slot-radio-label input{display:none}
+    .slot-radio-label:hover{border-color:var(--green)}
+    .slot-radio-label.is-selected{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+      box-shadow:0 4px 14px rgba(27,94,59,.25);
+    }
+    .slot-radio-label.is-booked{
+      background:#fef2f2;
+      border-color:#fecaca;
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    /* SERVICE ROWS */
+    .service-item-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 14px;
+      border-radius:12px;
+      background:var(--cream);
+      border:1px solid var(--line);
+      margin-bottom:10px;
+    }
+    .service-item-row input[type="number"]{
+      width:60px;
+      padding:4px 8px;
+      border-radius:6px;
+      border:1px solid var(--line);
+      text-align:center;
+      font-weight:700;
+    }
+
+    /* SUMMARY STICKY BOX */
+    .summary-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1.5px solid var(--green);
+      padding:28px;
+      box-shadow:var(--shadow);
+      position:sticky;
+      top:100px;
+    }
+    .sum-row{
+      display:flex;
+      justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid rgba(11,25,17,.06);
+      font-size:13.5px;
+    }
+    .sum-row.total{
+      border-top:2px solid var(--ink);
+      border-bottom:0;
+      padding-top:16px;
+      font-size:18px;
+      font-weight:900;
+      color:var(--green);
+    }
+
+    /* DATA TABLES */
+    .table-responsive{width:100%;overflow-x:auto}
+    .sz-table{
+      width:100%;
+      border-collapse:collapse;
+      text-align:left;
+    }
+    .sz-table th{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding:12px 14px;
+      background:var(--cream);
+      border-bottom:1px solid var(--line);
+    }
+    .sz-table td{
+      padding:14px;
+      font-size:13.5px;
+      font-weight:600;
+      border-bottom:1px solid rgba(11,25,17,.05);
+      vertical-align:middle;
+    }
+    .sz-table tr:hover td{background:#fafcfb}
+
+    /* ACTION BUTTONS */
+    .btn-action{
+      padding:8px 16px;
+      border-radius:8px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12.5px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-action-green{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+    }
+    .btn-action-green:hover{background:#13472d}
+
+    .btn-action-danger{
+      background:var(--danger-bg);
+      color:var(--danger);
+      border-color:var(--danger-border);
+    }
+
+    /* FLOATING INSPECTOR */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:24px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    .view-section{display:none;animation:fadeIn .25s ease}
+    .view-section.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="sz-nav">
+    <div class="container nav-inner">
+      <a class="brand-logo" href="../home/sportzone-home-demo.html">
+        <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="14" fill="#1b5e3b"/>
+          <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/>
+          <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="3.5" fill="#caa54b"/>
+        </svg>
+        <span>Sport<span class="zone">Zone</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a class="nav-link" href="../home/sportzone-home-demo.html">Trang Chủ</a>
+        <a class="nav-link" href="../court/sportzone-court-demo.html">Danh Sách Sân</a>
+        <a class="nav-link active" href="sportzone-booking-demo.html">Đặt Sân</a>
+        <a class="nav-link" href="../account/sportzone-account-demo.html">Tài Khoản</a>
+        <a class="nav-link" href="../admin/sportzone-admin-demo.html" style="color:var(--gold); font-weight:800">Admin Suite</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- View Switcher Tabs -->
+  <div class="container">
+    <div class="demo-view-switcher">
+      <button class="btn-view-tab active" id="tabCreate" onclick="switchBookingTab('create')">B1: Form Đặt Sân (Create.jsp)</button>
+      <button class="btn-view-tab" id="tabList" onclick="switchBookingTab('list')">B2: Booking Của Tôi (List.jsp)</button>
+      <button class="btn-view-tab" id="tabDetail" onclick="switchBookingTab('detail')">B3: Chi Tiết Booking (Detail.jsp)</button>
+    </div>
+  </div>
+
+  <!-- Floating Inspector Toggle for Backend Verification -->
+  <div class="inspector-bar" id="inspectorBar">
+    <div class="toggle-switch" id="toggleInspector" title="Bật/Tắt hiển thị dữ liệu Backend đổ vào"></div>
+    <span>Xem biến JSP (${...})</span>
+  </div>
+
+  <main class="container">
+    
+    <!-- ==============================================
+         VIEW 1: FORM ĐẶT SÂN (CREATE.JSP - U10)
+         ============================================== -->
+    <section class="view-section active" id="viewCreate">
+      <div style="text-align:center; max-width:680px; margin:0 auto 36px;">
+        <span class="sz-badge sz-badge-completed" style="margin-bottom:8px">ĐẶT SÂN ONLINE TRỰC TUYẾN</span>
+        <h1>Đặt Lịch Sân Thi Đấu</h1>
+        <p style="color:var(--muted)">Chọn sân, khung giờ và dịch vụ đi kèm. Thanh toán dễ dàng qua chuyển khoản QR hoặc tại quầy lễ tân.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:32px;">
+        <!-- Left: Booking Form -->
+        <div>
+          <!-- Step 1 & 2: Court & Date -->
+          <div class="sz-card backend-bound">
+            <span class="backend-tag">Step 1 &amp; 2: courtId &amp; date</span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <label style="font-size:13px; font-weight:800; display:block; margin-bottom:6px">
+                  <span class="step-num">1</span> Chọn sân đấu
+                </label>
+                <select id="courtSelect" style="width:100%; padding:10px 14px; border-radius:10px; border:1.5px solid var(--line); font-weight:700" onchange="calculateTotal()">
+                  <option value="320000" selected>Sân Tennis A1 (320.000 đ/h)</option>
+                  <option value="280000">Sân Tennis A2 (280.000 đ/h)</option>
+                  <option value="180000">Sân Pickleball P1 (180.000 đ/h)</option>
+                  <option value="160000">Sân Pickleball P2 (160.000 đ/h)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size:13px; font-weight:800; display:block; margin-bottom:6px">
+                  <span class="step-num">2</span> Chọn ngày chơi
+                </label>
+                <input type="date" value="2026-08-18" style="width:100%; padding:9px 14px; border-radius:10px; border:1.5px solid var(--line); font-weight:700" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: TimeSlot Radio Selection -->
+          <div class="sz-card backend-bound">
+            <span class="backend-tag">Step 3: slotId in slotList</span>
+            <div style="font-size:14px; font-weight:800; margin-bottom:12px">
+              <span class="step-num">3</span> Chọn khung giờ trống (8 Khung giờ)
+            </div>
+
+            <div class="slot-grid-radio">
+              <div class="slot-radio-label is-booked">
+                <span style="font-size:13px; font-weight:800">06:00 – 07:00</span>
+                <span style="font-size:11px">Đã đặt</span>
+              </div>
+              <div class="slot-radio-label is-booked">
+                <span style="font-size:13px; font-weight:800">07:00 – 08:00</span>
+                <span style="font-size:11px">Đã đặt</span>
+              </div>
+              <div class="slot-radio-label" onclick="selectRadioSlot(this, '08:00 – 09:00')">
+                <span style="font-size:13px; font-weight:800">08:00 – 09:00</span>
+                <span style="font-size:11px; color:var(--green)">Trống</span>
+              </div>
+              <div class="slot-radio-label is-selected" onclick="selectRadioSlot(this, '16:00 – 17:00')">
+                <span style="font-size:13px; font-weight:800">16:00 – 17:00</span>
+                <span style="font-size:11px">Đang chọn</span>
+              </div>
+              <div class="slot-radio-label is-booked">
+                <span style="font-size:13px; font-weight:800">17:00 – 18:00</span>
+                <span style="font-size:11px">Đã đặt</span>
+              </div>
+              <div class="slot-radio-label is-booked">
+                <span style="font-size:13px; font-weight:800">18:00 – 19:00</span>
+                <span style="font-size:11px">Đã đặt</span>
+              </div>
+              <div class="slot-radio-label" onclick="selectRadioSlot(this, '19:00 – 20:00')">
+                <span style="font-size:13px; font-weight:800">19:00 – 20:00</span>
+                <span style="font-size:11px; color:var(--green)">Trống</span>
+              </div>
+              <div class="slot-radio-label" onclick="selectRadioSlot(this, '20:00 – 21:00')">
+                <span style="font-size:13px; font-weight:800">20:00 – 21:00</span>
+                <span style="font-size:11px; color:var(--green)">Trống</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Add-on Services -->
+          <div class="sz-card backend-bound">
+            <span class="backend-tag">Step 4: serviceList with Qty</span>
+            <div style="font-size:14px; font-weight:800; margin-bottom:12px">
+              <span class="step-num">4</span> Dịch vụ bổ sung (Tùy chọn)
+            </div>
+
+            <div class="service-item-row">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13.5px; font-weight:700">
+                <input type="checkbox" id="svcRacket" checked onchange="toggleSvc('qtyRacket', this)" />
+                <span>Thuê Vợt Tennis Cao Cấp (Wilson / Head)</span>
+              </label>
+              <div style="display:flex; align-items:center; gap:12px">
+                <span style="font-size:13px; font-weight:800">50.000 đ</span>
+                <input type="number" id="qtyRacket" value="2" min="1" max="6" onchange="calculateTotal()" />
+              </div>
+            </div>
+
+            <div class="service-item-row">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13.5px; font-weight:700">
+                <input type="checkbox" id="svcBall" onchange="toggleSvc('qtyBall', this)" />
+                <span>Hộp Bóng Tennis US Open (4 quả mới)</span>
+              </label>
+              <div style="display:flex; align-items:center; gap:12px">
+                <span style="font-size:13px; font-weight:800">120.000 đ</span>
+                <input type="number" id="qtyBall" value="1" min="1" max="10" disabled onchange="calculateTotal()" />
+              </div>
+            </div>
+
+            <div class="service-item-row">
+              <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:13.5px; font-weight:700">
+                <input type="checkbox" id="svcWater" checked onchange="toggleSvc('qtyWater', this)" />
+                <span>Nước Khoáng Bổ Sung Điện Giải Pocari</span>
+              </label>
+              <div style="display:flex; align-items:center; gap:12px">
+                <span style="font-size:13px; font-weight:800">20.000 đ</span>
+                <input type="number" id="qtyWater" value="2" min="1" max="20" onchange="calculateTotal()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Sticky Order Summary -->
+        <div>
+          <div class="summary-card backend-bound">
+            <span class="backend-tag">U10 Order Preview</span>
+            <h2 style="font-size:18px; margin-bottom:16px">Tóm Tắt Đặt Sân</h2>
+
+            <div class="sum-row"><span style="color:var(--muted)">Sân thi đấu</span><span style="font-weight:800" id="sumCourtName">Sân Tennis A1</span></div>
+            <div class="sum-row"><span style="color:var(--muted)">Ngày chơi</span><span style="font-weight:800">18/08/2026</span></div>
+            <div class="sum-row"><span style="color:var(--muted)">Khung giờ</span><span style="font-weight:800; color:var(--green)" id="sumSlotTime">16:00 – 17:00</span></div>
+            <div class="sum-row"><span style="color:var(--muted)">Tiền thuê sân</span><span style="font-weight:800" id="sumCourtPrice">320.000 đ</span></div>
+            <div class="sum-row"><span style="color:var(--muted)">Dịch vụ kèm theo</span><span style="font-weight:800" id="sumSvcPrice">140.000 đ</span></div>
+            <div class="sum-row total"><span>Tổng thanh toán</span><span id="sumTotalPrice">460.000 đ</span></div>
+
+            <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:12px; font-size:12px; color:#92400e; margin:18px 0;">
+              <b>Quy tắc thanh toán:</b> Booking được gửi ở trạng thái <b>Chờ xác nhận</b>. Hóa đơn điện tử sẽ được tạo ngay khi bạn xác nhận hoặc thanh toán tại quầy.
+            </div>
+
+            <button class="btn-action-green" style="width:100%; padding:14px; font-size:15px; border-radius:999px" onclick="alert('Đã gửi yêu cầu đặt sân thành công! Chuyển sang lịch sử booking.')">
+              Xác Nhận Đặt Sân Ngay
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 2: BOOKING CỦA TÔI (LIST.JSP - U11)
+         ============================================== -->
+    <section class="view-section" id="viewList">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:16px;">
+        <div>
+          <span class="sz-badge sz-badge-completed" style="margin-bottom:6px">LỊCH SỬ THI ĐẤU</span>
+          <h1>Booking Của Tôi</h1>
+          <p style="color:var(--muted); margin:0">Theo dõi trạng thái lịch đặt sân và thông tin hóa đơn thanh toán.</p>
+        </div>
+        <button class="btn-action-green" style="border-radius:999px; padding:10px 20px" onclick="switchBookingTab('create')">
+          + Đặt Thêm Sân Mới
+        </button>
+      </div>
+
+      <div class="sz-card">
+        <div class="table-responsive">
+          <table class="sz-table">
+            <thead>
+              <tr>
+                <th>Mã Đơn</th>
+                <th>Ngày Chơi</th>
+                <th>Khung Giờ</th>
+                <th>Sân Thi Đấu</th>
+                <th>Trạng Thái</th>
+                <th>Thanh Toán</th>
+                <th style="text-align:right">Tổng Tiền</th>
+                <th style="text-align:right">Chi Tiết</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-family:monospace; font-weight:800">#BK-1026</td>
+                <td>18/08/2026</td>
+                <td><b>16:00 – 17:00</b></td>
+                <td><b>Sân Tennis A1</b></td>
+                <td><span class="sz-badge sz-badge-pending">Chờ xác nhận</span></td>
+                <td><span class="sz-badge sz-badge-none">Chưa lập HĐ</span></td>
+                <td style="text-align:right; font-weight:800">460.000 đ</td>
+                <td style="text-align:right">
+                  <button class="btn-action" onclick="switchBookingTab('detail')">Xem đơn</button>
+                </td>
+              </tr>
+              <tr>
+                <td style="font-family:monospace; font-weight:800">#BK-1024</td>
+                <td>18/08/2026</td>
+                <td><b>18:00 – 19:00</b></td>
+                <td><b>Sân Tennis A2</b></td>
+                <td><span class="sz-badge sz-badge-confirmed">Đã xác nhận</span></td>
+                <td><span class="sz-badge sz-badge-paid">Đã thanh toán</span></td>
+                <td style="text-align:right; font-weight:800">320.000 đ</td>
+                <td style="text-align:right">
+                  <button class="btn-action" onclick="switchBookingTab('detail')">Xem đơn</button>
+                </td>
+              </tr>
+              <tr style="opacity:.65">
+                <td style="font-family:monospace; font-weight:800">#BK-1018</td>
+                <td>15/08/2026</td>
+                <td><b>07:00 – 08:00</b></td>
+                <td><b>Sân Pickleball P1</b></td>
+                <td><span class="sz-badge sz-badge-completed">Hoàn thành</span></td>
+                <td><span class="sz-badge sz-badge-paid">Đã thanh toán</span></td>
+                <td style="text-align:right; font-weight:800">180.000 đ</td>
+                <td style="text-align:right">
+                  <button class="btn-action" onclick="switchBookingTab('detail')">Xem đơn</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 3: CHI TIẾT BOOKING (DETAIL.JSP - U12 + U13)
+         ============================================== -->
+    <section class="view-section" id="viewDetail">
+      <div style="margin-bottom:20px">
+        <button class="btn-action" onclick="switchBookingTab('list')">&larr; Quay lại danh sách booking</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:32px;">
+        <div class="sz-card backend-bound">
+          <span class="backend-tag">U12: ${booking} Detail</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; border-bottom:1px solid var(--line); padding-bottom:16px">
+            <div>
+              <span class="sz-badge sz-badge-confirmed">ĐÃ XÁC NHẬN</span>
+              <h1 style="font-size:24px; margin-top:6px">Booking #BK-1024</h1>
+            </div>
+            <div style="text-align:right; font-size:12.5px; color:var(--muted)">
+              Đặt lúc: <b>17/08/2026 14:30</b>
+            </div>
+          </div>
+
+          <div style="display:grid; gap:12px; font-size:14px; margin-bottom:24px">
+            <div style="display:flex; justify-content:space-between">
+              <span style="color:var(--muted)">Sân thi đấu:</span>
+              <b>Sân Tennis A2 (Pro Master)</b>
+            </div>
+            <div style="display:flex; justify-content:space-between">
+              <span style="color:var(--muted)">Ngày chơi:</span>
+              <b>Thứ 3, 18/08/2026</b>
+            </div>
+            <div style="display:flex; justify-content:space-between">
+              <span style="color:var(--muted)">Khung giờ:</span>
+              <b style="color:var(--green)">18:00 – 19:00</b>
+            </div>
+            <div style="display:flex; justify-content:space-between">
+              <span style="color:var(--muted)">Địa điểm:</span>
+              <span>Khu phức hợp thể thao Zone A · Hòa Lạc</span>
+            </div>
+          </div>
+
+          <h3 style="font-size:15px; margin-bottom:12px">Dịch Vụ Đi Kèm Đã Chọn</h3>
+          <div style="background:var(--cream); padding:14px; border-radius:12px; margin-bottom:20px">
+            <div style="display:flex; justify-content:space-between; font-size:13.5px; margin-bottom:6px">
+              <span>Thuê Vợt Tennis Cao Cấp × 2</span>
+              <b>100.000 đ</b>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:13.5px">
+              <span>Nước Khoáng Pocari × 2</span>
+              <b>40.000 đ</b>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:900; border-top:2px solid var(--ink); padding-top:14px">
+            <span>Tổng Giá Trị Đơn</span>
+            <span style="color:var(--green)">460.000 đ</span>
+          </div>
+        </div>
+
+        <div>
+          <!-- Payment Status & Cancellation -->
+          <div class="sz-card backend-bound">
+            <span class="backend-tag">U13: Cancel Policy</span>
+            <h3 style="font-size:16px; margin-bottom:12px">Trạng Thái Thanh Toán</h3>
+            <div style="display:flex; align-items:center; justify-content:space-between; background:var(--success-bg); border:1px solid var(--success-border); padding:14px; border-radius:12px; margin-bottom:20px">
+              <span style="font-weight:800; color:var(--success)">ĐÃ THANH TOÁN (HĐ #INV-2041)</span>
+              <a href="../invoice/sportzone-invoice-demo.html" style="font-size:12.5px; font-weight:800; color:var(--green); text-decoration:underline">Xem Hóa Đơn</a>
+            </div>
+
+            <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:16px; margin-bottom:20px">
+              <div style="font-weight:800; font-size:13px; color:#991b1b; margin-bottom:4px">Quy định hủy sân (Quy tắc 24h)</div>
+              <p style="font-size:12px; color:#7f1d1d; margin:0; line-height:1.5">
+                Bạn có thể hủy booking trước <b>24 giờ</b> tính từ thời điểm bắt đầu trận đấu để được hoàn tiền 100%.
+              </p>
+            </div>
+
+            <button class="btn-action-danger" style="width:100%; padding:12px; font-size:13.5px; border-radius:10px" onclick="confirmCancelBooking()">
+              Hủy Lịch Đặt Sân Này
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function switchBookingTab(tab){
+      document.getElementById('tabCreate').classList.toggle('active', tab === 'create');
+      document.getElementById('tabList').classList.toggle('active', tab === 'list');
+      document.getElementById('tabDetail').classList.toggle('active', tab === 'detail');
+
+      document.getElementById('viewCreate').classList.toggle('active', tab === 'create');
+      document.getElementById('viewList').classList.toggle('active', tab === 'list');
+      document.getElementById('viewDetail').classList.toggle('active', tab === 'detail');
+    }
+
+    function selectRadioSlot(el, timeText){
+      document.querySelectorAll('.slot-radio-label').forEach(s => s.classList.remove('is-selected'));
+      el.classList.add('is-selected');
+      document.getElementById('sumSlotTime').textContent = timeText;
+    }
+
+    function toggleSvc(qtyId, cb){
+      document.getElementById(qtyId).disabled = !cb.checked;
+      calculateTotal();
+    }
+
+    function calculateTotal(){
+      const courtPrice = parseInt(document.getElementById('courtSelect').value) || 320000;
+      let svcTotal = 0;
+
+      if(document.getElementById('svcRacket').checked){
+        svcTotal += 50000 * (parseInt(document.getElementById('qtyRacket').value) || 1);
+      }
+      if(document.getElementById('svcBall').checked){
+        svcTotal += 120000 * (parseInt(document.getElementById('qtyBall').value) || 1);
+      }
+      if(document.getElementById('svcWater').checked){
+        svcTotal += 20000 * (parseInt(document.getElementById('qtyWater').value) || 1);
+      }
+
+      const total = courtPrice + svcTotal;
+      document.getElementById('sumCourtPrice').textContent = courtPrice.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('sumSvcPrice').textContent = svcTotal.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('sumTotalPrice').textContent = total.toLocaleString('vi-VN') + ' đ';
+    }
+
+    function confirmCancelBooking(){
+      if(confirm('Bạn có chắc chắn muốn hủy đơn booking #BK-1024 không? Tiền sẽ được hoàn lại theo đúng quy tắc 24h.')){
+        alert('Đã hủy booking thành công!');
+        switchBookingTab('list');
+      }
+    }
+
+    const toggleInspector = document.getElementById('toggleInspector');
+    if(toggleInspector){
+      toggleInspector.addEventListener('click',()=>{
+        const active = toggleInspector.classList.toggle('active');
+        document.body.classList.toggle('show-backend', active);
+      });
+    }
+  </script>
+</body>
+</html>

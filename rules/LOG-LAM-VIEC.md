@@ -5,6 +5,35 @@
 
 ---
 
+## [2026-08-23 13:36] — CODEX — Ban hành UI Rebuild Guardrails
+
+**Task:** Xây bộ quy tắc cho phép rebuild giao diện nhưng không làm ảnh hưởng chức năng/backend hiện hành.
+**Trạng thái:** Xong — chốt phương án Contract-Preserving UI Rebuild và thêm cổng bắt buộc vào AGENTS.md.
+
+### Đã làm
+- [x] Tạo `rules/UI-REBUILD-GUARDRAILS.md` khóa URL, HTTP method, form/input, CSRF, attribute/EL, JSTL nghiệp vụ, JavaScript hook và security contract.
+- [x] Quy định rõ phần UI được phép thay đổi và backend/SQL/web.xml/build mặc định bị khóa.
+- [x] Thêm Contract Snapshot, quy trình static comparison, runtime smoke và Contract Change Gate.
+- [x] Thêm mục `UI Rebuild Safety — MANDATORY` vào `rules/AGENTS.md` để mọi task UI bắt buộc đọc guardrails.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `rules/UI-REBUILD-GUARDRAILS.md` | Mới | Contract và checklist an toàn khi rebuild UI |
+| `rules/AGENTS.md` | Sửa | Bắt buộc áp dụng UI guardrails |
+| `rules/LOG-LAM-VIEC.md` | Sửa | Ghi nhận task |
+
+### Chưa làm / tồn đọng
+- Chưa áp dụng guardrails cho một trang cụ thể; mỗi trang cần Contract Snapshot riêng trước khi rebuild.
+
+### Ghi chú cho model còn lại
+- UI-only task không được đổi backend contract. Nếu bắt buộc đổi, phải dừng và xin duyệt theo Contract Change Gate.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+
 ## [2026-08-23 13:22] — CODEX — Hoàn tất Phase 3 Xem sân & lịch
 
 **Task:** Triển khai Phase 3 theo Code Guidance Mode: U7 xem/lọc danh sách sân, U8 xem chi tiết sân, U9 xem lịch slot theo ngày và phần số lượng sân của U19.

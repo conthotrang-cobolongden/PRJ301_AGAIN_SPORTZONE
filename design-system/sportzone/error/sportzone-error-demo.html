@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Thông báo lỗi hệ thống 403, 404, 500." />
+  <title>SportZone — Thông Báo Lỗi &amp; Hỗ Trợ Kỹ Thuật</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro + Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --ink:#0b1911;
+      --green:#1b5e3b;
+      --gold:#caa54b;
+      --cream:#f7f4ed;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --shadow:0 24px 60px rgba(11,25,17,.12);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(27,94,59,.08), transparent 45%),
+        linear-gradient(180deg, #fffdfa 0%, #f7f4ed 100%);
+      padding:100px 0 80px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+    }
+
+    a{text-decoration:none;color:inherit}
+    .container{max-width:680px;margin:0 auto;padding:0 24px;text-align:center}
+
+    /* SWITCHER */
+    .demo-view-switcher{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:36px;
+    }
+    .btn-view-tab{
+      border:1.5px solid var(--line);
+      background:rgba(255,255,255,.8);
+      padding:8px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-view-tab.active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+    }
+
+    .error-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:54px 40px;
+      box-shadow:var(--shadow);
+    }
+
+    .error-code{
+      font-family:"Montserrat",sans-serif;
+      font-size:84px;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-.04em;
+      margin-bottom:12px;
+    }
+    .error-code.code-403{color:#dc2626}
+    .error-code.code-404{color:var(--green)}
+    .error-code.code-500{color:#d97706}
+
+    .error-title{
+      font-family:"Montserrat",sans-serif;
+      font-size:24px;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+    .error-desc{
+      font-size:15px;
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:32px;
+    }
+
+    .btn-home{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--green);
+      color:#fff;
+      padding:12px 28px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:800;
+      box-shadow:0 6px 18px rgba(27,94,59,.25);
+      transition:all .2s;
+    }
+    .btn-home:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 24px rgba(27,94,59,.35);
+    }
+
+    .error-view{display:none;animation:fadeIn .25s ease}
+    .error-view.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Switcher -->
+    <div class="demo-view-switcher">
+      <button class="btn-view-tab active" id="tab403" onclick="switchError('403')">403: Không Có Quyền</button>
+      <button class="btn-view-tab" id="tab404" onclick="switchError('404')">404: Không Tìm Thấy</button>
+      <button class="btn-view-tab" id="tab500" onclick="switchError('500')">500: Lỗi Hệ Thống</button>
+    </div>
+
+    <!-- ERROR 403 -->
+    <div class="error-card error-view active" id="view403">
+      <div class="error-code code-403">403</div>
+      <div class="error-title">Truy Cập Bị Từ Chối</div>
+      <p class="error-desc">
+        Bạn không có quyền truy cập vào phân vùng này, hoặc tài khoản đang ở trạng thái <b>Tạm Khóa</b> do vi phạm quy định hủy sân. Vui lòng liên hệ lễ tân để được hỗ trợ mở khóa.
+      </p>
+      <a class="btn-home" href="../home/sportzone-home-demo.html">Về Trang Chủ SportZone</a>
+    </div>
+
+    <!-- ERROR 404 -->
+    <div class="error-card error-view" id="view404">
+      <div class="error-code code-404">404</div>
+      <div class="error-title">Không Tìm Thấy Trang</div>
+      <p class="error-desc">
+        Địa chỉ trang hoặc mã sân thể thao bạn đang tìm kiếm không tồn tại hoặc đã được chuyển sang danh mục khác.
+      </p>
+      <a class="btn-home" href="../court/sportzone-court-demo.html">Xem Danh Sách Sân</a>
+    </div>
+
+    <!-- ERROR 500 -->
+    <div class="error-card error-view" id="view500">
+      <div class="error-code code-500">500</div>
+      <div class="error-title">Hệ Thống Đang Xử Lý</div>
+      <p class="error-desc">
+        Đã có lỗi phát sinh trong quá trình kết nối cơ sở dữ liệu. Đội ngũ kỹ thuật SportZone đã ghi nhận và đang khắc phục ngay lập tức.
+      </p>
+      <a class="btn-home" href="../home/sportzone-home-demo.html">Tải Lại Trang Chủ</a>
+    </div>
+  </div>
+
+  <script>
+    function switchError(code){
+      document.querySelectorAll('.btn-view-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.error-view').forEach(v => v.classList.remove('active'));
+
+      document.getElementById('tab' + code).classList.add('active');
+      document.getElementById('view' + code).classList.add('active');
+    }
+  </script>
+</body>
+</html>
