@@ -82,6 +82,8 @@ public final class UiRedesignContractTest {
                 "action=invoices", "action=profile", "action=logout",
                 "action=login", "action=register", "sessionScope.roleName",
                 "sessionScope.frozen", "pageCss");
+        requireAll("web/WEB-INF/views/layout/footer.jsp",
+                "classList.add('show')");
         String views = read("web/WEB-INF/views");
         require(!views.contains("inspector-toggle")
                 && !views.contains("demo-switcher")
