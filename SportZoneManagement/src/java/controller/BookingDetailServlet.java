@@ -13,7 +13,7 @@ import utils.SessionUtil;
 import utils.Views;
 
 /**
- * GET /booking?id=...
+ * GET action bookingDetail with id.
  * Tag: U12.
  */
 public class BookingDetailServlet extends HttpServlet {

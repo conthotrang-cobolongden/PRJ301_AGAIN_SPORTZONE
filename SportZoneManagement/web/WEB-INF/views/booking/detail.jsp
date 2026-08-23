@@ -13,7 +13,7 @@
        value="${pageContext.request.contextPath}"/>
 
 <section class="container sz-section">
-    <a class="sz-back-link" href="${ctx}/bookings">
+    <a class="sz-back-link" href="${ctx}/MainController?action=bookings">
         &larr; Về danh sách booking
     </a>
 
@@ -242,16 +242,28 @@
                         </span>
 
                         <p class="text-muted small mt-2 mb-0">
-                            Hóa đơn sẽ được phát triển và xử lý
-                            trong phase chức năng tiếp theo.
+                            Bắt đầu thanh toán chuyển khoản để tạo hóa đơn.
                         </p>
                     </c:otherwise>
                 </c:choose>
+
+                <div class="mt-4 d-grid">
+                    <c:choose>
+                        <c:when test="${booking.paymentStatus == 'Paid'}">
+                            <a class="btn btn-sz" href="${ctx}/MainController?action=invoiceDetail&amp;bookingId=${booking.bookingId}">Xem hóa đơn</a>
+                        </c:when>
+                        <c:when test="${booking.paymentStatus == 'Cancelled'}">
+                            <button class="btn btn-secondary" type="button" disabled>Thanh toán đã hủy</button>
+                        </c:when>
+                        <c:otherwise>
+                            <a class="btn btn-sz" href="${ctx}/MainController?action=invoicePayment&amp;bookingId=${booking.bookingId}">Thanh toán chuyển khoản</a>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
 
             <div class="alert alert-info mt-4 mb-0">
-                User hiện chỉ có thể xem booking.
-                Chức năng tự hủy booking không được hỗ trợ.
+                Thanh toán được giả lập qua QR. User không có quyền hủy booking.
             </div>
         </div>
     </div>

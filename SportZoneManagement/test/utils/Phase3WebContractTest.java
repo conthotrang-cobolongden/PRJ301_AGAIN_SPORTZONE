@@ -17,8 +17,7 @@ import org.w3c.dom.NodeList;
  * Kiem tra web.xml wiring cho Phase 3.
  *
  * Contract:
- * - CourtsServlet map GET /courts.
- * - CourtDetailServlet map GET /court.
+ * - CourtsServlet va CourtDetailServlet chi duoc named-dispatch.
  * - Hai route deu public.
  * - EncodingFilter van ap dung qua pattern /*.
  *
@@ -55,13 +54,13 @@ public final class Phase3WebContractTest {
         );
 
         require(
-                "/courts".equals(
+                "".equals(
                         servletPattern(
                                 document,
                                 "CourtsServlet"
                         )
                 ),
-                "CourtsServlet must map to /courts"
+                "CourtsServlet must not have a direct public mapping"
         );
 
         require(
@@ -84,13 +83,13 @@ public final class Phase3WebContractTest {
         );
 
         require(
-                "/court".equals(
+                "".equals(
                         servletPattern(
                                 document,
                                 "CourtDetailServlet"
                         )
                 ),
-                "CourtDetailServlet must map to /court"
+                "CourtDetailServlet must not have a direct public mapping"
         );
 
         /*

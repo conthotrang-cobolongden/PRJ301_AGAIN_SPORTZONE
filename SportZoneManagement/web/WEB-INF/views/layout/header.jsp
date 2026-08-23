@@ -21,7 +21,7 @@
 <header class="sz-header">
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="sz-brand-logo" href="${ctx}/home">
+            <a class="sz-brand-logo" href="${ctx}/MainController?action=home">
                 <span class="sz-mark">SZ</span>
                 <span class="sz-name">Sport<span style="color:var(--sz-green)">Zone</span></span>
             </a>
@@ -30,30 +30,31 @@
             </button>
             <div class="collapse navbar-collapse" id="szNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <li class="nav-item"><a class="nav-link" href="${ctx}/home"><i class="bi bi-house-door me-1"></i>Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="${ctx}/courts"><i class="bi bi-grid-3x3-gap me-1"></i>Danh sách sân</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=home"><i class="bi bi-house-door me-1"></i>Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=courts"><i class="bi bi-grid-3x3-gap me-1"></i>Danh sách sân</a></li>
                     <c:choose>
                         <c:when test="${not empty sessionScope.account}">
                             <c:if test="${sessionScope.roleName != 'Admin'}">
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/bookings"><i class="bi bi-calendar-check me-1"></i>Đặt sân</a></li>
+                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=bookings"><i class="bi bi-calendar-check me-1"></i>Đặt sân</a></li>
+                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=invoices"><i class="bi bi-receipt me-1"></i>Hóa đơn</a></li>
                             </c:if>
                             <li class="nav-item">
-                                <a class="nav-link fw-bold" href="${ctx}/profile" style="color:var(--sz-green)">
+                                <a class="nav-link fw-bold" href="${ctx}/MainController?action=profile" style="color:var(--sz-green)">
                                     <i class="bi bi-person-circle me-1"></i>${sessionScope.account.fullName}
                                 </a>
                             </li>
                             <li class="nav-item ms-lg-2">
-                                <a class="btn btn-sz-outline btn-sz-sm" href="${ctx}/logout">
+                                <a class="btn btn-sz-outline btn-sz-sm" href="${ctx}/MainController?action=logout">
                                     <i class="bi bi-box-arrow-right"></i> Đăng xuất
                                 </a>
                             </li>
                         </c:when>
                         <c:otherwise>
                             <li class="nav-item ms-lg-2">
-                                <a class="nav-link" href="${ctx}/login"><i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập</a>
+                                <a class="nav-link" href="${ctx}/MainController?action=login"><i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-sz btn-sz-sm" href="${ctx}/register">
+                                <a class="btn btn-sz btn-sz-sm" href="${ctx}/MainController?action=register">
                                     <i class="bi bi-person-plus-fill"></i> Đăng ký
                                 </a>
                             </li>
@@ -67,7 +68,7 @@
 
 <c:if test="${sessionScope.frozen}">
     <div class="alert alert-warning sz-frozen-banner mb-0 rounded-0 text-center border-0 shadow-sm" style="background:#fef3c7; color:#92400e; font-weight:600">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>Tài khoản đang bị khóa — chỉ xem được hồ sơ và hóa đơn cũ, không thể đặt sân.
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>Tài khoản đang bị khóa — vui lòng đăng xuất hoặc liên hệ hỗ trợ.
     </div>
 </c:if>
 

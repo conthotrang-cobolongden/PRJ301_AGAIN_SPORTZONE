@@ -11,7 +11,7 @@
                 <p class="sz-kicker">SportZone</p>
                 <h2>Đăng ký tài khoản</h2>
 
-                <form id="registerForm" method="post" action="${ctx}/register" novalidate>
+                <form id="registerForm" method="post" action="${ctx}/MainController?action=register" novalidate>
                     <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
 
                     <div class="mb-3">
@@ -59,7 +59,7 @@
                 </form>
 
                 <p class="mt-3 mb-0">Đã có tài khoản?
-                    <a href="${ctx}/login">Đăng nhập</a>
+                    <a href="${ctx}/MainController?action=login">Đăng nhập</a>
                 </p>
             </div>
         </div>

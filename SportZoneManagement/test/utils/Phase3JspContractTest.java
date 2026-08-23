@@ -86,6 +86,11 @@ public final class Phase3JspContractTest {
                 "Slot rendering must use the servlet-computed past flag"
         );
 
+        require(
+                detail.contains("${ctx}/MainController?action=court"),
+                "Court date links must route through MainController"
+        );
+
         System.out.println(
                 "Phase3JspContractTest PASSED"
         );

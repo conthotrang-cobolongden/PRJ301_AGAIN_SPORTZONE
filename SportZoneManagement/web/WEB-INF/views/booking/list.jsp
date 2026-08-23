@@ -12,18 +12,18 @@
             <p class="sz-kicker sz-kicker-dark mb-1">SportZone</p>
             <h1>Booking của tôi</h1>
         </div>
-        <a class="btn btn-sz" href="${ctx}/courts">+ Đặt sân</a>
+        <a class="btn btn-sz" href="${ctx}/MainController?action=courts">+ Đặt sân</a>
     </div>
 
     <!-- Tabs: GET ?tab=upcoming|history -->
     <ul class="nav nav-pills sz-tabs mb-4">
         <li class="nav-item">
-            <a class="nav-link ${activeTab != 'history' ? 'active' : ''}" href="${ctx}/bookings">
+            <a class="nav-link ${activeTab != 'history' ? 'active' : ''}" href="${ctx}/MainController?action=bookings">
                 Sắp tới <span class="sz-count">${upcomingList.size()}</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link ${activeTab == 'history' ? 'active' : ''}" href="${ctx}/bookings?tab=history">
+            <a class="nav-link ${activeTab == 'history' ? 'active' : ''}" href="${ctx}/MainController?action=bookings&amp;tab=history">
                 Lịch sử <span class="sz-count">${historyList.size()}</span>
             </a>
         </li>
@@ -79,7 +79,7 @@
                                 </td>
                                 <td class="num" data-label="Tổng tiền"><fmt:formatNumber value="${b.totalAmount}" type="number" groupingUsed="true"/> đ</td>
                                 <td class="sz-td-actions">
-                                    <a class="btn btn-outline-success btn-sm" href="${ctx}/booking?id=${b.bookingId}">Xem</a>
+                                    <a class="btn btn-outline-success btn-sm" href="${ctx}/MainController?action=bookingDetail&amp;id=${b.bookingId}">Xem</a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -98,7 +98,7 @@
                     <c:otherwise>
                         <h2>Chưa có booking sắp tới</h2>
                         <p>Chọn sân và khung giờ trống để đặt lịch chơi.</p>
-                        <a class="btn btn-sz" href="${ctx}/courts">Xem sân &amp; đặt ngay</a>
+                        <a class="btn btn-sz" href="${ctx}/MainController?action=courts">Xem sân &amp; đặt ngay</a>
                     </c:otherwise>
                 </c:choose>
             </div>

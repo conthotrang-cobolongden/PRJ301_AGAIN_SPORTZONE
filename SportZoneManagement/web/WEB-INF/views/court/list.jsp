@@ -17,17 +17,17 @@
         <!-- TABS lọc loại sân: GET ?type=all|tennis|pickleball -->
         <ul class="nav nav-pills sz-tabs">
             <li class="nav-item">
-                <a class="nav-link ${typeFilter == 'all' || empty typeFilter ? 'active' : ''}" href="${ctx}/courts">
+                <a class="nav-link ${typeFilter == 'all' || empty typeFilter ? 'active' : ''}" href="${ctx}/MainController?action=courts">
                     Tất cả
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link ${typeFilter == 'tennis' ? 'active' : ''}" href="${ctx}/courts?type=tennis">
+                <a class="nav-link ${typeFilter == 'tennis' ? 'active' : ''}" href="${ctx}/MainController?action=courts&amp;type=tennis">
                     Tennis <span class="sz-count">${tennisCount}</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link ${typeFilter == 'pickleball' ? 'active' : ''}" href="${ctx}/courts?type=pickleball">
+                <a class="nav-link ${typeFilter == 'pickleball' ? 'active' : ''}" href="${ctx}/MainController?action=courts&amp;type=pickleball">
                     Pickleball <span class="sz-count">${pickleballCount}</span>
                 </a>
             </li>
@@ -74,10 +74,10 @@
                                     <!-- Sân Maintenance/Unavailable: chỉ xem chi tiết, không đặt (spec courts.md) -->
                                     <c:choose>
                                         <c:when test="${c.status == 'Available'}">
-                                            <a class="btn btn-sz btn-sm" href="${ctx}/court?id=${c.courtId}">Đặt sân</a>
+                                            <a class="btn btn-sz btn-sm" href="${ctx}/MainController?action=court&amp;id=${c.courtId}">Đặt sân</a>
                                         </c:when>
                                         <c:otherwise>
-                                            <a class="btn btn-sz-outline btn-sm" href="${ctx}/court?id=${c.courtId}">Xem chi tiết</a>
+                                            <a class="btn btn-sz-outline btn-sm" href="${ctx}/MainController?action=court&amp;id=${c.courtId}">Xem chi tiết</a>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
@@ -95,7 +95,7 @@
                 </div>
                 <h2>Không có sân phù hợp</h2>
                 <p>Thử chọn lại loại sân khác.</p>
-                <a class="btn btn-sz" href="${ctx}/courts">Xem tất cả sân</a>
+                <a class="btn btn-sz" href="${ctx}/MainController?action=courts">Xem tất cả sân</a>
             </div>
         </c:otherwise>
     </c:choose>

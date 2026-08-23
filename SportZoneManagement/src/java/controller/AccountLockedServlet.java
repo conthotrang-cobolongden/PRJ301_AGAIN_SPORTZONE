@@ -42,7 +42,8 @@ public class AccountLockedServlet extends HttpServlet {
 
         if (!frozen) {
             response.sendRedirect(
-                    request.getContextPath() + "/home"
+                    request.getContextPath()
+                    + "/MainController?action=home"
             );
             return;
         }

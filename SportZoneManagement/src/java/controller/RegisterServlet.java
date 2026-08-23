@@ -34,7 +34,8 @@ public class RegisterServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (SessionUtil.isLoggedIn(request.getSession(false))) {
-            response.sendRedirect(request.getContextPath() + "/home");
+            response.sendRedirect(request.getContextPath()
+                    + "/MainController?action=home");
             return;
         }
 
@@ -78,7 +79,8 @@ public class RegisterServlet extends HttpServlet {
         }
 
         SessionUtil.storeLoggedInAccount(request.getSession(), result.getAccount());
-        response.sendRedirect(request.getContextPath() + "/home");
+        response.sendRedirect(request.getContextPath()
+                + "/MainController?action=home");
     }
 
     private void renderErrors(HttpServletRequest request,

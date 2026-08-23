@@ -7,7 +7,7 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
 <section class="container sz-section">
-    <a class="sz-back-link" href="${ctx}/courts">&larr; Quay lại danh sách sân</a>
+    <a class="sz-back-link" href="${ctx}/MainController?action=courts">&larr; Quay lại danh sách sân</a>
 
     <div class="row g-4">
         <!-- ===== Ảnh + thông tin sân ===== -->
@@ -49,7 +49,7 @@
                 <div class="mt-3">
                     <c:choose>
                         <c:when test="${court.status == 'Available'}">
-                            <a class="btn btn-sz w-100" href="${ctx}/booking/create?courtId=${court.courtId}&date=${selectedDate}">Đặt sân ngày này</a>
+                            <a class="btn btn-sz w-100" href="${ctx}/MainController?action=bookingCreate&amp;courtId=${court.courtId}&amp;date=${selectedDate}">Đặt sân ngày này</a>
                         </c:when>
                         <c:otherwise>
                             <div class="alert alert-warning mb-0" role="alert">
@@ -75,7 +75,7 @@
                 <!-- Dãy pill chọn ngày: dateOptions do servlet sinh (hôm nay → +6 ngày) -->
                 <div class="date-pill-row mb-4">
                     <c:forEach var="d" items="${dateOptions}">
-                        <a class="date-pill ${d.selected ? 'active' : ''}" href="${ctx}/court?id=${court.courtId}&date=${d.value}">
+                        <a class="date-pill ${d.selected ? 'active' : ''}" href="${ctx}/MainController?action=court&amp;id=${court.courtId}&amp;date=${d.value}">
                             <small><c:out value="${d.weekday}"/></small>
                             <b><c:out value="${d.dayMonth}"/></b>
                         </a>
@@ -89,7 +89,7 @@
                             <c:forEach var="s" items="${slotList}">
                                 <c:choose>
                                     <c:when test="${s.status == 'Available' && court.status == 'Available' && !s.past}">
-                                        <a class="sz-slot is-available" href="${ctx}/booking/create?courtId=${court.courtId}&date=${selectedDate}&slotId=${s.timeSlotId}">
+                                        <a class="sz-slot is-available" href="${ctx}/MainController?action=bookingCreate&amp;courtId=${court.courtId}&amp;date=${selectedDate}&amp;slotId=${s.timeSlotId}">
                                             <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                             <span class="sz-slot-label"><fmt:formatNumber value="${court.pricePerHour}" type="number" groupingUsed="true"/> đ</span>
                                         </a>

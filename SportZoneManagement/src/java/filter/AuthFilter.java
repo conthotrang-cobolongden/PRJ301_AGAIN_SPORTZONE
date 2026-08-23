@@ -25,6 +25,11 @@ public class AuthFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+        if (isPublicMainControllerAction(httpRequest)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         if (SessionUtil.isLoggedIn(httpRequest.getSession(false))) {
             chain.doFilter(request, response);
             return;
@@ -41,7 +46,31 @@ public class AuthFilter implements Filter {
             session.setAttribute(AppConstants.SESSION_REDIRECT_AFTER_LOGIN, target);
         }
 
-        httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
+        httpResponse.sendRedirect(
+                httpRequest.getContextPath()
+                + "/MainController?action=login"
+        );
+    }
+
+    private boolean isPublicMainControllerAction(
+            HttpServletRequest request
+    ) {
+        if (!"/MainController".equals(
+                request.getServletPath()
+        )) {
+            return false;
+        }
+
+        String action = request.getParameter("action");
+        return !"profile".equals(action)
+                && !"password".equals(action)
+                && !"bookingCreate".equals(action)
+                && !"bookings".equals(action)
+                && !"bookingDetail".equals(action)
+                && !"accountLocked".equals(action)
+                && !"invoicePayment".equals(action)
+                && !"invoices".equals(action)
+                && !"invoiceDetail".equals(action);
     }
 
     @Override

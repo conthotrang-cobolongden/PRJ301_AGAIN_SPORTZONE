@@ -191,6 +191,14 @@ ON Bookings (TimeSlotID)
 WHERE Status IN (N'Pending', N'Confirmed', N'Completed', N'NoShow');
 GO
 
+-- SCHEMA_CONTRACT_BOOKINGS_V3:
+-- Bookings derives its court only through TimeSlotID; direct CourtID is forbidden.
+IF COL_LENGTH(N'dbo.Bookings', N'TimeSlotID') IS NULL
+    THROW 51001, N'Invalid Bookings schema: TimeSlotID is required.', 1;
+IF COL_LENGTH(N'dbo.Bookings', N'CourtID') IS NOT NULL
+    THROW 51002, N'Invalid Bookings schema: direct CourtID must not exist.', 1;
+GO
+
 -- =============================================================================
 -- 8. BOOKING SERVICES (line items / add-ons)
 -- =============================================================================

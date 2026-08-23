@@ -1,7 +1,7 @@
 # MainController Routing Migration Design
 
 **Ngày:** 2026-08-23  
-**Trạng thái:** Chờ người dùng duyệt đặc tả  
+**Trạng thái:** Hoàn tất; Phase 1–5 đã triển khai và verify
 **Phạm vi:** Chuyển routing hiện có của Phase 1–5 sang Front Controller; Phase 6 tạm dừng.
 
 ## 1. Mục tiêu
@@ -61,7 +61,7 @@ Quy tắc lỗi routing:
 | P5 | `bookingDetail` | `BookingDetailServlet` | GET |
 | P5 | `accountLocked` | `AccountLockedServlet` | GET |
 
-Phase 6 sẽ bổ sung sau khi migration P1–P5 hoàn tất: `invoices`, `invoiceDetail`, `invoiceNotice`.
+Phase 6 đã bổ sung sau migration P1–P5: `invoicePayment`, `invoices`, `invoiceDetail`.
 
 ## 4. Migration theo phase
 

@@ -172,7 +172,7 @@ public class ProfileServlet extends HttpServlet {
 
         response.sendRedirect(
                 request.getContextPath()
-                + "/profile?updated=1"
+                + "/MainController?action=profile&updated=1"
         );
     }
 

@@ -21,16 +21,16 @@
             <div class="col-lg-3 col-6 ms-lg-auto">
                 <h6>Điều hướng nhanh</h6>
                 <div class="d-flex flex-column gap-2">
-                    <a href="${ctx}/home"><i class="bi bi-chevron-right me-1 small"></i>Trang chủ</a>
-                    <a href="${ctx}/courts"><i class="bi bi-chevron-right me-1 small"></i>Danh sách sân</a>
+                    <a href="${ctx}/MainController?action=home"><i class="bi bi-chevron-right me-1 small"></i>Trang chủ</a>
+                    <a href="${ctx}/MainController?action=courts"><i class="bi bi-chevron-right me-1 small"></i>Danh sách sân</a>
                     <c:choose>
                         <c:when test="${not empty sessionScope.account}">
-                            <a href="${ctx}/bookings"><i class="bi bi-chevron-right me-1 small"></i>Booking của tôi</a>
-                            <a href="${ctx}/invoices"><i class="bi bi-chevron-right me-1 small"></i>Hóa đơn</a>
+                            <a href="${ctx}/MainController?action=bookings"><i class="bi bi-chevron-right me-1 small"></i>Booking của tôi</a>
+                            <a href="${ctx}/MainController?action=invoices"><i class="bi bi-chevron-right me-1 small"></i>Hóa đơn đã thanh toán</a>
                         </c:when>
                         <c:otherwise>
-                            <a href="${ctx}/login"><i class="bi bi-chevron-right me-1 small"></i>Đăng nhập</a>
-                            <a href="${ctx}/register"><i class="bi bi-chevron-right me-1 small"></i>Đăng ký tài khoản</a>
+                            <a href="${ctx}/MainController?action=login"><i class="bi bi-chevron-right me-1 small"></i>Đăng nhập</a>
+                            <a href="${ctx}/MainController?action=register"><i class="bi bi-chevron-right me-1 small"></i>Đăng ký tài khoản</a>
                         </c:otherwise>
                     </c:choose>
                 </div>

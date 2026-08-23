@@ -8,7 +8,7 @@
     <p class="sz-kicker">404</p>
     <h1>Trang chưa có hoặc đường dẫn sai.</h1>
     <p>Một số mục (đăng nhập, danh sách sân) sẽ mở ở phase sau.</p>
-    <a class="btn btn-sz" href="${ctx}/home">Về trang chủ</a>
+    <a class="btn btn-sz" href="${ctx}/MainController?action=home">Về trang chủ</a>
 </section>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

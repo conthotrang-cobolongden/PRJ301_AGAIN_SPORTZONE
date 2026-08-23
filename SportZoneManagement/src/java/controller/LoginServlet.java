@@ -40,8 +40,8 @@ public class LoginServlet extends HttpServlet {
 
         if (SessionUtil.isLoggedIn(existingSession)) {
             String target = SessionUtil.isFrozen(existingSession)
-                    ? "/account-locked"
-                    : "/home";
+                    ? "/MainController?action=accountLocked"
+                    : "/MainController?action=home";
 
             response.sendRedirect(
                     request.getContextPath() + target
@@ -94,7 +94,7 @@ public class LoginServlet extends HttpServlet {
 
             response.sendRedirect(
                     request.getContextPath()
-                    + "/account-locked"
+                    + "/MainController?action=accountLocked"
             );
             return;
         }
@@ -113,7 +113,8 @@ public class LoginServlet extends HttpServlet {
         session.removeAttribute(AppConstants.SESSION_REDIRECT_AFTER_LOGIN);
         String target = savedTarget instanceof String
                 && ((String) savedTarget).startsWith("/")
-                ? (String) savedTarget : "/home";
+                ? (String) savedTarget
+                : "/MainController?action=home";
         response.sendRedirect(request.getContextPath() + target);
     }
 }

@@ -24,7 +24,7 @@
         </c:if>
 
         <div class="sz-card">
-            <form method="post" action="${ctx}/password" id="szPasswordForm" novalidate>
+            <form method="post" action="${ctx}/MainController?action=password" id="szPasswordForm" novalidate>
                 <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
 
                 <div class="mb-3">
@@ -54,7 +54,7 @@
 
                 <button class="btn btn-sz w-100" type="submit">Đổi mật khẩu</button>
             </form>
-            <p class="mt-3 mb-0"><a href="${ctx}/profile">&larr; Quay lại hồ sơ</a></p>
+            <p class="mt-3 mb-0"><a href="${ctx}/MainController?action=profile">&larr; Quay lại hồ sơ</a></p>
         </div>
     </div>
 </section>
