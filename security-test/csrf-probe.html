@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SportZone CSRF Probe</title>
+    <style>
+        :root { color-scheme: light; font-family: Arial, sans-serif; }
+        body { margin: 0; background: #f3f6f4; color: #10231a; }
+        main { width: min(720px, calc(100% - 32px)); margin: 56px auto; }
+        section { padding: 28px; border: 1px solid #dbe5de; border-radius: 18px; background: #fff; box-shadow: 0 16px 40px rgba(16,35,26,.1); }
+        h1 { margin-top: 0; }
+        label { display: block; margin-bottom: 8px; font-weight: 700; }
+        input { box-sizing: border-box; width: 100%; padding: 12px 14px; border: 1px solid #bccbc1; border-radius: 10px; font: inherit; }
+        button { margin-top: 16px; padding: 12px 18px; border: 0; border-radius: 10px; background: #145c3a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+        .notice { margin: 18px 0; padding: 14px; border-radius: 10px; background: #fff6d8; }
+        code { word-break: break-all; }
+        li { margin: 8px 0; }
+    </style>
+</head>
+<body>
+<main>
+    <section>
+        <h1>SportZone CSRF Probe</h1>
+        <p>Trang này gửi một POST không có <code>csrfToken</code> và dùng operation giả nên không thay đổi database.</p>
+
+        <div class="notice">
+            Trước khi thử, hãy đăng nhập tài khoản Admin trên đúng host bên dưới.
+            Không dùng lẫn <code>localhost</code> và <code>127.0.0.1</code>.
+        </div>
+
+        <form id="csrfProbe" method="post" target="_blank">
+            <label for="targetUrl">URL ứng dụng</label>
+            <input id="targetUrl" type="url"
+                   value="http://localhost:8080/SportZoneManagement/MainController?action=adminCourts"
+                   required>
+
+            <input type="hidden" name="operation" value="csrfProbe">
+            <!-- Cố ý KHÔNG có input csrfToken. -->
+
+            <button type="submit">Gửi POST không có CSRF token</button>
+        </form>
+
+        <h2>Đọc kết quả</h2>
+        <ul>
+            <li><strong>403 Forbidden:</strong> CSRF đang chặn đúng.</li>
+            <li><strong>400 Bad Request:</strong> request đã vượt qua CSRF; cần kiểm tra lại bảo vệ CSRF.</li>
+            <li><strong>Trang đăng nhập hoặc 403 phân quyền:</strong> session Admin chưa được gửi; kiểm tra lại host và đăng nhập.</li>
+        </ul>
+    </section>
+</main>
+
+<script>
+    document.getElementById('csrfProbe').addEventListener('submit', function () {
+        this.action = document.getElementById('targetUrl').value.trim();
+    });
+</script>
+</body>
+</html>

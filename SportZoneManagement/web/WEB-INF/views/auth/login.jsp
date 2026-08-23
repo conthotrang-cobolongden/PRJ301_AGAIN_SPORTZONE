@@ -14,7 +14,7 @@
         <div class="auth-hero-content">
             <a class="brand-logo" href="${ctx}/MainController?action=home"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="14" fill="#0b1911"/><path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/><path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="24" cy="24" r="3.5" fill="#1b5e3b" stroke="#fff" stroke-width="1.2"/></svg><span>Sport<span class="zone">Zone</span></span></a>
             <h1 class="hero-heading">Khung Giờ Vàng.<br><span class="gold">Sẵn Sàng Ra Sân.</span></h1>
-            <p class="hero-desc">Hệ thống tổ hợp 10 sân Tennis &amp; Pickleball đạt chuẩn quốc tế tại Khu CNC Hòa Lạc. Đặt sân tức thì trong 60s và tận hưởng trọn vẹn từng trận đấu.</p>
+            <p class="hero-desc">Hệ thống tổ hợp 10 sân Tennis &amp; Pickleball đạt chuẩn quốc tế tại TP. Hồ Chí Minh. Đặt sân tức thì trong 60s và tận hưởng trọn vẹn từng trận đấu.</p>
             <div class="auth-features"><div class="auth-feat-item"><i>✓</i><span>100% Giữ chỗ theo thời gian thực — không lo trùng lịch</span></div><div class="auth-feat-item"><i>✓</i><span>Xem lịch 7 ngày liên tiếp &amp; chọn slot giờ linh hoạt</span></div><div class="auth-feat-item"><i>✓</i><span>Dịch vụ trọn gói thuê vợt, bóng nỉ &amp; nước uống tại quầy</span></div></div>
         </div>
     </div>

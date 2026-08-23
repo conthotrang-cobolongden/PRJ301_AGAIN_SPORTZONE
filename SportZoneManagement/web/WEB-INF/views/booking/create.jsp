@@ -1,39 +1,41 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%-- U10: Tạo booking (KHÔNG sinh hóa đơn — rule 1) --%>
-<c:set var="pageTitle" value="Đặt sân — SportZone" scope="request"/>
+<c:set var="pageTitle" value="Đặt Sân — SportZone" scope="request"/>
 <c:set var="pageCss" value="booking-design.css" scope="request"/>
 <c:set var="pageBodyClass" value="sz-page-booking" scope="request"/>
-<c:set var="headerVariant" value="standard" scope="request"/>
-<c:set var="footerVariant" value="none" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<section class="container view-section active" id="viewCreate">
+<!-- ==============================================
+     BOOKING CREATE (U10) — SPORTZONE CONCEPT SYNC
+     ============================================== -->
+<div class="container view-section active" id="viewCreate" style="padding-top:40px; padding-bottom:60px;">
     <c:if test="${sessionScope.roleName == 'Admin'}">
-        <div class="alert alert-info">Booking này được ghi nhận cho <strong>Khách vãng lai</strong>.</div>
+        <div class="alert alert-info" style="border-radius:14px; margin-bottom:24px;">Booking này được ghi nhận cho <strong>Khách vãng lai</strong>.</div>
     </c:if>
+
+    <!-- Intro Header with Synchronized Aesthetics -->
     <div class="booking-page-intro">
-        <span class="sz-badge sz-badge-completed">ĐẶT SÂN ONLINE TRỰC TUYẾN</span>
-        <h1>Đặt Lịch Sân Thi Đấu</h1>
-        <p>Chọn sân, khung giờ và dịch vụ đi kèm. Thanh toán dễ dàng qua chuyển khoản QR hoặc tại quầy lễ tân.</p>
+        <div class="kicker"><span class="dot"></span> ĐẶT SÂN ONLINE TRỰC TUYẾN</div>
+        <h1>Đặt Lịch <span class="accent-text">Sân Thi Đấu</span></h1>
+        <p>Chọn sân, khung giờ và dịch vụ đi kèm. Giữ chỗ tức thì 100% không lo trùng lịch.</p>
     </div>
 
-    <!-- Rule 9: Frozen đăng nhập được nhưng không được đặt sân -->
+    <!-- Frozen account warning -->
     <c:if test="${sessionScope.frozen}">
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger" role="alert" style="border-radius:14px; margin-bottom:24px;">
             Tài khoản đang bị khóa — không thể đặt sân. Vui lòng liên hệ quầy để được hỗ trợ.
         </div>
     </c:if>
 
-    <!-- DEEPSEEK: lỗi nghiệp vụ chung (trùng slot, sai validate...) bind vào biến error -->
+    <!-- Business error message -->
     <c:if test="${not empty error}">
-        <div class="alert alert-danger" role="alert"><c:out value="${error}"/></div>
+        <div class="alert alert-danger" role="alert" style="border-radius:14px; margin-bottom:24px;"><c:out value="${error}"/></div>
     </c:if>
 
     <div class="booking-create-grid">
-        <!-- ===== FORM ===== -->
+        <!-- ===== LEFT COLUMN: STEP-BY-STEP FORM ===== -->
         <div>
             <!-- Bước 1+2: chọn sân & ngày — GET reload lại lưới slot -->
             <div class="sz-card mb-4">
@@ -41,9 +43,8 @@
                     <input type="hidden" name="action" value="bookingCreate"/>
                     <div class="row g-3 align-items-end">
                         <div class="col-md-5">
-                            <p class="sz-step-label mb-2"><span class="step-num">1</span> Chọn sân đấu</p>
-                            <!-- DEEPSEEK: courtList = chỉ sân Available; option cần data-price cho JS tính tổng -->
-                            <select class="form-select" name="courtId" aria-label="Chọn sân">
+                            <p class="sz-step-label"><span class="step-num">1</span> Chọn sân đấu</p>
+                            <select class="form-select" name="courtId" aria-label="Chọn sân" style="border-radius:10px; padding:10px 14px; font-weight:600;">
                                 <c:forEach var="c" items="${courtList}">
                                     <option value="${c.courtId}" data-price="${c.pricePerHour}"
                                             ${c.courtId == selectedCourtId ? 'selected' : ''}>
@@ -53,19 +54,19 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <p class="sz-step-label mb-2"><span class="step-num">2</span> Chọn ngày chơi</p>
+                            <p class="sz-step-label"><span class="step-num">2</span> Chọn ngày chơi</p>
                             <input class="form-control" type="date" name="date"
-                                   value="${selectedDate}" min="${minDate}" max="${maxDate}" aria-label="Chọn ngày">
+                                   value="${selectedDate}" min="${minDate}" max="${maxDate}" aria-label="Chọn ngày"
+                                   style="border-radius:10px; padding:10px 14px; font-weight:600;">
                         </div>
                         <div class="col-md-3 d-grid">
-                            <button class="btn btn-outline-success" type="submit">Xem khung giờ</button>
+                            <button class="btn btn-outline-success" type="submit" style="padding:10px; font-weight:800; border-radius:10px;">Xem khung giờ</button>
                         </div>
                     </div>
                 </form>
             </div>
 
-            <!-- DEEPSEEK: form POST đặt sân. selectedSlotId để pre-select khi vào từ court/detail.
-                 fieldErrors.slotId → alert lỗi chọn slot. -->
+            <!-- Form POST đặt sân -->
             <form method="post" action="${ctx}/MainController?action=bookingCreate" id="szBookingForm"
                   data-court-price="${selectedCourtPrice}" novalidate>
                 <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
@@ -87,15 +88,20 @@
                                                        data-start="${s.startTime}"
                                                        data-end="${s.endTime}"
                                                        ${s.timeSlotId == selectedSlotId ? 'checked' : ''}>
-                                                <span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span><span class="slot-display-state">Trống</span>
+                                                <span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span>
+                                                <span class="slot-display-state">Trống</span>
                                             </label>
                                         </c:when>
                                         <c:when test="${s.status == 'Booked'}">
-                                            <span class="slot-radio-label is-booked"><span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span><span class="slot-display-state">Đã đặt</span>
+                                            <span class="slot-radio-label is-booked" title="Đã có người đặt">
+                                                <span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span>
+                                                <span class="slot-display-state">Đã đặt</span>
                                             </span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="slot-radio-label is-booked"><span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span><span class="slot-display-state">Đóng</span>
+                                            <span class="slot-radio-label is-booked" title="Khung giờ đóng hoặc đã qua">
+                                                <span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span>
+                                                <span class="slot-display-state">Đóng</span>
                                             </span>
                                         </c:otherwise>
                                     </c:choose>
@@ -104,14 +110,14 @@
                             <div class="sz-slot-legend">
                                 <span><span class="swatch swatch-available"></span>Trống</span>
                                 <span><span class="swatch swatch-booked"></span>Đã đặt</span>
-                                <span><span class="swatch swatch-closed"></span>Đóng</span>
+                                <span><span class="swatch swatch-closed"></span>Đóng / Đã qua</span>
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="sz-empty">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                <h2>Chưa mở khung giờ ngày này</h2>
-                                <p>Chọn sân và ngày ở trên rồi bấm "Xem khung giờ".</p>
+                            <div class="empty-state" style="text-align:center; padding:30px 10px;">
+                                <span class="sz-badge sz-badge-pickle" style="margin-bottom:10px;">THÔNG BÁO</span>
+                                <h3 style="font-size:18px; margin-bottom:6px;">Chưa mở khung giờ ngày này</h3>
+                                <p style="color:var(--muted); font-size:13.5px;">Chọn sân và ngày ở trên rồi bấm "Xem khung giờ".</p>
                             </div>
                         </c:otherwise>
                     </c:choose>
@@ -119,25 +125,25 @@
 
                 <!-- Bước 4: dịch vụ kèm theo -->
                 <div class="sz-card mb-4">
-                    <p class="sz-step-label"><span class="step-num">4</span> Dịch vụ bổ sung <span class="text-muted fw-normal">(Tùy chọn)</span></p>
-                    <!-- DEEPSEEK: serviceList = dịch vụ IsActive=1; mỗi dòng data-price cho JS -->
+                    <p class="sz-step-label"><span class="step-num">4</span> Dịch vụ bổ sung <span class="text-muted fw-normal" style="font-size:13px;">(Tùy chọn)</span></p>
                     <c:choose>
                         <c:when test="${not empty serviceList}">
                             <c:forEach var="sv" items="${serviceList}">
-                                <div class="sz-service-row service-item-row" data-price="${sv.price}">
-                                    <div class="form-check">
+                                <div class="service-item-row sz-service-row" data-price="${sv.price}">
+                                    <div class="form-check d-flex align-items-center gap-2">
                                         <input class="form-check-input"
                                                type="checkbox"
                                                name="serviceId"
                                                value="${sv.serviceId}"
                                                id="svc${sv.serviceId}"
+                                               style="width:18px; height:18px; cursor:pointer;"
                                                ${not empty selectedServiceQuantities[sv.serviceId] ? 'checked' : ''}>
-                                        <label class="form-check-label" for="svc${sv.serviceId}">
+                                        <label class="form-check-label fw-bold" for="svc${sv.serviceId}" style="cursor:pointer; font-size:14px;">
                                             <c:out value="${sv.serviceName}"/>
                                         </label>
                                     </div>
                                     <span class="sz-svc-price"><fmt:formatNumber value="${sv.price}" type="number" groupingUsed="true"/> đ</span>
-                                    <input class="form-control form-control-sm sz-qty"
+                                    <input class="sz-qty"
                                            type="number"
                                            name="qty_${sv.serviceId}"
                                            value="${empty selectedServiceQuantities[sv.serviceId]
@@ -151,29 +157,34 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <p class="text-muted mb-0">Hiện chưa có dịch vụ kèm theo.</p>
+                            <p class="text-muted mb-0" style="font-size:13.5px;">Hiện chưa có dịch vụ kèm theo.</p>
                         </c:otherwise>
                     </c:choose>
                 </div>
+
+                <!-- Ghi chú -->
                 <div class="sz-card mb-4">
-                    <label class="form-label fw-bold" for="notes">
-                        Ghi chú
-                        <span class="text-muted fw-normal">(không bắt buộc)</span>
+                    <label class="form-label fw-bold" for="notes" style="font-size:14px; color:var(--ink);">
+                        Ghi chú yêu cầu đặc biệt
+                        <span class="text-muted fw-normal" style="font-size:13px;">(không bắt buộc)</span>
                     </label>
 
                     <textarea class="form-control"
                               id="notes"
                               name="notes"
                               maxlength="255"
-                              rows="3"><c:out value="${param.notes}"/></textarea>
+                              rows="3"
+                              placeholder="Ví dụ: Cần mượn thêm vợt thi đấu, chuẩn bị bóng sớm..."
+                              style="border-radius:12px; padding:12px; font-size:14px;"><c:out value="${param.notes}"/></textarea>
                 </div>
+
                 <button class="btn-action-green booking-submit" type="submit" ${sessionScope.frozen ? 'disabled' : ''}>
-                    Xác nhận đặt sân
+                    Xác Nhận Đặt Sân Ngay →
                 </button>
             </form>
         </div>
 
-        <!-- ===== TÓM TẮT ĐƠN (sticky) ===== -->
+        <!-- ===== RIGHT COLUMN: STICKY SUMMARY BOX ===== -->
         <div>
             <div class="summary-card">
                 <h2>Tóm Tắt Đặt Sân</h2>
@@ -183,22 +194,20 @@
                 <div class="sum-row"><span>Tiền thuê sân</span><strong id="szSumCourtPrice">0 đ</strong></div>
                 <div class="sum-row"><span>Dịch vụ kèm theo</span><strong id="szSumService">0 đ</strong></div>
                 <div class="sum-row total"><span>Tổng thanh toán</span><strong id="szSumTotal">0 đ</strong></div>
-                <!-- Rule 1: U10 không tạo hóa đơn -->
-                <p class="text-muted small mt-3 mb-0">
+                
+                <p class="text-muted small mt-3 mb-0" style="line-height:1.6;">
                     Booking ở trạng thái <span class="sz-badge sz-badge-pending">Chờ xác nhận</span> —
-                    hóa đơn sẽ được lập tại quầy khi bạn thanh toán.
+                    hóa đơn thanh toán sẽ được lập tại quầy khi bạn đến nhận sân thi đấu.
                 </p>
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <script>
-// Preview tổng tiền + đồng bộ ô slot được chọn (không thêm lib ngoài — plan 2.2)
     (function () {
         var form = document.getElementById('szBookingForm');
-        if (!form)
-            return;
+        if (!form) return;
         var fmt = new Intl.NumberFormat('vi-VN');
 
         function money(n) {
@@ -211,7 +220,7 @@
             document.querySelectorAll('.sz-service-row').forEach(function (row) {
                 var cb = row.querySelector('input[type="checkbox"]');
                 var qty = row.querySelector('.sz-qty');
-                if (cb.checked) {
+                if (cb && cb.checked) {
                     var q = Math.max(1, parseInt(qty.value, 10) || 1);
                     svcTotal += (parseFloat(row.getAttribute('data-price')) || 0) * q;
                 }
@@ -229,7 +238,7 @@
             if (checked) {
                 checked.closest('.slot-radio-label').classList.add('is-selected');
                 document.getElementById('szSumSlot').textContent =
-                        checked.getAttribute('data-start') + '–' + checked.getAttribute('data-end');
+                        checked.getAttribute('data-start') + ' – ' + checked.getAttribute('data-end');
             } else {
                 document.getElementById('szSumSlot').textContent = '—';
             }
@@ -250,16 +259,16 @@
 
         form.addEventListener('change', function (e) {
             var t = e.target;
-            if (t.classList.contains('sz-slot-radio'))
+            if (t.classList.contains('sz-slot-radio')) {
                 updateSlotSummary();
+            }
             if (t.type === 'checkbox') {
                 var qty = t.closest('.sz-service-row').querySelector('.sz-qty');
-                qty.disabled = !t.checked;
+                if (qty) qty.disabled = !t.checked;
             }
             updateTotal();
         });
 
-        // Feedback khi submit (UX guideline: Submit Feedback)
         form.addEventListener('submit', function (e) {
             if (!form.querySelector('.sz-slot-radio:checked')) {
                 e.preventDefault();
@@ -267,8 +276,10 @@
                 return;
             }
             var btn = form.querySelector('button[type="submit"]');
-            btn.disabled = true;
-            btn.textContent = 'Đang xử lý…';
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Đang xử lý…';
+            }
         });
 
         updateCourtSummary();

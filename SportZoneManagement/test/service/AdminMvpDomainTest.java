@@ -100,6 +100,14 @@ public final class AdminMvpDomainTest {
                 early.checkIn(10).getErrorCode()),
                 "Check-in earlier than 30 minutes must fail");
 
+        Clock beforeStartClock = Clock.fixed(
+                Instant.parse("2026-08-24T02:30:00Z"), ZONE);
+        AdminBookingService beforeStart = new AdminBookingService(
+                dao, beforeStartClock);
+        require(AdminBookingService.CHECK_IN_WINDOW_CLOSED.equals(
+                beforeStart.checkIn(10).getErrorCode()),
+                "Check-in must remain closed until the slot starts");
+
         Clock deadlineClock = Clock.fixed(
                 Instant.parse("2026-08-24T03:30:00Z"), ZONE);
         AdminBookingService deadline = new AdminBookingService(

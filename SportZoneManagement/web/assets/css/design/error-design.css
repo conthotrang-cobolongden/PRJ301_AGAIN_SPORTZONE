@@ -107,7 +107,6 @@
       box-shadow:0 8px 24px rgba(27,94,59,.35);
     }
 
-    .error-view{display:none;animation:fadeIn .25s ease}
-    .error-view.active{display:block}
+    .error-view{display:block;animation:fadeIn .25s ease}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 

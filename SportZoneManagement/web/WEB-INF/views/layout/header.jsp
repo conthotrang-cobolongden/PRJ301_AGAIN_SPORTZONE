@@ -13,8 +13,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="${ctx}/assets/css/app.css" rel="stylesheet">
-    <link href="${ctx}/assets/css/design/home-design.css" rel="stylesheet">
-    <c:if test="${not empty pageCss && pageCss != 'home-design.css'}"><link href="${ctx}/assets/css/design/${pageCss}" rel="stylesheet"></c:if>
+    <c:choose>
+        <c:when test="${not empty pageCss}"><link href="${ctx}/assets/css/design/${pageCss}" rel="stylesheet"></c:when>
+        <c:otherwise><link href="${ctx}/assets/css/design/home-design.css" rel="stylesheet"></c:otherwise>
+    </c:choose>
 </head>
 <body class="${pageBodyClass}">
 <c:choose>

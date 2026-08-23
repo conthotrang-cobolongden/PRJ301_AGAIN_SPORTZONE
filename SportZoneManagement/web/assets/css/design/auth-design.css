@@ -344,8 +344,7 @@
     }
 
     /* FORM STYLES */
-    .auth-form-wrapper{display:none}
-    .auth-form-wrapper.active{display:block;animation:fadeInForm .35s ease}
+    .auth-form-wrapper{display:block;animation:fadeInForm .35s ease}
     @keyframes fadeInForm{
       from{opacity:0;transform:translateY(10px)}
       to{opacity:1;transform:none}
@@ -432,7 +431,8 @@
       margin-top:5px;
       display:none;
     }
-    .form-input.is-invalid ~ .invalid-feedback{display:block}
+    .form-input.is-invalid ~ .invalid-feedback,
+    .invalid-feedback:not(:empty){display:block}
 
     /* Password Toggle Icon */
     .toggle-pass-btn{
