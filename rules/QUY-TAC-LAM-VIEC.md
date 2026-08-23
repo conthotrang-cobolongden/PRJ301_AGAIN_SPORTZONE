@@ -147,7 +147,7 @@ Trích từ `docs/implementation-plan.md` — cả 2 model phải giữ nguyên 
 6. `Bookings` không có `CourtID`; sân của booking phải suy ra duy nhất qua `Bookings.TimeSlotID → TimeSlots.CourtID`, không tin `courtId` từ form.
 7. Snapshot giá khi đặt (`CourtPriceAtOrder`, `PriceAtOrder`, `TotalAmount`).
 8. Chống double-book bằng transaction + unique index, không check-then-act.
-9. Account `Frozen` đăng nhập được nhưng không đặt sân / không báo chuyển khoản.
+9. Account `Frozen` xác thực được nhưng chỉ được vào `/account-locked`, `/logout` và `/assets/*`; không được vào `/home` hay chức năng nghiệp vụ.
 10. Admin không tạo/xóa loại sân, không tạo/xóa sân.
 11. User không Confirm / Complete / NoShow.
 

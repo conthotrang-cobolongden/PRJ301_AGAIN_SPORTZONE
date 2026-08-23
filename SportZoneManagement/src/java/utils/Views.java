@@ -19,6 +19,8 @@ public final class Views {
     public static final String INVOICE_DETAIL = ROOT + "invoice/detail.jsp";
     public static final String PROFILE = ROOT + "account/profile.jsp";
     public static final String PASSWORD = ROOT + "account/password.jsp";
+    public static final String ACCOUNT_LOCKED
+            = ROOT + "error/account-locked.jsp";
 
     private Views() {
     }

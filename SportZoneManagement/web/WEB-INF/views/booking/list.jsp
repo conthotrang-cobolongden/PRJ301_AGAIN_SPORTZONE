@@ -53,8 +53,8 @@
                     <tbody>
                         <c:forEach var="b" items="${rows}">
                             <tr class="${b.status == 'Cancelled' || b.status == 'NoShow' ? 'row-muted' : ''}">
-                                <td data-label="Ngày chơi"><fmt:formatDate value="${b.slotDate}" pattern="dd/MM/yyyy"/></td>
-                                <td data-label="Giờ"><fmt:formatDate value="${b.startTime}" pattern="HH:mm"/>–<fmt:formatDate value="${b.endTime}" pattern="HH:mm"/></td>
+                                <td data-label="Ngày chơi"><fmt:formatDate value="${b.slotDateValue}" pattern="dd/MM/yyyy"/></td>
+                                <td data-label="Giờ"><fmt:formatDate value="${b.startTimeValue}" pattern="HH:mm"/>–<fmt:formatDate value="${b.endTimeValue}" pattern="HH:mm"/></td>
                                 <td data-label="Sân">
                                     <c:out value="${b.courtName}"/>
                                     <span class="sz-badge ${b.typeSlug == 'tennis' ? 'sz-badge-tennis' : 'sz-badge-pickle'} ms-1"><c:out value="${b.typeName}"/></span>
