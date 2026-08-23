@@ -22,6 +22,12 @@ public final class Views {
     public static final String PASSWORD = ROOT + "account/password.jsp";
     public static final String ACCOUNT_LOCKED
             = ROOT + "error/account-locked.jsp";
+    public static final String ADMIN_DASHBOARD
+            = ROOT + "admin/dashboard.jsp";
+    public static final String ADMIN_COURTS
+            = ROOT + "admin/courts.jsp";
+    public static final String ADMIN_BOOKINGS
+            = ROOT + "admin/bookings.jsp";
 
     private Views() {
     }

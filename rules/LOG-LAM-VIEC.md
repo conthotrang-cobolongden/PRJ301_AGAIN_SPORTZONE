@@ -833,3 +833,32 @@
 - Không. Chờ giao task thiết kế tiếp theo.
 
 ---
+
+## [2026-08-24] — CODEX — Hoàn tất Admin MVP gộp Phase 7 + 8
+
+**Task:** Triển khai Admin MVP trong tối đa 2 phase và 2 lượt test.
+**Trạng thái:** Xong
+
+### Đã làm
+- [x] Dashboard gồm tổng tài khoản, sân, booking và tổng doanh thu của hóa đơn `Paid`.
+- [x] Quản lý giá/trạng thái sân; chặn ngừng sân khi còn booking tương lai `Pending`/`Confirmed`/`CheckedIn`.
+- [x] Sinh slot theo tuần cho 10 sân, 8 ca/ngày; chạy lặp không tạo trùng.
+- [x] Admin xem/lọc/chi tiết toàn bộ booking và tạo booking dưới tên `Khách vãng lai`.
+- [x] Mở QR payment/invoice cho booking vãng lai theo ownership của tài khoản Admin.
+- [x] Check-in từ 30 phút trước đến trước 30 phút sau giờ bắt đầu; lazy reconcile `Confirmed → NoShow` và `CheckedIn → Completed`.
+- [x] Migration `03_SportZoneDB_AdminMvp_Migration.sql` đã áp dụng thành công trên database local.
+
+### Verification thực tế
+- Lượt 1: 60 source + 36 test source compile; toàn bộ domain/database contract Admin MVP pass.
+- Lượt 2: 63 source + 38 test source compile; `AdminMvpRegressionBatchTest PASSED`; `ant dist` tạo WAR thành công.
+- Tomcat smoke: 3 trang Admin HTTP 200; User vào Admin nhận 403; sinh tuần `560/0`, chạy lại `0/560`; cập nhật sân thành công và chặn đúng sân có booking tương lai.
+- Runtime booking: `Khách vãng lai → QR → Paid/Confirmed`; check-in, auto NoShow và auto Completed đều đúng. Các booking/slot smoke cô lập đã được dọn; giữ lại 560 slot hợp lệ của tuần 2026-08-31.
+- Trong smoke bắt được lỗi EL `sessionScope.account.accountId`; đã sửa thành JavaBean property `accountID`, thêm regression contract và chạy lại cùng lượt 2 thành công.
+
+### Future feature đang khóa
+- Quản lý tài khoản, dịch vụ, báo cáo nâng cao, CRUD slot lẻ, checkout, manual no-show và refund.
+
+### Cần người dùng quyết định
+- Không.
+
+---

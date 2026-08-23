@@ -12,6 +12,13 @@ public final class AppConstants {
     public static final String ACCOUNT_FROZEN = "Frozen";
     public static final String ACCOUNT_PENDING = "Pending";
 
+    public static final String BOOKING_PENDING = "Pending";
+    public static final String BOOKING_CONFIRMED = "Confirmed";
+    public static final String BOOKING_CHECKED_IN = "CheckedIn";
+    public static final String BOOKING_COMPLETED = "Completed";
+    public static final String BOOKING_CANCELLED = "Cancelled";
+    public static final String BOOKING_NO_SHOW = "NoShow";
+
     public static final String SESSION_ACCOUNT = "account";
     public static final String SESSION_ROLE_NAME = "roleName";
     public static final String SESSION_FROZEN = "frozen";

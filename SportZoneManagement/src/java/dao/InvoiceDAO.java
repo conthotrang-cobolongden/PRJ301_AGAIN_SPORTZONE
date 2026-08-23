@@ -22,11 +22,13 @@ public class InvoiceDAO {
             + "i.InvoiceDate, i.SubTotal, i.DiscountAmount, "
             + "i.FinalAmount, i.PaymentStatus, i.PaymentMethod, "
             + "i.PaidAt, i.PaymentNote, i.Note, i.CreatedAt, i.UpdatedAt, "
-            + "a.FullName AS AccountName, c.CourtName, ts.SlotDate, "
+            + "CASE WHEN r.RoleName=N'Admin' THEN N'Khách vãng lai' "
+            + "ELSE a.FullName END AS AccountName, c.CourtName, ts.SlotDate, "
             + "ts.StartTime, ts.EndTime, b.CourtPriceAtOrder AS CourtAmount "
             + "FROM Invoices i "
             + "INNER JOIN Bookings b ON i.BookingID = b.BookingID "
             + "INNER JOIN Accounts a ON b.AccountID = a.AccountID "
+            + "INNER JOIN Roles r ON a.RoleID = r.RoleID "
             + "INNER JOIN TimeSlots ts ON b.TimeSlotID = ts.TimeSlotID "
             + "INNER JOIN Courts c ON ts.CourtID = c.CourtID ";
 

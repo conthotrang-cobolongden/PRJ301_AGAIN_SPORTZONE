@@ -70,7 +70,7 @@ public class BookingCreateServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
-        Account account = requireUser(request, response);
+        Account account = requireBookingActor(request, response);
 
         if (account == null) {
             return;
@@ -105,7 +105,7 @@ public class BookingCreateServlet extends HttpServlet {
             return;
         }
 
-        Account account = requireUser(request, response);
+        Account account = requireBookingActor(request, response);
 
         if (account == null) {
             return;
@@ -196,12 +196,11 @@ public class BookingCreateServlet extends HttpServlet {
             return;
         }
 
-        response.sendRedirect(
-                request.getContextPath()
-                + "/MainController?action=bookingDetail&id="
-                + result.getBookingID()
-                + "&created=1"
-        );
+        String action = AppConstants.ROLE_ADMIN.equals(account.getRoleName())
+                ? "adminBookings&id=" + result.getBookingID()
+                : "bookingDetail&id=" + result.getBookingID();
+        response.sendRedirect(request.getContextPath()
+                + "/MainController?action=" + action + "&created=1");
     }
 
     private void renderForm(
@@ -312,7 +311,7 @@ public class BookingCreateServlet extends HttpServlet {
         }
     }
 
-    private Account requireUser(
+    private Account requireBookingActor(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws IOException {
@@ -327,9 +326,8 @@ public class BookingCreateServlet extends HttpServlet {
             return null;
         }
 
-        if (!AppConstants.ROLE_USER.equals(
-                account.getRoleName()
-        )) {
+        if (!AppConstants.ROLE_USER.equals(account.getRoleName())
+                && !AppConstants.ROLE_ADMIN.equals(account.getRoleName())) {
             response.sendError(
                     HttpServletResponse.SC_FORBIDDEN
             );

@@ -39,6 +39,12 @@ public final class ModelContractTest {
         Set<String> bookingFields = fieldNames(Booking.class);
         require(bookingFields.contains("timeSlotID"), "Booking must reference TimeSlotID");
         require(!bookingFields.contains("courtID"), "ERD v3 Booking must not contain CourtID");
+        require(bookingFields.containsAll(Arrays.asList(
+                "checkInAt", "accountName", "accountRoleName")),
+                "Admin MVP booking fields must be present");
+        requireReadableProperty(Booking.class, "checkInAt");
+        requireReadableProperty(Booking.class, "accountName");
+        requireReadableProperty(Booking.class, "accountRoleName");
         require(fieldNames(BookingService.class).containsAll(Arrays.asList(
                 "bookingID", "serviceID", "quantity", "priceAtOrder", "lineTotal")),
                 "BookingService must map the composite key and computed total");

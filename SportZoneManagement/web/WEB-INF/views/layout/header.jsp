@@ -34,10 +34,18 @@
                     <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=courts"><i class="bi bi-grid-3x3-gap me-1"></i>Danh sách sân</a></li>
                     <c:choose>
                         <c:when test="${not empty sessionScope.account}">
-                            <c:if test="${sessionScope.roleName != 'Admin'}">
+                            <c:choose>
+                            <c:when test="${sessionScope.roleName == 'Admin'}">
+                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=adminDashboard">Dashboard</a></li>
+                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=adminCourts">Quản lý sân</a></li>
+                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=adminBookings">Booking</a></li>
+                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=bookingCreate">Tạo booking vãng lai</a></li>
+                            </c:when>
+                            <c:otherwise>
                                 <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=bookings"><i class="bi bi-calendar-check me-1"></i>Đặt sân</a></li>
                                 <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=invoices"><i class="bi bi-receipt me-1"></i>Hóa đơn</a></li>
-                            </c:if>
+                            </c:otherwise>
+                            </c:choose>
                             <li class="nav-item">
                                 <a class="nav-link fw-bold" href="${ctx}/MainController?action=profile" style="color:var(--sz-green)">
                                     <i class="bi bi-person-circle me-1"></i>${sessionScope.account.fullName}

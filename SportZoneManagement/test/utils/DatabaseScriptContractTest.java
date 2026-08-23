@@ -17,6 +17,9 @@ public final class DatabaseScriptContractTest {
         String seed = new String(Files.readAllBytes(
                 sqlDirectory.resolve("02_SportZoneDB_Seed.sql")),
                 StandardCharsets.UTF_8);
+        String migration = new String(Files.readAllBytes(
+                sqlDirectory.resolve("03_SportZoneDB_AdminMvp_Migration.sql")),
+                StandardCharsets.UTF_8);
 
         int bookingStart = schema.indexOf("CREATE TABLE Bookings (");
         int bookingEnd = schema.indexOf("CREATE TABLE BookingServices (");
@@ -31,6 +34,13 @@ public final class DatabaseScriptContractTest {
                 "Schema must assert the canonical Bookings contract");
         require(seed.contains("SCHEMA_CONTRACT_BOOKINGS_V3"),
                 "Seed must reject a stale Bookings schema before inserting data");
+        require(bookingTable.contains("CheckInAt")
+                && bookingTable.contains("N'CheckedIn'"),
+                "Fresh schema must support check-in status and timestamp");
+        require(migration.contains("CheckInAt DATETIME NULL")
+                && migration.contains("N'CheckedIn'")
+                && migration.contains("UQ_Bookings_Slot_Active"),
+                "Admin MVP migration must update booking lifecycle safely");
 
         System.out.println("DatabaseScriptContractTest PASSED");
     }
