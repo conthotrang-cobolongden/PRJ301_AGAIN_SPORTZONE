@@ -1,6 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%-- U4: Xem hồ sơ + U5: Cập nhật name/phone/email — UI theo demo kit C10 --%>
 <c:set var="pageTitle" value="Hồ sơ cá nhân — SportZone" scope="request"/>
@@ -38,7 +37,7 @@
                     </c:choose>
                 </p>
                 <p class="text-muted small mb-3">
-                    Thành viên từ <fmt:formatDate value="${sessionScope.account.createdAt}" pattern="dd/MM/yyyy"/>
+                    Thành viên từ <c:out value="${memberSince}"/>
                 </p>
                 <div class="sz-kv"><dt>Email</dt><dd><c:out value="${sessionScope.account.email}"/></dd></div>
                 <div class="sz-kv"><dt>Số điện thoại</dt><dd><c:out value="${sessionScope.account.phone}"/></dd></div>
@@ -71,7 +70,7 @@
                     <div class="mb-3">
                         <label class="form-label" for="email">Email</label>
                         <input class="form-control ${not empty fieldErrors.email ? 'is-invalid' : ''}"
-                               type="email" id="email" name="email" maxlength="150"
+                               type="email" id="email" name="email" maxlength="100"
                                value="<c:out value='${account.email}'/>" required>
                         <div class="invalid-feedback"><c:out value="${fieldErrors.email}"/></div>
                     </div>

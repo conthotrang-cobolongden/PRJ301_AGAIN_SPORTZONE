@@ -15,13 +15,23 @@
 | Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
 | Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
 | Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
-| Java web (Servlet / JSP / Filter) | **P1–P3 đã dựng lại và verify** | Phase 3 trên branch `codex/phase-3-courts`: targeted tests, Clean and Build và Tomcat smoke đều pass |
+| Java web (Servlet / JSP / Filter) | **P1–P4 đã dựng lại và verify** | Phase 4 trên branch `codex/phase4`: targeted tests, Clean and Build và 12/12 Tomcat smoke đều pass |
 | Phase 2 — Auth & phân quyền | **Xong — verify 2026-08-22 23:23** | A1, A2, U1, U2, U3; login/register/logout, CSRF, AuthFilter và RoleFilter |
 | Phase 3 — Xem sân & lịch | **Xong — verify 2026-08-23** | U7, U8, U9 và count sân U19; `/courts`, `/court`, lịch 7 ngày |
-| Phase 4 — Hồ sơ (U4–U6) | **Tiếp theo** | Dựng profile, cập nhật thông tin và đổi mật khẩu trên nền P1–P3 |
-| Phase 5–9 | Chưa bắt đầu trong working copy mới | Làm tuần tự sau khi P1–P4 được dựng lại và verify |
+| Phase 4 — Hồ sơ (U4–U6) | **Xong — verify 2026-08-23** | Profile dùng chung User/Admin, cập nhật thông tin, đổi mật khẩu, CSRF và session refresh |
+| Phase 5–9 | Chưa bắt đầu | Tiếp theo là Phase 5 đặt và hủy sân U10–U13 |
 
-**Nguồn trạng thái hiện hành:** `rules/new-plan-0954.md`. Các entry ngày 17/08 bên dưới được giữ nguyên làm lịch sử, không phản ánh code đang còn trong working copy mới.
+---
+## 2026-08-23 (16:08) — Hoàn tất Phase 4 Hồ sơ cá nhân
+
+- Branch: `codex/phase4`.
+- Hoàn tất U4: User/Admin xem chung trang hồ sơ; Frozen User vẫn xem được cảnh báo trạng thái.
+- Hoàn tất U5: cập nhật họ tên, email và số điện thoại; validate server, normalize và loại trừ chính account khi kiểm tra unique.
+- Hoàn tất U6: xác minh mật khẩu hiện tại, lưu SHA-256 của mật khẩu mới, giữ phiên đăng nhập và không lưu hash trong session.
+- Mọi POST `/profile` và `/password` đều kiểm tra CSRF trước khi đọc dữ liệu form.
+- Targeted DAO/Service/Web tests, Clean and Build và 12/12 Tomcat smoke đều pass.
+- Mật khẩu `user1` đã được khôi phục về giá trị seed `User@123` sau smoke test.
+- Việc tiếp theo: Phase 5 đặt và hủy sân U10–U13.
 
 ---
 

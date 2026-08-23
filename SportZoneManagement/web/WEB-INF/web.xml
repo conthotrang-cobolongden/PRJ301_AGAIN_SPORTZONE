@@ -99,6 +99,18 @@
         <servlet-class>controller.LogoutServlet</servlet-class>
     </servlet>
 
+    <!-- ===== PHASE 4: PROFILE — U4, U5, U6 ===== -->
+
+    <servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>controller.ProfileServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PasswordServlet</servlet-name>
+        <servlet-class>controller.PasswordServlet</servlet-class>
+    </servlet>
+
     <!-- ===== PUBLIC ROUTE MAPPINGS ===== -->
 
     <servlet-mapping>
@@ -138,6 +150,18 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+
+    <!-- U4, U5: View and update own profile. -->
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/profile</url-pattern>
+    </servlet-mapping>
+
+    <!-- U6: Change own password. -->
+    <servlet-mapping>
+        <servlet-name>PasswordServlet</servlet-name>
+        <url-pattern>/password</url-pattern>
     </servlet-mapping>
 
     <!-- Session expires after 30 minutes of inactivity. -->
