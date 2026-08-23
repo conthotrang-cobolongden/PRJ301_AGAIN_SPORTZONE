@@ -30,7 +30,7 @@
                 <div class="mb-3">
                     <label class="form-label" for="currentPassword">Mật khẩu hiện tại</label>
                     <input class="form-control ${not empty fieldErrors.currentPassword ? 'is-invalid' : ''}"
-                           type="password" id="currentPassword" name="currentPassword"
+                           type="password" id="currentPassword" name="currentPassword" maxlength="64"
                            autocomplete="current-password" required>
                     <div class="invalid-feedback"><c:out value="${fieldErrors.currentPassword}"/></div>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="mb-3">
                     <label class="form-label" for="newPassword">Mật khẩu mới</label>
                     <input class="form-control ${not empty fieldErrors.newPassword ? 'is-invalid' : ''}"
-                           type="password" id="newPassword" name="newPassword"
+                           type="password" id="newPassword" name="newPassword" maxlength="64"
                            autocomplete="new-password" minlength="8" required>
                     <div class="invalid-feedback"><c:out value="${fieldErrors.newPassword}"/></div>
                     <div class="form-text">Ít nhất 8 ký tự, nên gồm chữ hoa, chữ thường và số.</div>
@@ -47,7 +47,7 @@
                 <div class="mb-4">
                     <label class="form-label" for="confirmPassword">Nhập lại mật khẩu mới</label>
                     <input class="form-control ${not empty fieldErrors.confirmPassword ? 'is-invalid' : ''}"
-                           type="password" id="confirmPassword" name="confirmPassword"
+                           type="password" id="confirmPassword" name="confirmPassword" maxlength="64"
                            autocomplete="new-password" minlength="8" required>
                     <div class="invalid-feedback"><c:out value="${fieldErrors.confirmPassword}"/></div>
                 </div>

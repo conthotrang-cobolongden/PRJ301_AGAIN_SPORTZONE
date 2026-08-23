@@ -4,6 +4,49 @@
 > Ai làm người đó ghi, không sửa entry của người kia.
 
 ---
+## [2026-08-23 16:08] — CODEX — Hoàn tất Phase 4 Hồ sơ cá nhân
+
+**Task:** Triển khai Phase 4 theo Code Guidance Mode: U4 xem hồ sơ, U5 cập nhật hồ sơ và U6 đổi mật khẩu dùng chung cho User/Admin.
+
+**Trạng thái:** Xong — targeted tests, Clean and Build và 12/12 Tomcat smoke scenarios đều pass.
+
+### Đã làm
+- [x] Mở rộng `AccountDAO`: kiểm tra email/phone loại trừ account hiện tại, cập nhật hồ sơ và password hash.
+- [x] Tạo `ProfileService`: chuẩn hóa dữ liệu, validate server, kiểm tra unique và xác minh mật khẩu hiện tại.
+- [x] Tạo `ProfileServlet` cho `GET/POST /profile`; lấy account ID từ session, đồng bộ session sau cập nhật và dùng PRG redirect.
+- [x] Tạo `PasswordServlet` cho `GET/POST /password`; CSRF bắt buộc, không giữ password trong request/session và giữ đăng nhập sau khi đổi mật khẩu.
+- [x] Admin, User và Frozen User dùng chung giao diện profile; không cho sửa role/status.
+- [x] Đồng bộ giới hạn form với schema: email 100 ký tự, password 8–64 ký tự.
+- [x] Không truyền `LocalDateTime` vào `fmt:formatDate`; Servlet bind chuỗi `memberSince`.
+- [x] Thêm test DAO, Service, Servlet, routing và JSP contract.
+- [x] Clean and Build thành công: 36 source files, WAR 2,113,915 bytes.
+- [x] Smoke 12/12: auth redirect, profile GET, CSRF 403, duplicate email, update profile, sai mật khẩu cũ, đổi mật khẩu, đăng nhập lại, khôi phục mật khẩu seed, Admin profile và Frozen profile.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/dao/AccountDAO.java` | Sửa | Thêm persistence cho U5/U6 |
+| `SportZoneManagement/src/java/service/ProfileService.java` | Mới | Nghiệp vụ profile và đổi mật khẩu |
+| `SportZoneManagement/src/java/controller/ProfileServlet.java` | Mới | `GET/POST /profile` |
+| `SportZoneManagement/src/java/controller/PasswordServlet.java` | Mới | `GET/POST /password` |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Khai báo và mapping hai Servlet Phase 4 |
+| `SportZoneManagement/web/WEB-INF/views/account/profile.jsp` | Sửa | Schema maxlength và memberSince |
+| `SportZoneManagement/web/WEB-INF/views/account/password.jsp` | Sửa | Password maxlength 64 |
+| `SportZoneManagement/test/dao/ProfileAccountDAOContractTest.java` | Mới | DAO contract U5/U6 |
+| `SportZoneManagement/test/service/ProfileServiceTest.java` | Mới | Test nghiệp vụ profile/password |
+| `SportZoneManagement/test/controller/Phase4ServletTest.java` | Mới | Test HTTP/session/CSRF contract |
+| `SportZoneManagement/test/utils/Phase4WebContractTest.java` | Mới | Test web.xml |
+| `SportZoneManagement/test/utils/Phase4JspContractTest.java` | Mới | Test JSP contract |
+| `SportZoneManagement/test/utils/Phase4WebBatchTest.java` | Mới | Chạy gộp test web Phase 4 |
+
+### Chưa làm / tồn đọng
+- `/health` đang trả 503 vì database có 10 bảng trong khi baseline HealthCheck kỳ vọng 9; response vẫn xác nhận `database=OK` và `passwordHash=OK`. Điều tra riêng, không thuộc lỗi Phase 4.
+- Phase 5 đặt và hủy sân U10–U13 là hạng mục tiếp theo.
+
+### Cần người dùng quyết định
+- Không.
+
+---
 
 ## [2026-08-23 13:36] — CODEX — Ban hành UI Rebuild Guardrails
 
