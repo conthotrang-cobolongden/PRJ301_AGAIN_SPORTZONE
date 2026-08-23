@@ -207,7 +207,7 @@ http://localhost:8080/SportZoneManagement/MainController?action=health
 
 ## Tài liệu liên quan
 
+- [Bộ tài liệu vấn đáp và luồng toàn bộ chức năng](docs/viva/README.md)
 - [Hướng dẫn database](sql/README.md)
 - [ERD](docs/erd-file/erd.md)
 - [Quy tắc làm việc với repository](rules/AGENTS.md)
-
