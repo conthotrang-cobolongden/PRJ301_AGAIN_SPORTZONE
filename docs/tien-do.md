@@ -20,7 +20,8 @@
 | Phase 3 — Xem sân & lịch | **Xong — verify 2026-08-23** | U7, U8, U9 và count sân U19; `/courts`, `/court`, lịch 7 ngày |
 | Phase 4 — Hồ sơ (U4–U6) | **Xong — verify 2026-08-23** | Profile dùng chung User/Admin, cập nhật thông tin, đổi mật khẩu, CSRF và session refresh |
 | Phase 5 — Đặt sân, xem booking, hạng thành viên | **Xong — verify 2026-08-23** | U10–U12; user không được hủy; membership chỉ hiển thị; Frozen bị cách ly khỏi ứng dụng |
-| Phase 6–9 | Chưa bắt đầu | Tiếp theo là Phase 6 hóa đơn phía User U14–U18 |
+| Phase 6 — Thanh toán giả lập + hóa đơn User | **Đã triển khai — verify 2026-08-23** | QR giả lập, pay/cancel, timeout 15 phút, chỉ xem invoice Paid; toàn bộ route qua MainController |
+| Phase 7–9 | Chưa bắt đầu | Chức năng Admin và báo cáo chưa triển khai |
 
 ---
 ## 2026-08-23 (17:33) — Hoàn tất Phase 5 Đặt sân và hạng thành viên

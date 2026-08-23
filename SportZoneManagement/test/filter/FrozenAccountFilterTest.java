@@ -42,7 +42,11 @@ public final class FrozenAccountFilterTest {
 
     private static void guestCanContinue()
             throws Exception {
-        Result result = execute("/home", null);
+        Result result = execute(
+                "/MainController",
+                "home",
+                null
+        );
 
         require(
                 result.chained,
@@ -53,7 +57,8 @@ public final class FrozenAccountFilterTest {
     private static void activeAccountCanContinue()
             throws Exception {
         Result result = execute(
-                "/home",
+                "/MainController",
+                "home",
                 session("Active", false)
         );
 
@@ -66,7 +71,8 @@ public final class FrozenAccountFilterTest {
     private static void frozenCannotAccessHome()
             throws Exception {
         Result result = execute(
-                "/home",
+                "/MainController",
+                "home",
                 session("Frozen", true)
         );
 
@@ -76,7 +82,7 @@ public final class FrozenAccountFilterTest {
         );
 
         require(
-                "/SportZone/account-locked".equals(
+                "/SportZone/MainController?action=accountLocked".equals(
                         result.redirect
                 ),
                 "Frozen phai bi redirect sang account-locked"
@@ -85,11 +91,7 @@ public final class FrozenAccountFilterTest {
 
     private static void frozenCanOnlyAccessAllowedPaths()
             throws Exception {
-        String[] allowedPaths = {
-            "/account-locked",
-            "/logout",
-            "/assets/css/app.css"
-        };
+        String[] allowedPaths = {"/assets/css/app.css"};
 
         for (String path : allowedPaths) {
             Result result = execute(
@@ -109,11 +111,35 @@ public final class FrozenAccountFilterTest {
             );
         }
 
+        Result locked = execute(
+                "/MainController",
+                "accountLocked",
+                session("Frozen", true)
+        );
+
+        require(
+                locked.chained && locked.redirect == null,
+                "Frozen phai xem accountLocked qua MainController"
+        );
+
+        Result logout = execute(
+                "/MainController",
+                "logout",
+                session("Frozen", true)
+        );
+
+        require(
+                logout.chained && logout.redirect == null,
+                "Frozen phai logout duoc qua MainController"
+        );
+
         String[] blockedPaths = {
             "/",
             "/home",
+            "/MainController",
             "/courts",
             "/profile",
+            "/account-locked",
             "/bookings",
             "/booking/create",
             "/invoices",
@@ -132,11 +158,31 @@ public final class FrozenAccountFilterTest {
             );
 
             require(
-                    "/SportZone/account-locked".equals(
+                    "/SportZone/MainController?action=accountLocked".equals(
                             result.redirect
                     ),
                     "Blocked path phai redirect account-locked: "
                     + path
+            );
+        }
+
+        String[] blockedActions = {
+            "home", "courts", "profile", "password",
+            "bookingCreate", "bookings", "bookingDetail",
+            "invoicePayment", "invoices", "invoiceDetail"
+        };
+
+        for (String action : blockedActions) {
+            Result result = execute(
+                    "/MainController",
+                    action,
+                    session("Frozen", true)
+            );
+
+            require(
+                    !result.chained
+                    && "/SportZone/MainController?action=accountLocked".equals(result.redirect),
+                    "Frozen phai bi chan tai MainController action: " + action
             );
         }
     }
@@ -173,15 +219,15 @@ public final class FrozenAccountFilterTest {
                 webXml.contains(
                         "controller.AccountLockedServlet"
                 )
-                && webXml.contains(
+                && !webXml.contains(
                         "<url-pattern>/account-locked</url-pattern>"
                 ),
-                "Phai map AccountLockedServlet"
+                "AccountLockedServlet phai la named-dispatch target, khong direct mapping"
         );
 
         require(
                 loginServlet.contains(
-                        "\"/account-locked\""
+                        "\"/MainController?action=accountLocked\""
                 )
                 && loginServlet.contains(
                         "SessionUtil.isFrozen"
@@ -211,6 +257,14 @@ public final class FrozenAccountFilterTest {
             String servletPath,
             HttpSession session
     ) throws Exception {
+        return execute(servletPath, null, session);
+    }
+
+    private static Result execute(
+            String servletPath,
+            String action,
+            HttpSession session
+    ) throws Exception {
         AtomicBoolean chained
                 = new AtomicBoolean(false);
 
@@ -230,6 +284,11 @@ public final class FrozenAccountFilterTest {
 
                                 case "getContextPath":
                                     return "/SportZone";
+
+                                case "getParameter":
+                                    return "action".equals(
+                                            arguments[0]
+                                    ) ? action : null;
 
                                 default:
                                     return defaultValue(

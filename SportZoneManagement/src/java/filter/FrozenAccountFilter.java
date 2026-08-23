@@ -18,8 +18,8 @@ import utils.SessionUtil;
  * Cach ly tai khoan Frozen khoi toan bo he thong.
  *
  * Frozen chi duoc:
- * - Xem /account-locked
- * - Logout
+ * - Xem accountLocked qua MainController
+ * - Logout qua MainController
  * - Tai static assets cua trang khoa
  */
 public class FrozenAccountFilter implements Filter {
@@ -55,17 +55,14 @@ public class FrozenAccountFilter implements Filter {
             return;
         }
 
-        String servletPath
-                = httpRequest.getServletPath();
-
-        if (isAllowedPath(servletPath)) {
+        if (isAllowedRequest(httpRequest)) {
             chain.doFilter(request, response);
             return;
         }
 
         httpResponse.sendRedirect(
                 httpRequest.getContextPath()
-                + "/account-locked"
+                + "/MainController?action=accountLocked"
         );
     }
 
@@ -79,14 +76,22 @@ public class FrozenAccountFilter implements Filter {
                 );
     }
 
-    private boolean isAllowedPath(String servletPath) {
+    private boolean isAllowedRequest(
+            HttpServletRequest request
+    ) {
+        String servletPath = request.getServletPath();
+
         if (servletPath == null) {
             return false;
         }
 
-        return "/account-locked".equals(servletPath)
-                || "/logout".equals(servletPath)
-                || servletPath.startsWith("/assets/");
+        if ("/MainController".equals(servletPath)) {
+            String action = request.getParameter("action");
+            return "accountLocked".equals(action)
+                    || "logout".equals(action);
+        }
+
+        return servletPath.startsWith("/assets/");
     }
 
     @Override

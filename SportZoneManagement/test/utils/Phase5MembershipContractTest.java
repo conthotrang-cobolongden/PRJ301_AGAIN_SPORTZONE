@@ -161,7 +161,7 @@ public class Phase5MembershipContractTest {
 
         require(
                 source.contains("method=\"post\"")
-                && source.contains("action=\"${ctx}/profile\""),
+                && source.contains("action=\"${ctx}/MainController?action=profile\""),
                 "Khong duoc thay doi profile form action/method"
         );
 

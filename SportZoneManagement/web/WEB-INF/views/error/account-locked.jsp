@@ -69,7 +69,7 @@
                         </div>
 
                         <a class="btn btn-danger px-4"
-                           href="${ctx}/logout">
+                           href="${ctx}/MainController?action=logout">
                             <i class="bi bi-box-arrow-right me-1"></i>
                             Đăng xuất
                         </a>

@@ -15,7 +15,7 @@
                     <div class="alert alert-danger"><c:out value="${errorMessage}"/></div>
                 </c:if>
 
-                <form method="post" action="${ctx}/login" novalidate>
+                <form method="post" action="${ctx}/MainController?action=login" novalidate>
                     <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
 
                     <div class="mb-3">
@@ -33,7 +33,7 @@
                 </form>
 
                 <p class="mt-3 mb-0">Chưa có tài khoản?
-                    <a href="${ctx}/register">Đăng ký ngay</a>
+                    <a href="${ctx}/MainController?action=register">Đăng ký ngay</a>
                 </p>
             </div>
         </div>

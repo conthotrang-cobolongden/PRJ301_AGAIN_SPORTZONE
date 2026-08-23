@@ -26,21 +26,17 @@ public final class Phase4WebContractTest {
         require("controller.ProfileServlet".equals(
                 servletClass(document, "ProfileServlet")),
                 "ProfileServlet must use controller.ProfileServlet");
-        require("/profile".equals(
-                servletPattern(document, "ProfileServlet")),
-                "ProfileServlet must map to /profile");
+        require(servletPattern(document, "ProfileServlet").isEmpty(),
+                "ProfileServlet must not have a direct public mapping");
         require("controller.PasswordServlet".equals(
                 servletClass(document, "PasswordServlet")),
                 "PasswordServlet must use controller.PasswordServlet");
-        require("/password".equals(
-                servletPattern(document, "PasswordServlet")),
-                "PasswordServlet must map to /password");
+        require(servletPattern(document, "PasswordServlet").isEmpty(),
+                "PasswordServlet must not have a direct public mapping");
 
         List<String> authPatterns = filterPatterns(document, "AuthFilter");
-        require(authPatterns.contains("/profile"),
-                "/profile must remain authentication-protected");
-        require(authPatterns.contains("/password"),
-                "/password must remain authentication-protected");
+        require(authPatterns.contains("/MainController"),
+                "MainController must remain authentication-protected by action");
 
         require(xml.indexOf("<servlet-name>ProfileServlet</servlet-name>")
                 < xml.indexOf("<servlet-name>PasswordServlet</servlet-name>"),

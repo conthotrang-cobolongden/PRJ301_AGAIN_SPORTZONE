@@ -32,7 +32,8 @@
         <div class="col-lg-7">
             <!-- Bước 1+2: chọn sân & ngày — GET reload lại lưới slot -->
             <div class="sz-card mb-4">
-                <form method="get" action="${ctx}/booking/create">
+                <form method="get" action="${ctx}/MainController">
+                    <input type="hidden" name="action" value="bookingCreate"/>
                     <div class="row g-3 align-items-end">
                         <div class="col-md-5">
                             <p class="sz-step-label mb-2"><span class="sz-step-num">1</span> Chọn sân</p>
@@ -60,7 +61,7 @@
 
             <!-- DEEPSEEK: form POST đặt sân. selectedSlotId để pre-select khi vào từ court/detail.
                  fieldErrors.slotId → alert lỗi chọn slot. -->
-            <form method="post" action="${ctx}/booking/create" id="szBookingForm"
+            <form method="post" action="${ctx}/MainController?action=bookingCreate" id="szBookingForm"
                   data-court-price="${selectedCourtPrice}" novalidate>
                 <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
                 <input type="hidden" name="courtId" value="${selectedCourtId}"/>

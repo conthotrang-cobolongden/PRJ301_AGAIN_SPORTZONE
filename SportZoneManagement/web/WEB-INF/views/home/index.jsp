@@ -27,11 +27,11 @@
                 </p>
                 
                 <div class="d-flex gap-3 flex-wrap align-items-center">
-                    <a class="btn btn-sz btn-lg" href="${ctx}/courts">
+                    <a class="btn btn-sz btn-lg" href="${ctx}/MainController?action=courts">
                         <i class="bi bi-calendar2-check-fill"></i> Đặt sân ngay
                     </a>
                     <c:if test="${empty sessionScope.account}">
-                        <a class="btn btn-sz-outline btn-lg" href="${ctx}/login">
+                        <a class="btn btn-sz-outline btn-lg" href="${ctx}/MainController?action=login">
                             <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
                         </a>
                     </c:if>
@@ -153,7 +153,7 @@
                             Hệ thống <b>${tennisCourtCount} sân cứng acrylic</b> ngoài trời cao cấp, phù hợp đánh đơn và đánh đôi chuyên nghiệp.
                         </p>
                         <div class="mt-auto">
-                            <a class="btn btn-sz-green w-100" href="${ctx}/courts?type=tennis">
+                            <a class="btn btn-sz-green w-100" href="${ctx}/MainController?action=courts&amp;type=tennis">
                                 Xem danh sách sân Tennis <i class="bi bi-arrow-right"></i>
                             </a>
                         </div>
@@ -180,7 +180,7 @@
                             Cụm <b>${pickleballCourtCount} sân ngoài trời</b> thiết kế hiện đại, mặt sân bám tốt, thích hợp mọi lứa tuổi.
                         </p>
                         <div class="mt-auto">
-                            <a class="btn btn-sz-outline w-100" href="${ctx}/courts?type=pickleball">
+                            <a class="btn btn-sz-outline w-100" href="${ctx}/MainController?action=courts&amp;type=pickleball">
                                 Xem danh sách sân Pickleball <i class="bi bi-arrow-right"></i>
                             </a>
                         </div>

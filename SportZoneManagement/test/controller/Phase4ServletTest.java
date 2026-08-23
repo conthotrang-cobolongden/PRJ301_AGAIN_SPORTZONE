@@ -133,7 +133,7 @@ public final class Phase4ServletTest {
         require(Boolean.FALSE.equals(fixture.sessionData.get(
                 AppConstants.SESSION_FROZEN)),
                 "Profile refresh must preserve frozen session state");
-        require("/SportZone/profile?updated=1".equals(
+        require("/SportZone/MainController?action=profile&updated=1".equals(
                 fixture.redirectLocation),
                 "Successful profile update must use PRG redirect");
     }
@@ -226,7 +226,7 @@ public final class Phase4ServletTest {
         require(fixture.sessionData.get(AppConstants.SESSION_ACCOUNT)
                 == originalSessionAccount,
                 "Password change must keep the current login session");
-        require("/SportZone/password?changed=1".equals(
+        require("/SportZone/MainController?action=password&changed=1".equals(
                 fixture.redirectLocation),
                 "Successful password change must use PRG redirect");
     }

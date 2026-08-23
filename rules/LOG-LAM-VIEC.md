@@ -4,6 +4,379 @@
 > Ai làm người đó ghi, không sửa entry của người kia.
 
 ---
+## [2026-08-23 23:35] — CODEX — Reset lại DB sau khi SQL legacy ghi đè
+
+**Task:** Xử lý lỗi CourtID tái xuất hiện sau khi người dùng vô tình chạy nhầm SQL cũ.
+
+**Trạng thái:** Xong — DB canonical và booking rollback probe pass.
+
+### Đã làm
+- [x] Đọc stack trace 23:32 và metadata runtime: DB được tạo lúc 23:31:47 với CourtID legacy.
+- [x] Người dùng xác nhận đã chạy nhầm SQL cũ.
+- [x] Chạy lại đúng file 01 rồi 02 trên localhost:1433/SportZoneDB.
+- [x] Xác nhận metadata: CourtID không tồn tại, TimeSlotID tồn tại.
+- [x] Insert booking trong transaction rollback và đếm bản ghi trước/sau: pass.
+- [x] Dọn source/class runner và probe tạm.
+
+### Chưa làm / tồn đọng
+- Người dùng cần logout/login lại sau lần reset cuối.
+
+### Ghi chú cho model còn lại
+- Nếu CourtID xuất hiện lại, một SQL legacy đã tiếp tục ghi đè DB; file repo hiện có contract chặn schema cũ.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 23:30] — CODEX — Đồng bộ schema/seed và reset DB runtime
+
+**Task:** Sửa hai file database và DB thực tế để booking không còn phụ thuộc `Bookings.CourtID`.
+
+**Trạng thái:** Xong — schema, seed và insert booking rollback probe đều pass.
+
+### Đã làm
+- [x] Thêm contract hậu kiểm vào `01_SportZoneDB_Schema.sql`: Bookings bắt buộc có TimeSlotID và cấm CourtID trực tiếp.
+- [x] Thêm preflight vào `02_SportZoneDB_Seed.sql`: chặn seed ngay nếu schema cũ/không đúng contract.
+- [x] Thêm `DatabaseScriptContractTest` chống tái xuất hiện schema legacy.
+- [x] Chạy lại file 01 rồi 02 trên đúng `localhost:1433/SportZoneDB` bằng JDBC driver của app.
+- [x] Đọc metadata DB: CourtID không tồn tại, TimeSlotID dài 4 byte.
+- [x] Insert booking thật trong transaction rollback thành công; không tạo booking hoặc khóa slot test.
+
+### Chưa làm / tồn đọng
+- Người dùng cần logout/login lại vì reset DB làm AccountID trong session cũ hết hiệu lực.
+
+### Ghi chú cho model còn lại
+- Không thêm CourtID vào BookingDAO; court tiếp tục suy ra qua TimeSlots theo Rule 6.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 23:22] — CODEX — Chẩn đoán lỗi booking sau reset DB
+
+**Task:** Điều tra POST bookingCreate trả HTTP 500 sau khi người dùng khởi tạo và seed lại database.
+
+**Trạng thái:** Đã xác định root cause — chưa tự ý reset/migrate dữ liệu.
+
+### Đã làm
+- [x] Xác nhận lỗi lặp lại trên nhiều slot Available, không phải slot conflict.
+- [x] Chạy insert probe trong transaction rollback trên đúng `localhost:1433/SportZoneDB`.
+- [x] Bắt lỗi SQL gốc: DB runtime vẫn có `Bookings.CourtID NOT NULL`; backend chuẩn không ghi cột suy diễn này.
+- [x] Đối chiếu repo: `01_SportZoneDB_Schema.sql` đã bỏ CourtID; `00_SportZoneDB_Init_All.sql` dùng `:r` và cần SQLCMD Mode.
+- [x] Dọn source probe tạm; probe luôn rollback nên không tạo booking hoặc khóa slot.
+
+### Chưa làm / tồn đọng
+- DB runtime cần được tạo lại bằng file 01 rồi 02 trên đúng instance localhost:1433, hoặc chạy file 00 với SQLCMD Mode.
+
+### Ghi chú cho model còn lại
+- Không sửa BookingDAO để ghi CourtID vì vi phạm Rule 6 và schema chuẩn.
+
+### Cần người dùng quyết định
+- Không; hướng dẫn chạy đúng script là đủ, chỉ cần xin quyền nếu muốn agent tự reset DB.
+
+---
+## [2026-08-23 23:12] — CODEX — Paid tự động xác nhận booking
+
+**Task:** Đổi Phase 6 để thanh toán thành công tự chuyển booking từ Pending sang Confirmed.
+
+**Trạng thái:** Xong — build và regression tổng hợp đều pass.
+
+### Đã làm
+- [x] Gộp `Invoice Unpaid -> Paid` và `Booking Pending -> Confirmed` trong cùng transaction `markPaid`.
+- [x] Giữ nguyên booking đã Confirmed và slot vẫn Booked.
+- [x] Enforce ownership bằng `BookingID + AccountID`; booking chỉ Confirmed khi invoice thực sự Paid.
+- [x] Reconcile invoice Paid cũ nhưng booking còn Pending khi tải lại phiên thanh toán.
+- [x] Đồng bộ Phase 6 spec, plan và regression contract.
+- [x] Verify tổng hợp: 53 source + 33 test source compile; Auth/Frozen và regression P3–P6 đều pass.
+
+### Chưa làm / tồn đọng
+- Không.
+
+### Ghi chú cho model còn lại
+- Không còn bước admin duyệt sau thanh toán; Pending chỉ tồn tại trong lúc chưa thanh toán.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 23:07] — CODEX — Reconcile booking/slot bị lệch từ cancel cũ
+
+**Task:** Điều tra báo cáo slot vẫn khóa sau khi đã deploy fix cancel payment.
+
+**Trạng thái:** Xong — đã xác nhận và sửa đúng bản ghi test bị lệch.
+
+### Đã làm
+- [x] Xác nhận Tomcat đang deploy từ `SportZoneManagement/build/web` và class mới build lúc 23:04.
+- [x] Đọc DB bằng JDBC: invoice #5/booking #6 bị cancel lúc 22:55 (trước fix), booking còn Pending và slot #562 còn Booked.
+- [x] Chạy reconciliation hiện hành đúng ownership account #19 cho booking #6.
+- [x] Đọc lại DB: Invoice `Cancelled`, Booking `Cancelled`, slot #562 `Available`.
+- [x] Dọn toàn bộ source/class chẩn đoán tạm.
+
+### Chưa làm / tồn đọng
+- Không.
+
+### Ghi chú cho model còn lại
+- Đây là stale data được tạo trước khi class fix được deploy, không phải transaction mới tiếp tục thất bại.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 23:01] — CODEX — Fix cancel payment phải hủy booking và nhả slot
+
+**Task:** Sửa Phase 6 để cancel/timeout thanh toán hủy toàn bộ đơn chưa Paid và trả slot cho người khác đặt.
+
+**Trạng thái:** Xong — build và regression tổng hợp đều pass.
+
+### Đã làm
+- [x] Xác định root cause: cancel cũ chỉ update `Invoices`, không đụng `Bookings`/`TimeSlots`.
+- [x] Gộp cancel thủ công vào transaction: Invoice `Cancelled`, Booking `Cancelled`, ghi `CancelReason`, slot `Available`.
+- [x] Áp dụng cùng rule cho timeout 15 phút.
+- [x] Chỉ cancel booking đang `Pending`/`Confirmed`; invoice `Paid` không thể bị cancel.
+- [x] Chỉ nhả slot khi không còn booking active khác trên slot.
+- [x] Reconcile trường hợp invoice đã Cancelled bởi code cũ nhưng booking vẫn active khi payment được tải lại.
+- [x] Verify một batch: 53 source + 33 test source compile; Auth/Frozen và regression P3–P6 đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/dao/InvoiceDAO.java` | Sửa | Transaction cancel invoice/booking và release slot |
+| `SportZoneManagement/test/utils/Phase5BookingWebContractTest.java` | Sửa | Contract kiểm tra atomic cancel/release |
+| `docs/superpowers/specs/2026-08-23-phase-6-simulated-payment-design.md` | Sửa | Chốt rule cancel mới |
+| `docs/superpowers/plans/2026-08-23-phase-6-simulated-payment.md` | Sửa | Đồng bộ checklist implementation |
+
+### Chưa làm / tồn đọng
+- Chưa chạy browser/SQL smoke riêng; người dùng có thể kiểm tra bằng một booking test mới.
+- Các thay đổi Phase 1–6 chưa commit.
+
+### Ghi chú cho model còn lại
+- `Hủy thanh toán` trong scope này đồng nghĩa hủy đơn chưa Paid, không phải chỉ đóng màn QR.
+- Paid vẫn giữ booking và slot; không có đường user cancel Paid.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 22:48] — CODEX — Phase 6 thanh toán QR giả lập và hóa đơn Paid
+
+**Task:** Triển khai nhanh Phase 6 theo contract mới: QR giả lập, pay/cancel, timeout 15 phút và chỉ hiển thị hóa đơn Paid.
+
+**Trạng thái:** Xong — một batch build/regression duy nhất đã pass.
+
+### Đã làm
+- [x] Thêm action `invoicePayment`, `invoices`, `invoiceDetail`; MainController vẫn chỉ named-dispatch.
+- [x] Thêm InvoiceDAO/InvoiceService cho tạo phiên Unpaid, ownership, pay, cancel, lazy expiry sau 15 phút và truy vấn Paid-only.
+- [x] Thêm trang QR giả lập, countdown và hai form CSRF `Thanh toán` / `Hủy thanh toán`.
+- [x] `Paid` lưu `PaymentMethod=BankTransfer`, `PaidAt`; cancel/hết hạn thành `Cancelled`.
+- [x] Chỉ invoice Paid xuất hiện trong danh sách và được mở chi tiết; invoice khác trả 404 ở detail.
+- [x] Chuyển toàn bộ route Invoice qua MainController; bỏ direct Invoice filter mapping cũ.
+- [x] Đồng bộ regression contract hiện có, không tạo test nhỏ riêng.
+- [x] Chạy đúng một batch: 53 source + 33 test source compile; Auth/Frozen và regression P3–P6 đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/{dao/InvoiceDAO,service/InvoiceService}.java` | Sửa/Tạo | Persistence và rule thanh toán 15 phút |
+| `SportZoneManagement/src/java/controller/{InvoicePayment,Invoices,InvoiceDetail}Servlet.java` | Tạo | HTTP/CSRF/ownership cho Phase 6 |
+| `SportZoneManagement/src/java/controller/MainController.java` | Sửa | Thêm ba action Phase 6 |
+| `SportZoneManagement/src/java/{filter/AuthFilter,model/Invoice,utils/Views}.java` | Sửa | Security và JSP-safe properties |
+| `SportZoneManagement/web/WEB-INF/views/{invoice,booking,layout}/**` | Sửa/Tạo | QR, countdown, paid-only invoice và CTA |
+| `SportZoneManagement/web/assets/img/payment-qr.svg` | Tạo | QR vector giả lập |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Khai báo named servlets, không direct mapping |
+| `docs/superpowers/{specs,plans}/2026-08-23-phase-6-simulated-payment*` | Tạo | Contract và checklist triển khai |
+
+### Chưa làm / tồn đọng
+- Không tích hợp API/cổng thanh toán thật theo scope đã chốt.
+- Chưa chạy Tomcat/browser + SQL Server smoke riêng vì người dùng yêu cầu chỉ một lượt test tổng hợp.
+- Các thay đổi Phase 1–6 chưa commit.
+
+### Ghi chú cho model còn lại
+- Không thêm cột deadline: thời hạn là `InvoiceDate + 15 phút`; SQL Server là nguồn chân lý.
+- Client submit cancel khi countdown về 0; backend cũng lazy-cancel trước pay/load để chống sửa JavaScript.
+- Invoice Cancelled không được reset/retry trong scope tối giản hiện tại.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 22:30] — CODEX — Migrate routing Phase 5 qua MainController
+
+**Task:** Hoàn tất migration P1–P5 bằng cách chuyển Booking và Frozen routing của Phase 5 qua MainController.
+
+**Trạng thái:** Xong — build và regression tổng hợp đều pass.
+
+### Đã làm
+- [x] Bổ sung action `bookingCreate`, `bookings`, `bookingDetail`, `accountLocked` vào MainController.
+- [x] Xóa direct mapping `/booking/create`, `/bookings`, `/booking`, `/account-locked`; toàn bộ Servlet P1–P5 chỉ còn là named-dispatch target.
+- [x] Chuyển form/link/PRG redirect Booking và các link chéo Court/Invoice sang MainController, giữ nguyên `courtId`, `date`, `slotId`, `serviceId`, `tab`, `id`, `created` và CSRF.
+- [x] Mở rộng AuthFilter để bảo vệ toàn bộ action P4–P5 và lưu đúng URL MainController cho GET của guest.
+- [x] Đổi FrozenAccountFilter để chỉ whitelist action `accountLocked`, `logout` và `/assets/*`; redirect khóa tài khoản cũng đi qua MainController.
+- [x] Đồng bộ các regression test hiện có; không tạo file test nhỏ mới.
+- [x] Verify tổng hợp: 49 source + 33 test source compile; Auth/Frozen và toàn bộ regression P3–P5 đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/controller/MainController.java` | Sửa | Thêm bốn action P5 |
+| `SportZoneManagement/src/java/controller/{BookingCreate,Bookings,BookingDetail,Login}Servlet.java` | Sửa | Redirect và route contract qua MainController |
+| `SportZoneManagement/src/java/filter/{AuthFilter,FrozenAccountFilter}.java` | Sửa | Security theo action P5 |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Xóa toàn bộ direct mapping P5 |
+| `SportZoneManagement/web/WEB-INF/views/{booking,court,invoice,layout}/**` | Sửa | Form/link P5 qua MainController |
+| `SportZoneManagement/test/{controller,filter,utils}/**` | Sửa | Đồng bộ routing/security contract mới |
+
+### Chưa làm / tồn đọng
+- Phase 6 invoice vẫn tạm dừng theo yêu cầu.
+- Các thay đổi migration Phase 1–5 chưa commit.
+
+### Ghi chú cho model còn lại
+- `web.xml` hiện chỉ public-map `/MainController` cho toàn bộ nghiệp vụ đã hoàn tất P1–P5.
+- AuthFilter vẫn giữ direct mappings của Invoice/Admin chưa migrate; khi tiếp tục Phase 6 cần chuyển chúng thành action-aware MainController routes.
+- GET form chọn sân/ngày dùng hidden field `action=bookingCreate` để browser không làm mất action khi tạo query string.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 22:24] — CODEX — Migrate routing Phase 4 qua MainController
+
+**Task:** Migration Phase 4 Account để hồ sơ và đổi mật khẩu chỉ đi qua MainController.
+
+**Trạng thái:** Xong — build và regression tổng hợp đều pass.
+
+### Đã làm
+- [x] Bổ sung action `profile`, `password` vào MainController.
+- [x] Bỏ mapping public trực tiếp `/profile`, `/password`; giữ Servlet làm named-dispatch target.
+- [x] Chuyển link/form hồ sơ, đổi mật khẩu và PRG redirect sang MainController.
+- [x] Map AuthFilter vào MainController và phân biệt action: chỉ `profile`, `password` của Phase 4 yêu cầu đăng nhập; action public Phase 1–3 vẫn đi tiếp.
+- [x] Đồng bộ các test contract/servlet/filter hiện có; không tạo test nhỏ mới.
+- [x] Verify tổng hợp: 49 source + 33 test source compile; Auth/Frozen và regression P3–P5 đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/controller/MainController.java` | Sửa | Thêm routing Account P4 |
+| `SportZoneManagement/src/java/filter/AuthFilter.java` | Sửa | Bảo vệ MainController theo action |
+| `SportZoneManagement/src/java/controller/{Profile,Password}Servlet.java` | Sửa | PRG redirect qua MainController |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Bỏ direct mapping Account, map AuthFilter vào MainController |
+| `SportZoneManagement/web/WEB-INF/views/{account,layout}/**` | Sửa | Link/form Account qua MainController |
+| `SportZoneManagement/test/{controller,filter,utils}/**` | Sửa | Đồng bộ contract routing và auth mới |
+
+### Chưa làm / tồn đọng
+- Phase 5 vẫn còn route trực tiếp.
+- Phase 6 invoice tiếp tục tạm dừng.
+
+### Ghi chú cho model còn lại
+- AuthFilter phải tiếp tục xét `action` khi Phase 5 được đưa vào MainController; không được biến toàn bộ MainController thành route bắt đăng nhập.
+- FrozenAccountFilter vẫn chỉ cho tài khoản bị khóa đi qua action `logout`.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 22:20] — CODEX — Migrate routing Phase 3 qua MainController
+
+**Task:** Migration Phase 3 Court browsing để danh sách/chi tiết sân chỉ đi qua MainController.
+
+**Trạng thái:** Xong — build và regression tổng hợp đều pass.
+
+### Đã làm
+- [x] Bổ sung action `courts`, `court` vào MainController.
+- [x] Bỏ mapping public trực tiếp `/courts`, `/court`; giữ Servlet làm named-dispatch target.
+- [x] Chuyển toàn bộ link danh sách, filter loại sân, court detail và date pill sang MainController.
+- [x] Giữ nguyên query parameter `type`, `id`, `date` và các link booking chưa migrate.
+- [x] Đồng bộ Phase 3 web/JSP contract tests hiện có; không tạo test nhỏ mới.
+- [x] Verify tổng hợp: build thành công; Auth/Frozen và regression P3–P5 đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/controller/MainController.java` | Sửa | Thêm routing Court P3 |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Bỏ direct mapping Court |
+| `SportZoneManagement/web/WEB-INF/views/{court,home,layout,booking}/**` | Sửa | Link Court qua MainController |
+| `SportZoneManagement/test/utils/Phase3{Web,Jsp}ContractTest.java` | Sửa | Đồng bộ contract routing mới |
+
+### Chưa làm / tồn đọng
+- Phase 4–5 vẫn còn route trực tiếp.
+- Phase 6 invoice tiếp tục tạm dừng.
+
+### Ghi chú cho model còn lại
+- Court routes vẫn public; MainController chỉ dispatch, không thêm auth rule.
+- Query parameters trong HTML dùng `&amp;` để browser gửi đúng `type`, `id`, `date`.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 22:17] — CODEX — Migrate routing Phase 2 qua MainController
+
+**Task:** Tiếp tục migration Phase 2 Auth để login/register/logout chỉ đi qua MainController.
+
+**Trạng thái:** Xong — build và regression tổng hợp đã pass sau khi đồng bộ một contract test cũ.
+
+### Đã làm
+- [x] Bổ sung action `login`, `register`, `logout` vào MainController.
+- [x] Bỏ mapping public trực tiếp `/login`, `/register`, `/logout`; giữ nguyên ba Auth Servlet làm named-dispatch target.
+- [x] Chuyển form/link Auth và AuthFilter redirect sang `MainController?action=...`.
+- [x] Cho account Frozen dùng riêng action `logout`; các action MainController khác vẫn bị cách ly.
+- [x] Đồng bộ Auth/Frozen/Web contract tests hiện có; không tạo test nhỏ mới.
+- [x] Verify tổng hợp: 49 source + 33 test source compile; AuthWebContract, AuthFilter, AuthServlet, Frozen và regression P3–P5 đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/controller/MainController.java` | Sửa | Thêm routing Auth P2 |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Bỏ direct mapping Auth, đồng bộ thứ tự filter |
+| `SportZoneManagement/src/java/filter/{AuthFilter,FrozenAccountFilter}.java` | Sửa | Redirect login và whitelist logout theo action |
+| `SportZoneManagement/web/WEB-INF/views/{auth,layout,home,error}/**` | Sửa | Form/link Auth qua MainController |
+| `SportZoneManagement/test/{filter,utils}/**` | Sửa | Đồng bộ contract routing mới |
+
+### Chưa làm / tồn đọng
+- Phase 3–5 vẫn còn route trực tiếp.
+- Phase 6 invoice tiếp tục tạm dừng.
+
+### Ghi chú cho model còn lại
+- AuthFilter vẫn bảo vệ các URL trực tiếp của P4/P5 cho tới khi các phase đó được migrate.
+- AccountLocked vẫn là route trực tiếp tới Phase 5; sẽ chuyển sau cùng với Frozen routing.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+## [2026-08-23 22:12] — CODEX — Migrate routing Phase 1 qua MainController
+
+**Task:** Tạm dừng Phase 6, bắt đầu refactor P1–P5 để mọi request nghiệp vụ đi qua MainController; thực hiện Phase 1 trước.
+
+**Trạng thái:** Xong — một lượt build và regression tổng hợp đã pass.
+
+### Đã làm
+- [x] Tạo `MainController` chỉ whitelist action `home`, `health` và forward bằng named dispatcher.
+- [x] Map `/MainController`; bỏ mapping public trực tiếp `/home`, `/health` nhưng giữ nguyên `HomeServlet`, `HealthServlet`.
+- [x] Chuyển entry point, link và redirect về Home sang `MainController?action=home`.
+- [x] Không thay đổi DAO, Service, model, SQL hoặc nghiệp vụ hiện hành.
+- [x] Verify một lượt: `ant clean compile-test`, Home/Auth/Frozen tests và `Phase5RegressionBatchTest` đều pass.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/controller/MainController.java` | Mới | Front Controller thuần điều hướng cho P1 |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Khai báo/mapping MainController, bỏ direct mapping Home/Health |
+| `SportZoneManagement/web/index.jsp`, `web/WEB-INF/views/{layout,error}/**` | Sửa | Đi vào/quay về Home qua MainController |
+| `SportZoneManagement/src/java/controller/{LoginServlet,RegisterServlet,LogoutServlet,AccountLockedServlet}.java` | Sửa | Redirect Home qua MainController |
+| `SportZoneManagement/test/controller/AuthServletTest.java` | Sửa | Đồng bộ redirect contract mới |
+| `docs/superpowers/specs/2026-08-23-main-controller-routing-design.md` | Sửa | Đánh dấu đặc tả đã duyệt và P1 đã verify |
+
+### Chưa làm / tồn đọng
+- Phase 2–5 vẫn còn route trực tiếp, sẽ migrate tuần tự.
+- Phase 6 invoice tiếp tục tạm dừng.
+
+### Ghi chú cho model còn lại
+- Không đưa nghiệp vụ, security hoặc validation vào MainController.
+- P2 tiếp theo bổ sung `login`, `register`, `logout` rồi chuyển AuthFilter sang action-aware routing.
+
+### Cần người dùng quyết định
+- Không.
+
+---
 ## [2026-08-23 17:33] — CODEX — Hoàn tất Phase 5 Đặt sân và hạng thành viên
 
 **Task:** Chốt Phase 5, đồng bộ tài liệu/log tiến độ và commit trước khi chuyển sang Phase 6.

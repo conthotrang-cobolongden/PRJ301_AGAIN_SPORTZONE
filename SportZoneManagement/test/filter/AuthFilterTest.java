@@ -18,16 +18,58 @@ public final class AuthFilterTest {
 
     public static void main(String[] args) throws Exception {
         loggedInRequestContinuesChain();
+        anonymousPublicMainControllerActionContinues();
+        anonymousProtectedMainControllerActionsRedirect();
         anonymousGetSavesTargetAndRedirects();
         anonymousPostDoesNotSaveTargetAndRedirects();
         System.out.println("AuthFilterTest PASSED");
+    }
+
+    private static void anonymousPublicMainControllerActionContinues() throws Exception {
+        HttpServletRequest request = request("GET", "/MainController", "action=home",
+                "/SportZone", null);
+        AtomicBoolean chained = new AtomicBoolean();
+        AtomicReference<String> redirect = new AtomicReference<>();
+
+        new AuthFilter().doFilter(request, response(redirect), chain(chained));
+
+        require(chained.get(), "Anonymous public MainController action must continue the chain");
+        require(redirect.get() == null, "Anonymous public action must not redirect");
+    }
+
+    private static void anonymousProtectedMainControllerActionsRedirect() throws Exception {
+        String[] protectedActions = {
+            "profile", "password", "bookingCreate", "bookings",
+            "bookingDetail", "accountLocked", "invoicePayment",
+            "invoices", "invoiceDetail"
+        };
+
+        for (String action : protectedActions) {
+            Map<String, Object> attributes = new HashMap<>();
+            HttpSession createdSession = session(attributes);
+            String query = "action=" + action;
+            HttpServletRequest request = request("GET", "/MainController", query,
+                    "/SportZone", null, createdSession);
+            AtomicBoolean chained = new AtomicBoolean();
+            AtomicReference<String> redirect = new AtomicReference<>();
+
+            new AuthFilter().doFilter(request, response(redirect), chain(chained));
+
+            require(!chained.get(), "Anonymous protected action must not continue: " + action);
+            require(("/MainController?" + query).equals(
+                    attributes.get(AppConstants.SESSION_REDIRECT_AFTER_LOGIN)),
+                    "Anonymous protected action must save target: " + action);
+            require("/SportZone/MainController?action=login".equals(redirect.get()),
+                    "Anonymous protected action must redirect to login: " + action);
+        }
     }
 
     private static void loggedInRequestContinuesChain() throws Exception {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put(AppConstants.SESSION_ACCOUNT, new Account());
         HttpSession session = session(attributes);
-        HttpServletRequest request = request("GET", "/booking", null, "/SportZone", session);
+        HttpServletRequest request = request("GET", "/MainController",
+                "action=bookingDetail&id=17", "/SportZone", session);
         AtomicBoolean chained = new AtomicBoolean();
         AtomicReference<String> redirect = new AtomicReference<>();
 
@@ -40,7 +82,8 @@ public final class AuthFilterTest {
     private static void anonymousGetSavesTargetAndRedirects() throws Exception {
         Map<String, Object> attributes = new HashMap<>();
         HttpSession createdSession = session(attributes);
-        HttpServletRequest request = request("GET", "/booking", "id=17",
+        HttpServletRequest request = request("GET", "/MainController",
+                "action=bookingDetail&id=17",
                 "/SportZone", null, createdSession);
         AtomicBoolean chained = new AtomicBoolean();
         AtomicReference<String> redirect = new AtomicReference<>();
@@ -48,16 +91,19 @@ public final class AuthFilterTest {
         new AuthFilter().doFilter(request, response(redirect), chain(chained));
 
         require(!chained.get(), "Anonymous GET must not continue the chain");
-        require("/booking?id=17".equals(attributes.get(AppConstants.SESSION_REDIRECT_AFTER_LOGIN)),
+        require("/MainController?action=bookingDetail&id=17".equals(
+                attributes.get(AppConstants.SESSION_REDIRECT_AFTER_LOGIN)),
                 "Anonymous GET must save servlet path and query");
-        require("/SportZone/login".equals(redirect.get()),
+        require("/SportZone/MainController?action=login".equals(
+                redirect.get()),
                 "Anonymous GET must redirect to context login URL");
     }
 
     private static void anonymousPostDoesNotSaveTargetAndRedirects() throws Exception {
         Map<String, Object> attributes = new HashMap<>();
         HttpSession createdSession = session(attributes);
-        HttpServletRequest request = request("POST", "/booking", "id=17",
+        HttpServletRequest request = request("POST", "/MainController",
+                "action=bookingCreate",
                 "/SportZone", null, createdSession);
         AtomicBoolean chained = new AtomicBoolean();
         AtomicReference<String> redirect = new AtomicReference<>();
@@ -67,7 +113,8 @@ public final class AuthFilterTest {
         require(!chained.get(), "Anonymous POST must not continue the chain");
         require(!attributes.containsKey(AppConstants.SESSION_REDIRECT_AFTER_LOGIN),
                 "Anonymous POST must not save a replay target");
-        require("/SportZone/login".equals(redirect.get()),
+        require("/SportZone/MainController?action=login".equals(
+                redirect.get()),
                 "Anonymous POST must redirect to context login URL");
     }
 
@@ -108,6 +155,13 @@ public final class AuthFilterTest {
                 case "getMethod": return httpMethod;
                 case "getServletPath": return servletPath;
                 case "getQueryString": return query;
+                case "getParameter":
+                    if (!"action".equals(args[0]) || query == null) return null;
+                    for (String pair : query.split("&")) {
+                        String[] parts = pair.split("=", 2);
+                        if (parts.length == 2 && "action".equals(parts[0])) return parts[1];
+                    }
+                    return null;
                 case "getContextPath": return contextPath;
                 case "getSession":
                     return args == null || args.length == 0 ? createdSession : existingSession;

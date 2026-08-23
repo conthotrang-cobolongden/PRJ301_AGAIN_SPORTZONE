@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import model.Booking;
 import model.BookingService;
+import model.Invoice;
 import model.Service;
 
 public final class Phase5BookingWebContractTest {
@@ -23,6 +24,7 @@ public final class Phase5BookingWebContractTest {
         shouldBindOwnedBookingLists();
         shouldEnforceBookingDetailOwnership();
         shouldKeepBookingJspScope();
+        shouldConfigurePhase6SimulatedPayment();
 
         System.out.println(
                 "Phase5BookingWebContractTest PASSED"
@@ -66,6 +68,9 @@ public final class Phase5BookingWebContractTest {
         String webXml = readProjectFile(
                 "web/WEB-INF/web.xml"
         );
+        String mainController = readProjectFile(
+                "src/java/controller/MainController.java"
+        );
 
         require(
                 webXml.contains(
@@ -89,24 +94,17 @@ public final class Phase5BookingWebContractTest {
         );
 
         require(
-                webXml.contains(
-                        "<url-pattern>/booking/create</url-pattern>"
-                ),
-                "Phai map /booking/create"
+                !webXml.contains("<url-pattern>/booking/create</url-pattern>")
+                && !webXml.contains("<url-pattern>/bookings</url-pattern>")
+                && !webXml.contains("<url-pattern>/booking</url-pattern>"),
+                "Booking Servlet khong duoc co direct public mapping"
         );
 
         require(
-                webXml.contains(
-                        "<url-pattern>/bookings</url-pattern>"
-                ),
-                "Phai map /bookings"
-        );
-
-        require(
-                webXml.contains(
-                        "<url-pattern>/booking</url-pattern>"
-                ),
-                "Phai map /booking"
+                mainController.contains("case \"bookingCreate\":")
+                && mainController.contains("case \"bookings\":")
+                && mainController.contains("case \"bookingDetail\":"),
+                "MainController phai dieu huong du ba booking action"
         );
     }
 
@@ -147,7 +145,7 @@ public final class Phase5BookingWebContractTest {
 
         require(
                 source.contains(
-                        "\"/booking?id=\""
+                        "\"/MainController?action=bookingDetail&id=\""
                 )
                 && source.contains(
                         "\"&created=1\""
@@ -224,9 +222,15 @@ public final class Phase5BookingWebContractTest {
 
         require(
                 createJsp.contains(
-                        "action=\"${ctx}/booking/create\""
+                        "method=\"get\" action=\"${ctx}/MainController\""
+                )
+                && createJsp.contains(
+                        "name=\"action\" value=\"bookingCreate\""
+                )
+                && createJsp.contains(
+                        "method=\"post\" action=\"${ctx}/MainController?action=bookingCreate\""
                 ),
-                "Create JSP phai POST dung route"
+                "Create JSP phai GET/POST qua MainController"
         );
 
         require(
@@ -252,7 +256,7 @@ public final class Phase5BookingWebContractTest {
 
         require(
                 listJsp.contains(
-                        "${ctx}/booking?id=${b.bookingId}"
+                        "${ctx}/MainController?action=bookingDetail&amp;id=${b.bookingId}"
                 ),
                 "Booking list phai link sang owned detail"
         );
@@ -279,6 +283,66 @@ public final class Phase5BookingWebContractTest {
                 !detailJsp.contains("name=\"csrfToken\""),
                 "Detail read-only khong can POST form"
         );
+    }
+
+    private static void shouldConfigurePhase6SimulatedPayment()
+            throws Exception {
+        String webXml = readProjectFile("web/WEB-INF/web.xml");
+        String mainController = readProjectFile(
+                "src/java/controller/MainController.java");
+        String authFilter = readProjectFile(
+                "src/java/filter/AuthFilter.java");
+        String invoiceDAO = readProjectFile(
+                "src/java/dao/InvoiceDAO.java");
+        String paymentServlet = readProjectFile(
+                "src/java/controller/InvoicePaymentServlet.java");
+        String paymentJsp = readProjectFile(
+                "web/WEB-INF/views/invoice/payment.jsp");
+        String invoiceList = readProjectFile(
+                "web/WEB-INF/views/invoice/list.jsp");
+
+        requireReadableProperty(Invoice.class, "expiresAtEpochMilli");
+        requireReadableProperty(Invoice.class, "paidAtValue");
+
+        require(webXml.contains("controller.InvoicePaymentServlet")
+                && webXml.contains("controller.InvoicesServlet")
+                && webXml.contains("controller.InvoiceDetailServlet"),
+                "web.xml phai khai bao named servlet Phase 6");
+        require(!webXml.contains("<url-pattern>/invoice</url-pattern>")
+                && !webXml.contains("<url-pattern>/invoices</url-pattern>")
+                && !webXml.contains("<url-pattern>/invoice/*</url-pattern>"),
+                "Phase 6 khong duoc co direct public mapping");
+        require(mainController.contains("case \"invoicePayment\":")
+                && mainController.contains("case \"invoices\":")
+                && mainController.contains("case \"invoiceDetail\":"),
+                "MainController phai dieu huong du ba action Phase 6");
+        require(authFilter.contains("!\"invoicePayment\".equals(action)")
+                && authFilter.contains("!\"invoices\".equals(action)")
+                && authFilter.contains("!\"invoiceDetail\".equals(action)"),
+                "AuthFilter phai bao ve action Phase 6");
+        require(invoiceDAO.contains("DATEADD(MINUTE, 15, i.InvoiceDate)")
+                && invoiceDAO.contains("PaymentStatus = N'Paid'")
+                && invoiceDAO.contains("PaymentStatus = N'Cancelled'")
+                && invoiceDAO.contains("Status = N'Cancelled'")
+                && invoiceDAO.contains("Status = N'Available'")
+                && invoiceDAO.contains("confirmPaidBooking(connection, bookingID, accountID)")
+                && invoiceDAO.contains("Status = N'Confirmed'")
+                && invoiceDAO.contains("b.Status = N'Pending'")
+                && invoiceDAO.contains("connection.setAutoCommit(false)")
+                && invoiceDAO.contains("b.AccountID = ?"),
+                "InvoiceDAO phai atomically confirm Paid booking, cancel unpaid order, release slot va enforce ownership");
+        require(paymentServlet.contains("CsrfUtil.isValid(request)")
+                && paymentServlet.contains("invoiceService.pay(")
+                && paymentServlet.contains("invoiceService.cancel("),
+                "Payment servlet phai co CSRF va hai thao tac gia lap");
+        require(paymentJsp.contains("payment-qr.svg")
+                && paymentJsp.contains("paymentCountdown")
+                && paymentJsp.contains("value=\"pay\"")
+                && paymentJsp.contains("value=\"cancel\""),
+                "Payment JSP phai co QR, countdown, pay va cancel");
+        require(invoiceList.contains("Chỉ hiển thị hóa đơn có trạng thái Paid")
+                && invoiceDAO.contains("i.PaymentStatus = N'Paid'"),
+                "Danh sach hoa don chi duoc doc Paid");
     }
 
     private static void requireReadableProperty(

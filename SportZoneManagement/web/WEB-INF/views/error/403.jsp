@@ -8,7 +8,7 @@
     <p class="sz-kicker">403</p>
     <h1>Bạn không có quyền xem trang này.</h1>
     <p>Đăng nhập đúng tài khoản hoặc quay về trang chủ.</p>
-    <a class="btn btn-sz" href="${ctx}/home">Về trang chủ</a>
+    <a class="btn btn-sz" href="${ctx}/MainController?action=home">Về trang chủ</a>
 </section>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

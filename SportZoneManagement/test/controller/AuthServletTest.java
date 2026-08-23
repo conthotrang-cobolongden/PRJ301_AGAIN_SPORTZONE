@@ -65,8 +65,9 @@ public final class AuthServletTest {
 
         new TestLoginServlet(new FakeAuthService()).get(fixture.request, fixture.response);
 
-        require("/SportZone/home".equals(fixture.redirectLocation),
-                "Logged-in GET /login must redirect to context /home");
+        require("/SportZone/MainController?action=home".equals(
+                fixture.redirectLocation),
+                "Logged-in GET /login must redirect through MainController");
         require(fixture.forwardedPath == null,
                 "Logged-in GET /login must not forward to the login view");
     }
@@ -147,7 +148,7 @@ public final class AuthServletTest {
         require(!fixture.sessionData.containsKey(AppConstants.SESSION_REDIRECT_AFTER_LOGIN),
                 "Successful login must consume redirectAfterLogin exactly once");
         require(
-                "/SportZone/account-locked".equals(
+                "/SportZone/MainController?action=accountLocked".equals(
                         fixture.redirectLocation
                 ),
                 "Frozen login must ignore saved target and redirect to locked page"
@@ -166,8 +167,10 @@ public final class AuthServletTest {
 
             new TestLoginServlet(authService).post(fixture.request, fixture.response);
 
-            require("/SportZone/home".equals(fixture.redirectLocation),
-                    "Successful " + role + " login must default to context /home");
+            require("/SportZone/MainController?action=home".equals(
+                    fixture.redirectLocation),
+                    "Successful " + role
+                    + " login must default through MainController");
         }
     }
 
@@ -192,8 +195,9 @@ public final class AuthServletTest {
         new TestRegisterServlet(new FakeAuthService()).get(
                 loggedIn.request, loggedIn.response);
 
-        require("/SportZone/home".equals(loggedIn.redirectLocation),
-                "Logged-in GET /register must redirect to context /home");
+        require("/SportZone/MainController?action=home".equals(
+                loggedIn.redirectLocation),
+                "Logged-in GET /register must use MainController");
         require(loggedIn.forwardedPath == null,
                 "Logged-in GET /register must not forward to the register view");
     }
@@ -307,8 +311,9 @@ public final class AuthServletTest {
                 "Successful registration must use SessionUtil role state");
         require(Boolean.FALSE.equals(fixture.sessionData.get(AppConstants.SESSION_FROZEN)),
                 "Successful registration must use SessionUtil frozen state");
-        require("/SportZone/home".equals(fixture.redirectLocation),
-                "Successful registration must redirect to context /home");
+        require("/SportZone/MainController?action=home".equals(
+                fixture.redirectLocation),
+                "Successful registration must use MainController");
     }
 
     private static void testLogoutInvalidatesWholeSessionAndRedirectsHome()
@@ -324,8 +329,9 @@ public final class AuthServletTest {
                 "Logout must invalidate the entire existing session");
         require(fixture.sessionData.isEmpty(),
                 "Session invalidation must remove all session state");
-        require("/SportZone/home".equals(fixture.redirectLocation),
-                "Logout must redirect to context /home");
+        require("/SportZone/MainController?action=home".equals(
+                fixture.redirectLocation),
+                "Logout must redirect through MainController");
     }
 
     private static Fixture validPostFixture(String contextPath) {

@@ -79,7 +79,7 @@
                 </c:if>
 
                 <a class="btn btn-sz-outline btn-sm mt-3"
-                   href="${ctx}/password">
+                   href="${ctx}/MainController?action=password">
                     Đổi mật khẩu
                 </a>
             </div>
@@ -96,7 +96,7 @@
                     </div>
                 </c:if>
 
-                <form method="post" action="${ctx}/profile" novalidate>
+                <form method="post" action="${ctx}/MainController?action=profile" novalidate>
                     <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
 
                     <div class="mb-3">

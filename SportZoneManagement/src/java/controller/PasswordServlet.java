@@ -81,7 +81,10 @@ public class PasswordServlet extends HttpServlet {
             return;
         }
 
-        response.sendRedirect(request.getContextPath() + "/password?changed=1");
+        response.sendRedirect(
+                request.getContextPath()
+                + "/MainController?action=password&changed=1"
+        );
     }
 
     private Account currentAccount(HttpServletRequest request) {

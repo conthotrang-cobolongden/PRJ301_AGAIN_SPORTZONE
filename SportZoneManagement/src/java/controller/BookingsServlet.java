@@ -19,7 +19,7 @@ import utils.SessionUtil;
 import utils.Views;
 
 /**
- * GET /bookings.
+ * GET action bookings.
  * Tag: U11.
  */
 public class BookingsServlet extends HttpServlet {

@@ -14,8 +14,8 @@ public final class Phase4JspContractTest {
         String profile = read("web/WEB-INF/views/account/profile.jsp");
         String password = read("web/WEB-INF/views/account/password.jsp");
 
-        require(profile.contains("method=\"post\" action=\"${ctx}/profile\""),
-                "Profile form must POST to /profile");
+        require(profile.contains("method=\"post\" action=\"${ctx}/MainController?action=profile\""),
+                "Profile form must POST through MainController");
         require(profile.contains("name=\"csrfToken\""),
                 "Profile form must retain csrfToken");
         require(profile.contains("name=\"fullName\"")
@@ -37,8 +37,8 @@ public final class Phase4JspContractTest {
                 + "'") || profile.contains("value=\"<c:out value='${account.fullName}'/>\""),
                 "Profile fullName must come from escaped request account");
 
-        require(password.contains("method=\"post\" action=\"${ctx}/password\""),
-                "Password form must POST to /password");
+        require(password.contains("method=\"post\" action=\"${ctx}/MainController?action=password\""),
+                "Password form must POST through MainController");
         require(password.contains("name=\"csrfToken\""),
                 "Password form must retain csrfToken");
         require(password.contains("name=\"currentPassword\"")

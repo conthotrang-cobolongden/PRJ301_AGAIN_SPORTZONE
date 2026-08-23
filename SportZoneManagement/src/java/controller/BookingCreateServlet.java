@@ -29,7 +29,7 @@ import utils.SessionUtil;
 import utils.Views;
 
 /**
- * U10: GET/POST /booking/create.
+ * U10: GET/POST action bookingCreate.
  */
 public class BookingCreateServlet extends HttpServlet {
 
@@ -198,7 +198,7 @@ public class BookingCreateServlet extends HttpServlet {
 
         response.sendRedirect(
                 request.getContextPath()
-                + "/booking?id="
+                + "/MainController?action=bookingDetail&id="
                 + result.getBookingID()
                 + "&created=1"
         );

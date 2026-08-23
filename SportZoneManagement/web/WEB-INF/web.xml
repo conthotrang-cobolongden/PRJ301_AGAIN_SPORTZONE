@@ -8,7 +8,8 @@
         Filter order is intentional:
         1. EncodingFilter
         2. AuthFilter
-        3. RoleFilter
+        3. FrozenAccountFilter
+        4. RoleFilter
     -->
     <filter>
         <filter-name>EncodingFilter</filter-name>
@@ -38,19 +39,11 @@
         Authentication is required only for account, booking,
         invoice and admin functions.
 
-        Phase 3 routes /courts and /court are intentionally public.
+        Phase 3 actions courts and court are intentionally public.
     -->
     <filter-mapping>
         <filter-name>AuthFilter</filter-name>
-        <url-pattern>/account-locked</url-pattern>
-        <url-pattern>/profile</url-pattern>
-        <url-pattern>/password</url-pattern>
-        <url-pattern>/booking</url-pattern>
-        <url-pattern>/booking/*</url-pattern>
-        <url-pattern>/bookings</url-pattern>
-        <url-pattern>/invoice</url-pattern>
-        <url-pattern>/invoice/*</url-pattern>
-        <url-pattern>/invoices</url-pattern>
+        <url-pattern>/MainController</url-pattern>
         <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
 
@@ -70,6 +63,11 @@
     </filter-mapping>
 
     <!-- ===== PUBLIC FOUNDATION SERVLETS ===== -->
+
+    <servlet>
+        <servlet-name>MainController</servlet-name>
+        <servlet-class>controller.MainController</servlet-class>
+    </servlet>
 
     <servlet>
         <servlet-name>HomeServlet</servlet-name>
@@ -146,81 +144,28 @@
         <servlet-class>controller.AccountLockedServlet</servlet-class>
     </servlet>
 
+    <!-- ===== PHASE 6: SIMULATED USER PAYMENT + PAID INVOICES ===== -->
 
-    <servlet-mapping>
-        <servlet-name>AccountLockedServlet</servlet-name>
-        <url-pattern>/account-locked</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>InvoicePaymentServlet</servlet-name>
+        <servlet-class>controller.InvoicePaymentServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>InvoicesServlet</servlet-name>
+        <servlet-class>controller.InvoicesServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>InvoiceDetailServlet</servlet-name>
+        <servlet-class>controller.InvoiceDetailServlet</servlet-class>
+    </servlet>
 
     <!-- ===== PUBLIC ROUTE MAPPINGS ===== -->
 
     <servlet-mapping>
-        <servlet-name>HomeServlet</servlet-name>
-        <url-pattern>/home</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>HealthServlet</servlet-name>
-        <url-pattern>/health</url-pattern>
-    </servlet-mapping>
-
-    <!-- U7: danh sach va filter san. -->
-    <servlet-mapping>
-        <servlet-name>CourtsServlet</servlet-name>
-        <url-pattern>/courts</url-pattern>
-    </servlet-mapping>
-
-    <!-- U8, U9: chi tiet san va lich theo ngay. -->
-    <servlet-mapping>
-        <servlet-name>CourtDetailServlet</servlet-name>
-        <url-pattern>/court</url-pattern>
-    </servlet-mapping>
-
-    <!-- ===== AUTH ROUTE MAPPINGS ===== -->
-
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/login</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>RegisterServlet</servlet-name>
-        <url-pattern>/register</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/logout</url-pattern>
-    </servlet-mapping>
-
-    <!-- U4, U5: View and update own profile. -->
-    <servlet-mapping>
-        <servlet-name>ProfileServlet</servlet-name>
-        <url-pattern>/profile</url-pattern>
-    </servlet-mapping>
-
-    <!-- U6: Change own password. -->
-    <servlet-mapping>
-        <servlet-name>PasswordServlet</servlet-name>
-        <url-pattern>/password</url-pattern>
-    </servlet-mapping>
-
-    <!-- U10: Create booking. -->
-    <servlet-mapping>
-        <servlet-name>BookingCreateServlet</servlet-name>
-        <url-pattern>/booking/create</url-pattern>
-    </servlet-mapping>
-
-    <!-- U11: My bookings. -->
-    <servlet-mapping>
-        <servlet-name>BookingsServlet</servlet-name>
-        <url-pattern>/bookings</url-pattern>
-    </servlet-mapping>
-
-    <!-- U12: Owned booking detail. -->
-    <servlet-mapping>
-        <servlet-name>BookingDetailServlet</servlet-name>
-        <url-pattern>/booking</url-pattern>
+        <servlet-name>MainController</servlet-name>
+        <url-pattern>/MainController</url-pattern>
     </servlet-mapping>
 
     <!-- Session expires after 30 minutes of inactivity. -->

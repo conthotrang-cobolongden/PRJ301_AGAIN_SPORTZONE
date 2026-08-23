@@ -26,15 +26,14 @@ public final class AuthWebContractTest {
         Document document = parse(webXml);
 
         require(names(document, "filter", "filter-name").equals(Arrays.asList(
-                "EncodingFilter", "AuthFilter", "RoleFilter")),
-                "Filters must be declared in EncodingFilter -> AuthFilter -> RoleFilter order");
+                "EncodingFilter", "AuthFilter", "FrozenAccountFilter", "RoleFilter")),
+                "Filters must preserve declared security order");
         require(names(document, "filter-mapping", "filter-name").equals(Arrays.asList(
-                "EncodingFilter", "AuthFilter", "RoleFilter")),
-                "Filters must be mapped in EncodingFilter -> AuthFilter -> RoleFilter order");
+                "EncodingFilter", "AuthFilter", "FrozenAccountFilter", "RoleFilter")),
+                "Filters must preserve mapped security order");
 
         require(patterns(document, "AuthFilter").equals(Arrays.asList(
-                "/profile", "/password", "/booking", "/booking/*", "/bookings",
-                "/invoice", "/invoice/*", "/invoices", "/admin/*")),
+                "/MainController", "/admin/*")),
                 "AuthFilter must map exactly every protected URL pattern");
         require(patterns(document, "RoleFilter").equals(Arrays.asList("/admin/*")),
                 "RoleFilter must map exactly /admin/*");
@@ -43,19 +42,23 @@ public final class AuthWebContractTest {
         require(servletNames.containsAll(Arrays.asList(
                 "LoginServlet", "RegisterServlet", "LogoutServlet")),
                 "LoginServlet, RegisterServlet, and LogoutServlet must be declared");
-        require(servletPattern(document, "LoginServlet").equals("/login"),
-                "LoginServlet must map to /login");
-        require(servletPattern(document, "RegisterServlet").equals("/register"),
-                "RegisterServlet must map to /register");
-        require(servletPattern(document, "LogoutServlet").equals("/logout"),
-                "LogoutServlet must map to /logout");
+        require(servletPattern(document, "LoginServlet").isEmpty(),
+                "LoginServlet must not have a direct public mapping");
+        require(servletPattern(document, "RegisterServlet").isEmpty(),
+                "RegisterServlet must not have a direct public mapping");
+        require(servletPattern(document, "LogoutServlet").isEmpty(),
+                "LogoutServlet must not have a direct public mapping");
 
         require(login.contains("${errorMessage}"),
                 "Login view must render errorMessage");
         require(login.contains("name=\"csrfToken\""),
                 "Login form must submit csrfToken");
+        require(login.contains("${ctx}/MainController?action=login"),
+                "Login form must submit through MainController");
         require(register.contains("name=\"csrfToken\""),
                 "Register form must submit csrfToken");
+        require(register.contains("${ctx}/MainController?action=register"),
+                "Register form must submit through MainController");
         require(!register.contains("value=\"${password}"),
                 "Register view must never repopulate a password");
 
