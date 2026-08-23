@@ -45,8 +45,21 @@ public class WeeklySlotService {
             this.skipped = skipped;
         }
         public static GenerateResult success(int created, int skipped) {
+            int total = created + skipped;
+            String message;
+            if (created == 0) {
+                message = "Tuần này đã có đầy đủ " + skipped
+                        + " slot. Không cần tạo thêm.";
+            } else if (skipped == 0) {
+                message = "Đã tạo mới đầy đủ " + created
+                        + " slot cho tuần này.";
+            } else {
+                message = "Đã bổ sung " + created + " slot. "
+                        + skipped + " slot đã tồn tại và được giữ nguyên. "
+                        + "Tổng cộng " + total + " slot.";
+            }
             return new GenerateResult(true, null,
-                    "Đã tạo " + created + " slot, bỏ qua " + skipped + ".",
+                    message,
                     created, skipped);
         }
         public static GenerateResult failure(String code, String message) {

@@ -13,6 +13,7 @@ public final class AdminMvpRegressionBatchTest {
         FrozenAccountFilterTest.main(new String[0]);
         AdminMvpDomainBatchTest.main(new String[0]);
         AdminMvpWebContractTest.main(new String[0]);
+        UiRedesignContractTest.main(new String[0]);
         System.out.println("AdminMvpRegressionBatchTest PASSED");
     }
 }

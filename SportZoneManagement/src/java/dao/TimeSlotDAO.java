@@ -96,21 +96,19 @@ public class TimeSlotDAO {
                 + "SELECT CAST(? AS DATE) AS SlotDate,0 AS DayOffset "
                 + "UNION ALL SELECT DATEADD(DAY,1,SlotDate),DayOffset+1 "
                 + "FROM Days WHERE DayOffset<6), Hours AS ("
-                + "SELECT CAST(N'06:00:00' AS TIME) StartTime,CAST(N'07:00:00' AS TIME) EndTime "
-                + "UNION ALL SELECT N'07:00:00',N'08:00:00' "
-                + "UNION ALL SELECT N'08:00:00',N'09:00:00' "
-                + "UNION ALL SELECT N'16:00:00',N'17:00:00' "
-                + "UNION ALL SELECT N'17:00:00',N'18:00:00' "
-                + "UNION ALL SELECT N'18:00:00',N'19:00:00' "
-                + "UNION ALL SELECT N'19:00:00',N'20:00:00' "
-                + "UNION ALL SELECT N'20:00:00',N'21:00:00') "
+                + "SELECT CAST(N'06:00:00' AS TIME) StartTime,"
+                + "CAST(N'07:00:00' AS TIME) EndTime "
+                + "UNION ALL SELECT "
+                + "CAST(DATEADD(HOUR,1,StartTime) AS TIME),"
+                + "CAST(DATEADD(HOUR,1,EndTime) AS TIME) "
+                + "FROM Hours WHERE EndTime<CAST(N'21:00:00' AS TIME)) "
                 + "INSERT INTO TimeSlots(CourtID,SlotDate,StartTime,EndTime,Status) "
                 + "SELECT c.CourtID,d.SlotDate,h.StartTime,h.EndTime,"
                 + "CASE WHEN c.Status=N'Available' THEN N'Available' ELSE N'Closed' END "
                 + "FROM Courts c CROSS JOIN Days d CROSS JOIN Hours h "
                 + "WHERE c.IsActive=1 AND NOT EXISTS (SELECT 1 FROM TimeSlots existing "
                 + "WHERE existing.CourtID=c.CourtID AND existing.SlotDate=d.SlotDate "
-                + "AND existing.StartTime=h.StartTime) OPTION(MAXRECURSION 7)";
+                + "AND existing.StartTime=h.StartTime) OPTION(MAXRECURSION 100)";
         try (Connection connection = DBUtils.getConnection()) {
             int oldIsolation = connection.getTransactionIsolation();
             connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
@@ -122,7 +120,7 @@ public class TimeSlotDAO {
                     created = statement.executeUpdate();
                 }
                 connection.commit();
-                return new GenerationResult(created, Math.max(0, 560 - created));
+                return new GenerationResult(created, Math.max(0, 1050 - created));
             } catch (SQLException exception) {
                 connection.rollback();
                 throw exception;

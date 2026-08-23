@@ -68,7 +68,7 @@ public class AdminBookingService {
         }
         LocalDateTime start = LocalDateTime.of(
                 booking.getSlotDate(), booking.getStartTime());
-        boolean updated = dao.checkIn(bookingID, start.minusMinutes(30),
+        boolean updated = dao.checkIn(bookingID, start,
                 start.plusMinutes(30), now);
         return updated ? ActionResult.success("Check-in thành công.")
                 : ActionResult.failure(CHECK_IN_CONFLICT,
@@ -82,7 +82,7 @@ public class AdminBookingService {
                 || booking.getStartTime() == null) return false;
         LocalDateTime start = LocalDateTime.of(
                 booking.getSlotDate(), booking.getStartTime());
-        return !now.isBefore(start.minusMinutes(30))
+        return !now.isBefore(start)
                 && now.isBefore(start.plusMinutes(30));
     }
 

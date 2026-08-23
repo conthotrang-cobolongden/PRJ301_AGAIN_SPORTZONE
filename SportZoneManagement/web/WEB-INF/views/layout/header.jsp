@@ -7,77 +7,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><c:out value="${empty pageTitle ? 'SportZone — Thể Thao Đỉnh Cao' : pageTitle}"/></title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;850&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5 & Bootstrap Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&amp;family=Montserrat:wght@600;700;800;900&amp;display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- SportZone Custom App CSS -->
     <link href="${ctx}/assets/css/app.css" rel="stylesheet">
+    <c:choose>
+        <c:when test="${not empty pageCss}"><link href="${ctx}/assets/css/design/${pageCss}" rel="stylesheet"></c:when>
+        <c:otherwise><link href="${ctx}/assets/css/design/home-design.css" rel="stylesheet"></c:otherwise>
+    </c:choose>
 </head>
-<body>
-<header class="sz-header">
-    <nav class="navbar navbar-expand-lg">
-        <div class="container">
-            <a class="sz-brand-logo" href="${ctx}/MainController?action=home">
-                <span class="sz-mark">SZ</span>
-                <span class="sz-name">Sport<span style="color:var(--sz-green)">Zone</span></span>
+<body class="${pageBodyClass}">
+<c:choose>
+    <c:when test="${headerVariant == 'none'}"/>
+    <c:when test="${headerVariant == 'standard'}">
+        <header class="sz-nav"><div class="container nav-inner">
+            <a class="brand-logo" href="${ctx}/MainController?action=home" aria-label="SportZone Home">
+                <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="14" fill="#1b5e3b"/><path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/><path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/><circle cx="24" cy="24" r="3.5" fill="#caa54b"/></svg>
+                <span>Sport<span class="zone">Zone</span></span>
             </a>
-            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#szNav">
-                <i class="bi bi-list fs-2" style="color:var(--sz-ink)"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="szNav">
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=home"><i class="bi bi-house-door me-1"></i>Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=courts"><i class="bi bi-grid-3x3-gap me-1"></i>Danh sách sân</a></li>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.account}">
-                            <c:choose>
-                            <c:when test="${sessionScope.roleName == 'Admin'}">
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=adminDashboard">Dashboard</a></li>
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=adminCourts">Quản lý sân</a></li>
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=adminBookings">Booking</a></li>
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=bookingCreate">Tạo booking vãng lai</a></li>
-                            </c:when>
-                            <c:otherwise>
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=bookings"><i class="bi bi-calendar-check me-1"></i>Đặt sân</a></li>
-                                <li class="nav-item"><a class="nav-link" href="${ctx}/MainController?action=invoices"><i class="bi bi-receipt me-1"></i>Hóa đơn</a></li>
-                            </c:otherwise>
-                            </c:choose>
-                            <li class="nav-item">
-                                <a class="nav-link fw-bold" href="${ctx}/MainController?action=profile" style="color:var(--sz-green)">
-                                    <i class="bi bi-person-circle me-1"></i>${sessionScope.account.fullName}
-                                </a>
-                            </li>
-                            <li class="nav-item ms-lg-2">
-                                <a class="btn btn-sz-outline btn-sz-sm" href="${ctx}/MainController?action=logout">
-                                    <i class="bi bi-box-arrow-right"></i> Đăng xuất
-                                </a>
-                            </li>
-                        </c:when>
-                        <c:otherwise>
-                            <li class="nav-item ms-lg-2">
-                                <a class="nav-link" href="${ctx}/MainController?action=login"><i class="bi bi-box-arrow-in-right me-1"></i>Đăng nhập</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-sz btn-sz-sm" href="${ctx}/MainController?action=register">
-                                    <i class="bi bi-person-plus-fill"></i> Đăng ký
-                                </a>
-                            </li>
-                        </c:otherwise>
-                    </c:choose>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<c:if test="${sessionScope.frozen}">
-    <div class="alert alert-warning sz-frozen-banner mb-0 rounded-0 text-center border-0 shadow-sm" style="background:#fef3c7; color:#92400e; font-weight:600">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>Tài khoản đang bị khóa — vui lòng đăng xuất hoặc liên hệ hỗ trợ.
-    </div>
-</c:if>
-
+            <nav class="nav-links" aria-label="Điều hướng chính">
+                <a class="nav-link" href="${ctx}/MainController?action=home">Trang Chủ</a>
+                <a class="nav-link" href="${ctx}/MainController?action=courts">Danh Sách Sân</a>
+                <c:choose><c:when test="${not empty sessionScope.account}"><c:choose><c:when test="${sessionScope.roleName == 'Admin'}"><a class="nav-link" href="${ctx}/MainController?action=adminDashboard" style="color:var(--gold);font-weight:800">Admin Suite</a><a class="nav-link" href="${ctx}/MainController?action=adminBookings">Bookings</a><a class="nav-link" href="${ctx}/MainController?action=adminCourts">Courts</a></c:when><c:otherwise><a class="nav-link" href="${ctx}/MainController?action=bookings">Đặt Sân</a><a class="nav-link" href="${ctx}/MainController?action=invoices">Hóa Đơn</a></c:otherwise></c:choose><a class="nav-link" href="${ctx}/MainController?action=profile"><c:out value="${sessionScope.account.fullName}"/></a><a class="nav-link" href="${ctx}/MainController?action=logout">Đăng Xuất</a></c:when><c:otherwise><a class="nav-link" href="${ctx}/MainController?action=login">Đăng Nhập</a><a class="nav-link" href="${ctx}/MainController?action=register">Đăng Ký</a></c:otherwise></c:choose>
+            </nav>
+        </div></header>
+    </c:when>
+    <c:otherwise>
+        <header class="header" id="header"><div class="shell nav">
+            <a class="brand" href="${ctx}/MainController?action=home" aria-label="SportZone Home"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="14" fill="#0b1911"/><path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6" opacity=".9"/><path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5" opacity=".9"/><circle cx="24" cy="24" r="3.5" fill="#1b5e3b" stroke="#fff" stroke-width="1.2"/></svg><span>Sport<span class="zone">Zone</span></span></a>
+            <nav class="menu" aria-label="Điều hướng chính"><a href="${ctx}/MainController?action=home">Trang chủ</a><a href="${ctx}/MainController?action=courts">Danh sách sân</a><c:if test="${not empty sessionScope.account && sessionScope.roleName != 'Admin'}"><a href="${ctx}/MainController?action=bookings">Booking của tôi</a></c:if><c:if test="${sessionScope.roleName == 'Admin'}"><a href="${ctx}/MainController?action=adminDashboard">Admin Suite</a><a href="${ctx}/MainController?action=adminBookings">Bookings</a><a href="${ctx}/MainController?action=adminCourts">Courts</a></c:if></nav>
+            <div class="nav-actions"><c:choose><c:when test="${not empty sessionScope.account}"><a class="btn login" href="${ctx}/MainController?action=profile"><c:out value="${sessionScope.account.fullName}"/></a><a class="btn primary" href="${ctx}/MainController?action=logout">Đăng xuất <span>→</span></a></c:when><c:otherwise><a class="btn login" href="${ctx}/MainController?action=login">Đăng nhập</a><a class="btn primary" href="${ctx}/MainController?action=courts">Xem sân trống <span>→</span></a></c:otherwise></c:choose><button class="hamb" id="hamb" type="button" aria-label="Mở menu" aria-expanded="false">☰</button></div>
+        </div></header>
+        <div class="mobile-menu" id="mobileMenu" aria-hidden="true"><a href="${ctx}/MainController?action=home">Trang chủ</a><a href="${ctx}/MainController?action=courts">Danh sách sân</a><c:choose><c:when test="${not empty sessionScope.account}"><a href="${ctx}/MainController?action=profile">Tài khoản</a><a href="${ctx}/MainController?action=logout" class="small-link">Đăng xuất</a></c:when><c:otherwise><a href="${ctx}/MainController?action=login" class="small-link">Đăng nhập / Đăng ký</a></c:otherwise></c:choose></div>
+    </c:otherwise>
+</c:choose>
+<c:if test="${sessionScope.frozen}"><div class="alert alert-warning sz-frozen-banner mb-0 rounded-0 text-center border-0" role="alert"><i class="bi bi-exclamation-triangle-fill me-2"></i>Tài khoản đang bị khóa — vui lòng đăng xuất hoặc liên hệ hỗ trợ.</div></c:if>
 <main class="sz-main">
