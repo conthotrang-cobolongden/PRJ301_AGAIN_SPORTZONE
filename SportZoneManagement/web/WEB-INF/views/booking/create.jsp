@@ -3,19 +3,21 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%-- U10: Tạo booking (KHÔNG sinh hóa đơn — rule 1) --%>
 <c:set var="pageTitle" value="Đặt sân — SportZone" scope="request"/>
+<c:set var="pageCss" value="booking-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-booking" scope="request"/>
+<c:set var="headerVariant" value="standard" scope="request"/>
+<c:set var="footerVariant" value="none" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<section class="container sz-section">
+<section class="container view-section active" id="viewCreate">
     <c:if test="${sessionScope.roleName == 'Admin'}">
         <div class="alert alert-info">Booking này được ghi nhận cho <strong>Khách vãng lai</strong>.</div>
     </c:if>
-    <div class="sz-pagehead">
-        <div>
-            <p class="sz-kicker sz-kicker-dark mb-1">SportZone</p>
-            <h1>Đặt sân</h1>
-            <p class="sz-lead-sm">Chọn sân, ngày, khung giờ và dịch vụ kèm theo. Thanh toán tại quầy hoặc chuyển khoản.</p>
-        </div>
+    <div class="booking-page-intro">
+        <span class="sz-badge sz-badge-completed">ĐẶT SÂN ONLINE TRỰC TUYẾN</span>
+        <h1>Đặt Lịch Sân Thi Đấu</h1>
+        <p>Chọn sân, khung giờ và dịch vụ đi kèm. Thanh toán dễ dàng qua chuyển khoản QR hoặc tại quầy lễ tân.</p>
     </div>
 
     <!-- Rule 9: Frozen đăng nhập được nhưng không được đặt sân -->
@@ -30,16 +32,16 @@
         <div class="alert alert-danger" role="alert"><c:out value="${error}"/></div>
     </c:if>
 
-    <div class="row g-4">
+    <div class="booking-create-grid">
         <!-- ===== FORM ===== -->
-        <div class="col-lg-7">
+        <div>
             <!-- Bước 1+2: chọn sân & ngày — GET reload lại lưới slot -->
             <div class="sz-card mb-4">
                 <form method="get" action="${ctx}/MainController">
                     <input type="hidden" name="action" value="bookingCreate"/>
                     <div class="row g-3 align-items-end">
                         <div class="col-md-5">
-                            <p class="sz-step-label mb-2"><span class="sz-step-num">1</span> Chọn sân</p>
+                            <p class="sz-step-label mb-2"><span class="step-num">1</span> Chọn sân đấu</p>
                             <!-- DEEPSEEK: courtList = chỉ sân Available; option cần data-price cho JS tính tổng -->
                             <select class="form-select" name="courtId" aria-label="Chọn sân">
                                 <c:forEach var="c" items="${courtList}">
@@ -51,7 +53,7 @@
                             </select>
                         </div>
                         <div class="col-md-4">
-                            <p class="sz-step-label mb-2"><span class="sz-step-num">2</span> Chọn ngày</p>
+                            <p class="sz-step-label mb-2"><span class="step-num">2</span> Chọn ngày chơi</p>
                             <input class="form-control" type="date" name="date"
                                    value="${selectedDate}" min="${minDate}" max="${maxDate}" aria-label="Chọn ngày">
                         </div>
@@ -72,33 +74,28 @@
 
                 <!-- Bước 3: khung giờ -->
                 <div class="sz-card mb-4">
-                    <p class="sz-step-label"><span class="sz-step-num">3</span> Chọn khung giờ</p>
+                    <p class="sz-step-label"><span class="step-num">3</span> Chọn khung giờ trống</p>
                     <c:choose>
                         <c:when test="${not empty slotList}">
-                            <div class="sz-slot-grid">
+                            <div class="slot-grid-radio">
                                 <c:forEach var="s" items="${slotList}">
                                     <c:choose>
                                         <c:when test="${s.status == 'Available'}">
-                                            <label class="sz-slot is-available">
+                                            <label class="slot-radio-label">
                                                 <input class="sz-slot-radio" type="radio" name="slotId"
                                                        value="${s.timeSlotId}"
                                                        data-start="${s.startTime}"
                                                        data-end="${s.endTime}"
                                                        ${s.timeSlotId == selectedSlotId ? 'checked' : ''}>
-                                                <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
-                                                <span class="sz-slot-label">Trống</span>
+                                                <span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span><span class="slot-display-state">Trống</span>
                                             </label>
                                         </c:when>
                                         <c:when test="${s.status == 'Booked'}">
-                                            <span class="sz-slot is-booked">
-                                                <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
-                                                <span class="sz-slot-label">Đã đặt</span>
+                                            <span class="slot-radio-label is-booked"><span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span><span class="slot-display-state">Đã đặt</span>
                                             </span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="sz-slot is-closed">
-                                                <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
-                                                <span class="sz-slot-label">Đóng</span>
+                                            <span class="slot-radio-label is-booked"><span class="slot-display-time"><c:out value="${s.startTime}"/> – <c:out value="${s.endTime}"/></span><span class="slot-display-state">Đóng</span>
                                             </span>
                                         </c:otherwise>
                                     </c:choose>
@@ -122,12 +119,12 @@
 
                 <!-- Bước 4: dịch vụ kèm theo -->
                 <div class="sz-card mb-4">
-                    <p class="sz-step-label"><span class="sz-step-num">4</span> Dịch vụ kèm theo <span class="text-muted fw-normal">(không bắt buộc)</span></p>
+                    <p class="sz-step-label"><span class="step-num">4</span> Dịch vụ bổ sung <span class="text-muted fw-normal">(Tùy chọn)</span></p>
                     <!-- DEEPSEEK: serviceList = dịch vụ IsActive=1; mỗi dòng data-price cho JS -->
                     <c:choose>
                         <c:when test="${not empty serviceList}">
                             <c:forEach var="sv" items="${serviceList}">
-                                <div class="sz-service-row" data-price="${sv.price}">
+                                <div class="sz-service-row service-item-row" data-price="${sv.price}">
                                     <div class="form-check">
                                         <input class="form-check-input"
                                                type="checkbox"
@@ -170,22 +167,22 @@
                               maxlength="255"
                               rows="3"><c:out value="${param.notes}"/></textarea>
                 </div>
-                <button class="btn btn-sz btn-lg w-100" type="submit" ${sessionScope.frozen ? 'disabled' : ''}>
+                <button class="btn-action-green booking-submit" type="submit" ${sessionScope.frozen ? 'disabled' : ''}>
                     Xác nhận đặt sân
                 </button>
             </form>
         </div>
 
         <!-- ===== TÓM TẮT ĐƠN (sticky) ===== -->
-        <div class="col-lg-5">
-            <div class="sz-card sz-summary-card">
-                <h2 class="h5 mb-3">Tóm tắt đơn</h2>
-                <div class="sz-summary-row"><span class="lbl">Sân</span><span class="val" id="szSumCourt">—</span></div>
-                <div class="sz-summary-row"><span class="lbl">Ngày</span><span class="val" id="szSumDate">—</span></div>
-                <div class="sz-summary-row"><span class="lbl">Khung giờ</span><span class="val" id="szSumSlot">—</span></div>
-                <div class="sz-summary-row"><span class="lbl">Tiền sân</span><span class="val" id="szSumCourtPrice">0 đ</span></div>
-                <div class="sz-summary-row"><span class="lbl">Dịch vụ</span><span class="val" id="szSumService">0 đ</span></div>
-                <div class="sz-total-row"><span>Tổng cộng</span><span id="szSumTotal">0 đ</span></div>
+        <div>
+            <div class="summary-card">
+                <h2>Tóm Tắt Đặt Sân</h2>
+                <div class="sum-row"><span>Sân thi đấu</span><strong id="szSumCourt">—</strong></div>
+                <div class="sum-row"><span>Ngày chơi</span><strong id="szSumDate">—</strong></div>
+                <div class="sum-row"><span>Khung giờ</span><strong id="szSumSlot">—</strong></div>
+                <div class="sum-row"><span>Tiền thuê sân</span><strong id="szSumCourtPrice">0 đ</strong></div>
+                <div class="sum-row"><span>Dịch vụ kèm theo</span><strong id="szSumService">0 đ</strong></div>
+                <div class="sum-row total"><span>Tổng thanh toán</span><strong id="szSumTotal">0 đ</strong></div>
                 <!-- Rule 1: U10 không tạo hóa đơn -->
                 <p class="text-muted small mt-3 mb-0">
                     Booking ở trạng thái <span class="sz-badge sz-badge-pending">Chờ xác nhận</span> —
@@ -226,11 +223,11 @@
 
         function updateSlotSummary() {
             var checked = form.querySelector('.sz-slot-radio:checked');
-            document.querySelectorAll('label.sz-slot').forEach(function (l) {
+            document.querySelectorAll('label.slot-radio-label').forEach(function (l) {
                 l.classList.remove('is-selected');
             });
             if (checked) {
-                checked.closest('label').classList.add('is-selected');
+                checked.closest('.slot-radio-label').classList.add('is-selected');
                 document.getElementById('szSumSlot').textContent =
                         checked.getAttribute('data-start') + '–' + checked.getAttribute('data-end');
             } else {

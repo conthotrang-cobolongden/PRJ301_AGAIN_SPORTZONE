@@ -1,83 +1,27 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- U6: Đổi mật khẩu (hash SHA-256, CSRF bắt buộc) --%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <c:set var="pageTitle" value="Đổi mật khẩu — SportZone" scope="request"/>
+<c:set var="pageCss" value="account-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-account" scope="request"/>
+<c:set var="footerVariant" value="none" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-
-<section class="container sz-section">
-    <div class="sz-form-narrow">
-        <div class="sz-pagehead">
-            <div>
-                <p class="section-label mb-1">Tài khoản</p>
-                <h1>Đổi mật khẩu</h1>
+<section class="shell">
+    <div class="page-header"><div class="page-title"><div class="kicker">Tài Khoản Thành Viên SportZone</div><h1>Hồ Sơ &amp; Cài Đặt Cá Nhân</h1><p>Quản lý thông tin liên hệ, theo dõi đặc quyền thành viên và bảo mật tài khoản đặt sân.</p></div></div>
+    <div class="account-layout">
+        <aside class="profile-card"><c:set var="nameParts" value="${fn:split(sessionScope.account.fullName, ' ')}"/><div class="avatar-wrapper"><div class="avatar-main">${fn:toUpperCase(fn:substring(nameParts[0],0,1))}${fn:toUpperCase(fn:substring(nameParts[fn:length(nameParts)-1],0,1))}</div><div class="avatar-badge-vip">VIP</div></div><h2 class="user-name"><c:out value="${sessionScope.account.fullName}"/></h2><div class="user-meta"><span class="sz-badge sz-badge-dark">${sessionScope.account.roleName == 'Admin' ? 'Quản trị viên' : 'Khách hàng'}</span><span class="sz-badge ${sessionScope.account.status == 'Active' ? 'sz-badge-active' : 'sz-badge-frozen'}"><c:out value="${sessionScope.account.status}"/></span></div><div class="profile-kv-list"><div class="profile-kv-item"><span class="lbl">Email</span><span class="val"><c:out value="${sessionScope.account.email}"/></span></div><div class="profile-kv-item"><span class="lbl">Số điện thoại</span><span class="val"><c:out value="${sessionScope.account.phone}"/></span></div></div><div class="side-nav"><a class="side-nav-btn" href="${ctx}/MainController?action=profile">Thông tin cá nhân</a><a class="side-nav-btn active" href="${ctx}/MainController?action=password">Đổi mật khẩu</a><button class="side-nav-btn" type="button" disabled>Thống kê thi đấu · Coming Soon</button></div></aside>
+        <section class="content-card"><div class="content-tabs"><a class="content-tab-btn" href="${ctx}/MainController?action=profile">Thông Tin Cá Nhân</a><a class="content-tab-btn active" href="${ctx}/MainController?action=password">Đổi Mật Khẩu</a><button class="content-tab-btn" type="button" disabled>Hoạt Động &amp; Thống Kê · Coming Soon</button></div>
+            <div class="tab-section active"><div class="font-heading account-section-title">Đổi Mật Khẩu Bảo Mật</div><p class="account-section-copy">Để bảo vệ tài khoản, mật khẩu mới phải từ 8 đến 64 ký tự.</p>
+                <c:if test="${not empty success}"><div class="sz-alert sz-alert-success"><c:out value="${success}"/></div></c:if><c:if test="${not empty error}"><div class="sz-alert sz-alert-danger"><c:out value="${error}"/></div></c:if>
+                <form method="post" action="${ctx}/MainController?action=password" id="szPasswordForm" novalidate><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
+                    <div class="form-group"><label class="form-label" for="currentPassword">Mật khẩu hiện tại</label><div class="input-pass-wrap"><input class="form-input ${not empty fieldErrors.currentPassword ? 'is-invalid' : ''}" type="password" id="currentPassword" name="currentPassword" maxlength="64" autocomplete="current-password" required><button type="button" class="toggle-pass-btn" onclick="togglePass('currentPassword',this)">Hiện</button></div><div class="invalid-feedback"><c:out value="${fieldErrors.currentPassword}"/></div></div>
+                    <div class="form-grid"><div class="form-group"><label class="form-label" for="newPassword">Mật khẩu mới</label><div class="input-pass-wrap"><input class="form-input ${not empty fieldErrors.newPassword ? 'is-invalid' : ''}" type="password" id="newPassword" name="newPassword" minlength="8" maxlength="64" autocomplete="new-password" required><button type="button" class="toggle-pass-btn" onclick="togglePass('newPassword',this)">Hiện</button></div><div class="invalid-feedback"><c:out value="${fieldErrors.newPassword}"/></div></div><div class="form-group"><label class="form-label" for="confirmPassword">Xác nhận mật khẩu mới</label><div class="input-pass-wrap"><input class="form-input ${not empty fieldErrors.confirmPassword ? 'is-invalid' : ''}" type="password" id="confirmPassword" name="confirmPassword" minlength="8" maxlength="64" autocomplete="new-password" required><button type="button" class="toggle-pass-btn" onclick="togglePass('confirmPassword',this)">Hiện</button></div><div class="invalid-feedback"><c:out value="${fieldErrors.confirmPassword}"/></div></div></div>
+                    <button class="btn-gold" type="submit">Cập nhật mật khẩu mới</button>
+                </form>
             </div>
-        </div>
-
-        <!-- DEEPSEEK: success (nếu redirect về trang này), error chung,
-             fieldErrors = Map (currentPassword/newPassword/confirmPassword) -->
-        <c:if test="${not empty success}">
-            <div class="alert alert-success" role="alert"><c:out value="${success}"/></div>
-        </c:if>
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger" role="alert"><c:out value="${error}"/></div>
-        </c:if>
-
-        <div class="sz-card">
-            <form method="post" action="${ctx}/MainController?action=password" id="szPasswordForm" novalidate>
-                <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
-
-                <div class="mb-3">
-                    <label class="form-label" for="currentPassword">Mật khẩu hiện tại</label>
-                    <input class="form-control ${not empty fieldErrors.currentPassword ? 'is-invalid' : ''}"
-                           type="password" id="currentPassword" name="currentPassword" maxlength="64"
-                           autocomplete="current-password" required>
-                    <div class="invalid-feedback"><c:out value="${fieldErrors.currentPassword}"/></div>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label" for="newPassword">Mật khẩu mới</label>
-                    <input class="form-control ${not empty fieldErrors.newPassword ? 'is-invalid' : ''}"
-                           type="password" id="newPassword" name="newPassword" maxlength="64"
-                           autocomplete="new-password" minlength="8" required>
-                    <div class="invalid-feedback"><c:out value="${fieldErrors.newPassword}"/></div>
-                    <div class="form-text">Ít nhất 8 ký tự, nên gồm chữ hoa, chữ thường và số.</div>
-                </div>
-
-                <div class="mb-4">
-                    <label class="form-label" for="confirmPassword">Nhập lại mật khẩu mới</label>
-                    <input class="form-control ${not empty fieldErrors.confirmPassword ? 'is-invalid' : ''}"
-                           type="password" id="confirmPassword" name="confirmPassword" maxlength="64"
-                           autocomplete="new-password" minlength="8" required>
-                    <div class="invalid-feedback"><c:out value="${fieldErrors.confirmPassword}"/></div>
-                </div>
-
-                <button class="btn btn-sz w-100" type="submit">Đổi mật khẩu</button>
-            </form>
-            <p class="mt-3 mb-0"><a href="${ctx}/MainController?action=profile">&larr; Quay lại hồ sơ</a></p>
-        </div>
+        </section>
     </div>
 </section>
-
-<script>
-// Validate client tối thiểu (server validate lại — U6)
-(function () {
-    var form = document.getElementById('szPasswordForm');
-    if (!form) return;
-    form.addEventListener('submit', function (e) {
-        var np = document.getElementById('newPassword');
-        var cf = document.getElementById('confirmPassword');
-        var ok = true;
-        cf.classList.remove('is-invalid');
-        if (np.value.length < 8) { np.classList.add('is-invalid'); ok = false; }
-        if (cf.value !== np.value) {
-            cf.classList.add('is-invalid');
-            cf.nextElementSibling.textContent = 'Mật khẩu nhập lại không khớp.';
-            ok = false;
-        }
-        if (!ok) e.preventDefault();
-    });
-})();
-</script>
-
+<script>function togglePass(id,button){var input=document.getElementById(id);var show=input.type==='password';input.type=show?'text':'password';button.textContent=show?'Ẩn':'Hiện';}(function(){var form=document.getElementById('szPasswordForm');form.addEventListener('submit',function(e){var next=document.getElementById('newPassword'),confirm=document.getElementById('confirmPassword');if(next.value.length<8||next.value!==confirm.value){e.preventDefault();confirm.classList.add('is-invalid');}});})();</script>
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

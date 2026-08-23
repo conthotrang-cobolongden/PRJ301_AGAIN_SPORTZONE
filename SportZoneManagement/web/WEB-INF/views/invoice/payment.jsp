@@ -2,22 +2,26 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="pageTitle" value="Thanh toán chuyển khoản — SportZone" scope="request"/>
+<c:set var="pageCss" value="invoice-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-invoice" scope="request"/>
+<c:set var="headerVariant" value="standard" scope="request"/>
+<c:set var="footerVariant" value="none" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<section class="container sz-section"><div class="mx-auto" style="max-width:620px">
-    <div class="sz-pagehead"><div><p class="sz-kicker sz-kicker-dark mb-1">QR giả lập</p><h1>Thanh toán chuyển khoản</h1></div></div>
-    <div class="sz-card text-center"><c:choose>
+<section class="container view-section active"><div class="payment-shell">
+    <div class="invoice-page-head"><span class="sz-badge sz-badge-paid">QR THANH TOÁN</span><h1>Thanh Toán Chuyển Khoản</h1><p>Quét mã QR và xác nhận giao dịch cho booking của bạn.</p></div>
+    <div class="invoice-sheet payment-card"><c:choose>
         <c:when test="${invoice.paymentStatus == 'Cancelled'}">
             <div class="alert alert-secondary mb-3">Thanh toán đã bị hủy hoặc hết hạn.</div>
             <a class="btn btn-sz-outline" href="${ctx}/MainController?action=${sessionScope.roleName == 'Admin' ? 'adminBookings' : 'bookingDetail'}&amp;id=${invoice.bookingId}">Về booking</a>
         </c:when>
         <c:otherwise>
-            <img src="${ctx}/assets/img/payment-qr.svg" width="220" height="220" alt="QR thanh toán giả lập" class="img-fluid border rounded p-2 bg-white"/>
+            <img src="${ctx}/assets/img/payment-qr.svg" width="220" height="220" alt="QR thanh toán giả lập" class="payment-qr"/>
             <p class="mt-3 mb-1">Số tiền</p><p class="h3 fw-bold" style="color:var(--sz-green)"><fmt:formatNumber value="${invoice.finalAmount}" groupingUsed="true"/> đ</p>
             <p>Thời gian còn lại: <strong id="paymentCountdown" data-expires-at="${invoice.expiresAtEpochMilli}">15:00</strong></p>
             <div class="d-flex gap-2 justify-content-center flex-wrap">
-                <form method="post" action="${ctx}/MainController?action=invoicePayment"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/><input type="hidden" name="bookingId" value="${invoice.bookingId}"/><input type="hidden" name="operation" value="pay"/><button class="btn btn-sz" type="submit">Thanh toán</button></form>
-                <form id="cancelPaymentForm" method="post" action="${ctx}/MainController?action=invoicePayment"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/><input type="hidden" name="bookingId" value="${invoice.bookingId}"/><input type="hidden" name="operation" value="cancel"/><button class="btn btn-outline-danger" type="submit">Hủy thanh toán</button></form>
+                <form method="post" action="${ctx}/MainController?action=invoicePayment"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/><input type="hidden" name="bookingId" value="${invoice.bookingId}"/><input type="hidden" name="operation" value="pay"/><button class="invoice-print-btn" type="submit">Xác Nhận Thanh Toán</button></form>
+                <form id="cancelPaymentForm" method="post" action="${ctx}/MainController?action=invoicePayment"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/><input type="hidden" name="bookingId" value="${invoice.bookingId}"/><input type="hidden" name="operation" value="cancel"/><button class="invoice-view-btn danger" type="submit">Hủy thanh toán</button></form>
             </div>
         </c:otherwise>
     </c:choose></div>

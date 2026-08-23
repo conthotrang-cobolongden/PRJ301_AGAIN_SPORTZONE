@@ -2,39 +2,22 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="pageTitle" value="Quản lý sân — SportZone" scope="request"/>
+<c:set var="pageCss" value="admin-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-admin" scope="request"/>
+<c:set var="headerVariant" value="none" scope="request"/>
+<c:set var="footerVariant" value="none" scope="request"/>
+<c:set var="adminSection" value="courts" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<section class="container sz-section">
-    <div class="sz-pagehead"><div><p class="sz-kicker sz-kicker-dark mb-1">Admin MVP</p><h1>Quản lý sân và lịch tuần</h1></div></div>
-    <c:if test="${not empty success}"><div class="alert alert-success"><c:out value="${success}"/></div></c:if>
-    <c:if test="${not empty error}"><div class="alert alert-danger"><c:out value="${error}"/></div></c:if>
-
-    <div class="sz-card mb-4">
-        <h2 class="h5">Sinh slot theo tuần cho toàn bộ 10 sân</h2>
-        <form method="post" action="${ctx}/MainController?action=adminCourts" class="row g-3 align-items-end">
-            <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/>
-            <input type="hidden" name="operation" value="generateWeek"/>
-            <div class="col-sm-6"><label class="form-label" for="weekStart">Thứ Hai bắt đầu tuần</label><input class="form-control" id="weekStart" name="weekStart" type="date" value="${defaultWeek}" required/></div>
-            <div class="col-sm-auto"><button class="btn btn-sz" type="submit">Sinh slot theo tuần</button></div>
-        </form>
-    </div>
-
-    <div class="table-responsive sz-card p-0">
-        <table class="table align-middle mb-0"><thead><tr><th>Sân</th><th>Loại</th><th>Giá/giờ</th><th>Trạng thái</th><th></th></tr></thead><tbody>
-        <c:forEach var="court" items="${courtList}">
-            <tr>
-                <td><strong><c:out value="${court.courtName}"/></strong></td>
-                <td><c:out value="${court.typeName}"/></td>
-                <td><input form="courtForm${court.courtId}" class="form-control" name="price" type="number" min="0" step="1000" value="${court.pricePerHour}" required/></td>
-                <td><select form="courtForm${court.courtId}" class="form-select" name="status">
-                    <option value="Available" ${court.status == 'Available' ? 'selected' : ''}>Available</option>
-                    <option value="Maintenance" ${court.status == 'Maintenance' ? 'selected' : ''}>Maintenance</option>
-                    <option value="Unavailable" ${court.status == 'Unavailable' ? 'selected' : ''}>Unavailable</option>
-                </select></td>
-                <td><form id="courtForm${court.courtId}" method="post" action="${ctx}/MainController?action=adminCourts"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"/><input type="hidden" name="operation" value="updateCourt"/><input type="hidden" name="courtId" value="${court.courtId}"/><button class="btn btn-sm btn-sz-outline" type="submit">Lưu</button></form></td>
-            </tr>
-        </c:forEach>
-        </tbody></table>
-    </div>
-</section>
+<div class="admin-layout"><jsp:include page="/WEB-INF/views/layout/admin-sidebar.jsp"/><div class="admin-content">
+    <header class="admin-topbar"><button class="topbar-toggle" id="topbarToggle" type="button">☰</button><div class="topbar-title">Courts &amp; TimeSlots</div><div class="topbar-actions"><a class="btn-admin-primary" href="${ctx}/MainController?action=bookingCreate">+ Booking Vãng Lai</a></div></header>
+    <main class="admin-main-scroll"><section class="admin-view active">
+        <div class="admin-pagehead"><div><span class="page-eyebrow">QUẢN LÝ CƠ SỞ VẬT CHẤT</span><h1>Danh Sách 10 Sân Tiêu Chuẩn Quốc Tế</h1><p>Cập nhật giá và trạng thái sân an toàn với booking tương lai.</p></div></div>
+        <c:if test="${not empty success}"><div class="admin-alert success"><c:out value="${success}"/></div></c:if><c:if test="${not empty error}"><div class="admin-alert danger"><c:out value="${error}"/></div></c:if>
+        <section class="admin-panel weekly-generator"><div class="panel-head"><div><h2>Sinh Slot Theo Tuần</h2><p>Tạo 8 khung giờ mỗi ngày cho toàn bộ 10 sân, không sinh trùng.</p></div><span class="live-badge">ACTIVE</span></div><form method="post" action="${ctx}/MainController?action=adminCourts" class="generator-form"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"><input type="hidden" name="operation" value="generateWeek"><div><label for="weekStart">Thứ Hai bắt đầu tuần</label><input id="weekStart" name="weekStart" type="date" value="${defaultWeek}" required></div><button class="btn-admin-primary" type="submit">Sinh 560 Slot Tuần</button></form></section>
+        <section class="admin-panel"><div class="panel-head"><div><h2>Thông Tin &amp; Trạng Thái Sân</h2><p>Thay đổi trạng thái sẽ bị chặn nếu sân có booking tương lai.</p></div><span class="record-count">${courtList.size()} sân</span></div><div class="table-responsive"><table class="admin-table"><thead><tr><th>Sân</th><th>Phân Khu</th><th>Giá / Giờ</th><th>Trạng Thái</th><th>Thao Tác</th></tr></thead><tbody><c:forEach var="court" items="${courtList}"><tr><td><div class="court-cell"><span class="court-avatar ${court.typeName == 'Tennis' ? 'tennis' : 'pickle'}">${court.courtId}</span><div><strong><c:out value="${court.courtName}"/></strong><small>ID #${court.courtId}</small></div></div></td><td><span class="type-chip"><c:out value="${court.typeName}"/></span></td><td><input form="courtForm${court.courtId}" class="admin-input price-input" name="price" type="number" min="0" step="1000" value="${court.pricePerHour}" required></td><td><select form="courtForm${court.courtId}" class="admin-select" name="status"><option value="Available" ${court.status == 'Available' ? 'selected' : ''}>Available</option><option value="Maintenance" ${court.status == 'Maintenance' ? 'selected' : ''}>Maintenance</option><option value="Unavailable" ${court.status == 'Unavailable' ? 'selected' : ''}>Unavailable</option></select></td><td><form id="courtForm${court.courtId}" method="post" action="${ctx}/MainController?action=adminCourts"><input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}"><input type="hidden" name="operation" value="updateCourt"><input type="hidden" name="courtId" value="${court.courtId}"><button class="table-action" type="submit">Lưu Thay Đổi</button></form></td></tr></c:forEach></tbody></table></div></section>
+        <section class="admin-panel"><div class="panel-head"><div><h2>Quản Lý Khung Giờ Chi Tiết</h2><p>Điều hướng từng ngày và đóng/mở từng slot.</p></div><span class="coming-badge">Coming Soon</span></div><div class="timeslot-toolbar"><button type="button" disabled>← Ngày trước</button><strong>Chọn ngày để xem lưới slot</strong><button type="button" disabled>Ngày sau →</button></div><div class="timeslot-coming-grid"><c:forEach begin="1" end="8" var="slot"><div class="timeslot-coming-cell"><span>--:--</span><small>Coming Soon</small></div></c:forEach></div></section>
+    </section></main>
+</div></div>
+<script>(function(){var sidebar=document.getElementById('adminSidebar');function toggle(){sidebar.classList.toggle('collapsed');document.body.classList.toggle('sidebar-collapsed');}document.getElementById('sidebarToggle').addEventListener('click',toggle);document.getElementById('topbarToggle').addEventListener('click',toggle);})();</script>
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

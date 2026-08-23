@@ -6,14 +6,18 @@
 <c:set var="pageTitle"
        value="Chi tiết booking — SportZone"
        scope="request"/>
+<c:set var="pageCss" value="booking-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-booking" scope="request"/>
+<c:set var="headerVariant" value="standard" scope="request"/>
+<c:set var="footerVariant" value="none" scope="request"/>
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
 <c:set var="ctx"
        value="${pageContext.request.contextPath}"/>
 
-<section class="container sz-section">
-    <a class="sz-back-link" href="${ctx}/MainController?action=bookings">
+<section class="container view-section active" id="viewDetail">
+    <a class="btn-action" href="${ctx}/MainController?action=bookings">
         &larr; Về danh sách booking
     </a>
 
@@ -24,9 +28,9 @@
         </div>
     </c:if>
 
-    <div class="sz-pagehead mt-3">
+    <div class="booking-detail-head">
         <div>
-            <p class="sz-kicker sz-kicker-dark mb-1">
+            <p class="booking-code">
                 Booking #<c:out value="${booking.bookingId}"/>
             </p>
 
@@ -68,8 +72,8 @@
         </div>
     </div>
 
-    <div class="row g-4">
-        <div class="col-lg-7">
+    <div class="booking-detail-grid">
+        <div>
             <div class="sz-card">
                 <h2 class="h5 mb-3">
                     Thông tin buổi chơi
@@ -172,7 +176,7 @@
             </div>
         </div>
 
-        <div class="col-lg-5">
+        <div>
             <div class="sz-card">
                 <h2 class="h5 mb-3">
                     Tổng tiền
@@ -250,13 +254,13 @@
                 <div class="mt-4 d-grid">
                     <c:choose>
                         <c:when test="${booking.paymentStatus == 'Paid'}">
-                            <a class="btn btn-sz" href="${ctx}/MainController?action=invoiceDetail&amp;bookingId=${booking.bookingId}">Xem hóa đơn</a>
+                            <a class="btn-action-green" href="${ctx}/MainController?action=invoiceDetail&amp;bookingId=${booking.bookingId}">Xem hóa đơn</a>
                         </c:when>
                         <c:when test="${booking.paymentStatus == 'Cancelled'}">
-                            <button class="btn btn-secondary" type="button" disabled>Thanh toán đã hủy</button>
+                            <button class="btn-action" type="button" disabled>Thanh toán đã hủy</button>
                         </c:when>
                         <c:otherwise>
-                            <a class="btn btn-sz" href="${ctx}/MainController?action=invoicePayment&amp;bookingId=${booking.bookingId}">Thanh toán chuyển khoản</a>
+                            <a class="btn-action-green" href="${ctx}/MainController?action=invoicePayment&amp;bookingId=${booking.bookingId}">Thanh toán chuyển khoản</a>
                         </c:otherwise>
                     </c:choose>
                 </div>

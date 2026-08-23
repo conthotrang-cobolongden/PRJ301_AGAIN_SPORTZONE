@@ -1,243 +1,51 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- Trang chủ — UI Light Luxury Edition với Scroll Reveal Animations --%>
-<c:set var="pageTitle" value="SportZone — Đặt Sân Tennis & Pickleball Đẳng Cấp" scope="request"/>
+<c:set var="pageTitle" value="SportZone — Tổ Hợp Thể Thao Tennis &amp; Pickleball Cao Cấp" scope="request"/>
+<c:set var="pageCss" value="home-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-home" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<div class="container">
-    <!-- ===== HERO SECTION (Light Luxury Theme) ===== -->
-    <section class="sz-hero-luxury" data-reveal="zoom">
-        <div class="hero-court-bg"></div>
-        <div class="row g-4 align-items-center position-relative" style="z-index: 2;">
-            <div class="col-lg-7" data-reveal="fade-up">
-                <div class="d-inline-flex align-items-center gap-2 px-3 py-1.5 rounded-pill mb-3" 
-                     style="background: rgba(27, 94, 59, 0.08); border: 1px solid rgba(27, 94, 59, 0.15);">
-                    <span class="sz-badge sz-badge-gold"><i class="bi bi-star-fill"></i> PREMIUM</span>
-                    <span class="small fw-bold" style="color:var(--sz-green)">Nền tảng đặt sân thế hệ mới</span>
-                </div>
-                
-                <h1 class="font-heading">
-                    Đặt sân nhanh,<br/>
-                    <span class="text-gradient-green">Chơi đúng giờ.</span>
-                </h1>
-                
-                <p class="sz-lead mb-4">
-                    Trải nghiệm hệ thống đặt sân Tennis &amp; Pickleball đạt chuẩn quốc tế. Giữ khung giờ vàng, xác nhận thời gian thực và thanh toán tiện lợi tại quầy.
-                </p>
-                
-                <div class="d-flex gap-3 flex-wrap align-items-center">
-                    <a class="btn btn-sz btn-lg" href="${ctx}/MainController?action=courts">
-                        <i class="bi bi-calendar2-check-fill"></i> Đặt sân ngay
-                    </a>
-                    <c:if test="${empty sessionScope.account}">
-                        <a class="btn btn-sz-outline btn-lg" href="${ctx}/MainController?action=login">
-                            <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
-                        </a>
-                    </c:if>
-                </div>
-                
-                <div class="d-flex align-items-center gap-4 mt-4 pt-3 border-top border-slate-200">
-                    <div class="d-flex align-items-center gap-2 text-slate-600 small fw-bold">
-                        <i class="bi bi-check-circle-fill text-success fs-5"></i> Sân acrylic chống lóa
-                    </div>
-                    <div class="d-flex align-items-center gap-2 text-slate-600 small fw-bold">
-                        <i class="bi bi-check-circle-fill text-success fs-5"></i> Giữ chỗ 100%
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-5 ms-lg-auto" data-reveal="slide-right" class="delay-2">
-                <div class="row g-3">
-                    <div class="col-6 col-lg-12">
-                        <div class="hero-stat-card">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span class="sz-badge sz-badge-tennis">ZONE A</span>
-                                <i class="bi bi-trophy-fill fs-3 text-success"></i>
-                            </div>
-                            <div class="num">${tennisCourtCount}</div>
-                            <div class="lbl">Sân Tennis acrylic ngoài trời</div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-lg-12">
-                        <div class="hero-stat-card">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span class="sz-badge sz-badge-pickle">ZONE B</span>
-                                <i class="bi bi-lightning-charge-fill fs-3 text-warning"></i>
-                            </div>
-                            <div class="num" style="color:var(--sz-pickle)">${pickleballCourtCount}</div>
-                            <div class="lbl">Sân Pickleball đa năng</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<section class="hero" id="home">
+    <div class="shell hero-grid">
+        <div data-reveal>
+            <div class="kicker"><span class="dot"></span> SportZone · Tổ Hợp Tennis &amp; Pickleball Cao Cấp</div>
+            <h1>Khung Giờ Vàng.<br><span class="accent-text">Sẵn Sàng Ra Sân.</span></h1>
+            <p class="lead">Hệ thống ${tennisCourtCount + pickleballCourtCount} sân Tennis &amp; Pickleball tiêu chuẩn quốc tế tại Khu CNC Hòa Lạc. Tra cứu lịch trống theo thời gian thực, giữ chỗ tức thì và tận hưởng không gian thể thao đỉnh cao.</p>
+            <div class="hero-actions"><a class="btn primary" href="${ctx}/MainController?action=courts">Khám phá sân trống <span>→</span></a><c:if test="${empty sessionScope.account}"><a class="btn ghost" href="${ctx}/MainController?action=register">Tạo tài khoản miễn phí</a></c:if></div>
+            <div class="trust-row"><span><i>✓</i> Đặt sân trong 60 giây</span><span><i>✓</i> Giữ chỗ theo thời gian thực</span><span><i>✓</i> Mở cửa 06:00 – 21:00</span></div>
         </div>
-    </section>
+        <div class="hero-visual" data-reveal>
+            <div class="photo-main"><img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&amp;fit=crop&amp;w=1400&amp;q=88" alt="Sân thể thao SportZone"><div class="photo-overlay"></div></div>
+            <div class="court-coordinate">21.0122° N · 105.5272° E<br><b>KHU CNC HÒA LẠC</b></div>
+            <div class="hero-stat-floating"><div><span class="eyebrow">HỆ THỐNG SÂN</span><div class="stat-num">${tennisCourtCount + pickleballCourtCount}</div></div><div class="stat-line"></div><div><b>${tennisCourtCount} Tennis</b><span>${pickleballCourtCount} Pickleball</span></div></div>
+        </div>
+    </div>
+</section>
 
-    <!-- ===== ƯU ĐIỂM (Why Choose SportZone) ===== -->
-    <section class="py-5">
-        <div class="text-center mb-5" data-reveal="fade-up">
-            <span class="sz-badge sz-badge-gold mb-2"><i class="bi bi-shield-star"></i> TÍNH NĂNG NỔI BẬT</span>
-            <h2 class="font-heading fs-1 text-slate-900">Vì sao chọn SportZone?</h2>
-            <p class="text-slate-500" style="max-width: 540px; margin: 0 auto;">Trải nghiệm đặt sân thông minh, hiện đại và không tốn thời gian chờ đợi.</p>
-        </div>
-        
-        <div class="row g-4">
-            <div class="col-md-3 col-sm-6" data-reveal="fade-up" class="delay-1">
-                <div class="sz-card hover-lift h-100">
-                    <div class="feature-icon-wrapper bg-icon-gold">
-                        <i class="bi bi-lightning-fill"></i>
-                    </div>
-                    <h3 class="h5 font-heading mb-2">Đặt trong 1 phút</h3>
-                    <p class="small text-slate-500 mb-0" style="line-height:1.6">Chọn sân, chọn khung giờ trống và xác nhận ngay lập tức trên hệ thống.</p>
-                </div>
-            </div>
-            
-            <div class="col-md-3 col-sm-6" data-reveal="fade-up" class="delay-2">
-                <div class="sz-card hover-lift h-100">
-                    <div class="feature-icon-wrapper bg-icon-green">
-                        <i class="bi bi-shield-check"></i>
-                    </div>
-                    <h3 class="h5 font-heading mb-2">Giữ chỗ chắc chắn</h3>
-                    <p class="small text-slate-500 mb-0" style="line-height:1.6">Khung giờ đã đặt hiển thị theo thời gian thực, đảm bảo không trùng lịch.</p>
-                </div>
-            </div>
-            
-            <div class="col-md-3 col-sm-6" data-reveal="fade-up" class="delay-3">
-                <div class="sz-card hover-lift h-100">
-                    <div class="feature-icon-wrapper bg-icon-orange">
-                        <i class="bi bi-credit-card-2-front-fill"></i>
-                    </div>
-                    <h3 class="h5 font-heading mb-2">Thanh toán linh hoạt</h3>
-                    <p class="small text-slate-500 mb-0" style="line-height:1.6">Tiền mặt hoặc chuyển khoản tại quầy, xuất hóa đơn tự động tức thì.</p>
-                </div>
-            </div>
-            
-            <div class="col-md-3 col-sm-6" data-reveal="fade-up" class="delay-4">
-                <div class="sz-card hover-lift h-100">
-                    <div class="feature-icon-wrapper bg-icon-blue">
-                        <i class="bi bi-award-fill"></i>
-                    </div>
-                    <h3 class="h5 font-heading mb-2">Sân chuẩn quốc tế</h3>
-                    <p class="small text-slate-500 mb-0" style="line-height:1.6">Mặt sân acrylic, hệ thống đèn chiếu sáng chống lóa và bảo trì định kỳ.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<div class="ticker" aria-label="Điểm nổi bật"><div class="ticker-track"><span>ĐẶT SÂN NHANH</span><span>LỊCH TRỐNG THỜI GIAN THỰC</span><span>MẶT SÂN ACRYLIC</span><span>ÁNH SÁNG CHỐNG LÓA</span><span>DỊCH VỤ TẠI QUẦY</span><span>MỞ CỬA MỖI NGÀY</span></div></div>
 
-    <!-- ===== BẢNG GIÁ & CHỌN LOẠI SÂN ===== -->
-    <section class="py-5">
-        <div class="text-center mb-5" data-reveal="fade-up">
-            <span class="sz-badge sz-badge-green mb-2"><i class="bi bi-tags-fill"></i> BẢNG GIÁ & SÂN BÓNG</span>
-            <h2 class="font-heading fs-1">Lựa chọn sân thi đấu của bạn</h2>
-            <p class="text-slate-500">Giá thuê tính theo giờ, đã bao gồm hệ thống chiếu sáng tiêu chuẩn.</p>
-        </div>
-        
-        <div class="row g-4 justify-content-center">
-            <!-- Tennis Card -->
-            <div class="col-md-6 col-lg-5" data-reveal="slide-left">
-                <article class="luxury-court-card">
-                    <div class="court-visual">
-                        <div class="court-visual-bg tennis-bg"></div>
-                        <div class="court-lines-overlay"></div>
-                        <div class="court-badge-floating">
-                            <span class="sz-badge sz-badge-tennis bg-white shadow-sm"><i class="bi bi-circle-fill text-success"></i> TENNIS ZONE A</span>
-                        </div>
-                        <div class="court-price-tag">
-                            150.000 đ <span class="fs-6 fw-normal text-muted">/ giờ</span>
-                        </div>
-                    </div>
-                    <div class="p-4 d-flex flex-column flex-grow-1">
-                        <h3 class="h4 font-heading mb-2">Sân Tennis Đạt Chuẩn</h3>
-                        <p class="small text-slate-500 mb-3">
-                            Hệ thống <b>${tennisCourtCount} sân cứng acrylic</b> ngoài trời cao cấp, phù hợp đánh đơn và đánh đôi chuyên nghiệp.
-                        </p>
-                        <div class="mt-auto">
-                            <a class="btn btn-sz-green w-100" href="${ctx}/MainController?action=courts&amp;type=tennis">
-                                Xem danh sách sân Tennis <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-            
-            <!-- Pickleball Card -->
-            <div class="col-md-6 col-lg-5" data-reveal="slide-right">
-                <article class="luxury-court-card">
-                    <div class="court-visual">
-                        <div class="court-visual-bg pickle-bg"></div>
-                        <div class="court-lines-overlay"></div>
-                        <div class="court-badge-floating">
-                            <span class="sz-badge sz-badge-pickle bg-white shadow-sm"><i class="bi bi-circle-fill text-warning"></i> PICKLEBALL ZONE B</span>
-                        </div>
-                        <div class="court-price-tag">
-                            120.000 đ <span class="fs-6 fw-normal text-muted">/ giờ</span>
-                        </div>
-                    </div>
-                    <div class="p-4 d-flex flex-column flex-grow-1">
-                        <h3 class="h4 font-heading mb-2">Sân Pickleball Hiện Đại</h3>
-                        <p class="small text-slate-500 mb-3">
-                            Cụm <b>${pickleballCourtCount} sân ngoài trời</b> thiết kế hiện đại, mặt sân bám tốt, thích hợp mọi lứa tuổi.
-                        </p>
-                        <div class="mt-auto">
-                            <a class="btn btn-sz-outline w-100" href="${ctx}/MainController?action=courts&amp;type=pickleball">
-                                Xem danh sách sân Pickleball <i class="bi bi-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+<section class="gateway" id="gateway" aria-label="Chuyển cảnh vào khu sân thể thao">
+    <div class="gateway-stage"><div class="gateway-intro"><span class="eyebrow">SPORTZONE ARENA</span><h2>Bước Vào Trận Đấu Của Bạn.</h2><p>Hai phân khu · Một chuẩn thi đấu quốc tế</p></div>
+        <div class="arena-doors"><a class="arena-door door-tennis" href="${ctx}/MainController?action=courts&amp;type=tennis"><div class="door-texture"><span class="zone-no">ZONE A</span><div class="door-copy"><span class="mini">${tennisCourtCount} SÂN NGOÀI TRỜI</span><h3>TENNIS<br>ARENA</h3><span class="enter">BƯỚC VÀO KHU TENNIS →</span></div></div></a><a class="arena-door door-pickle" href="${ctx}/MainController?action=courts&amp;type=pickleball"><div class="door-texture"><span class="zone-no">ZONE B</span><div class="door-copy"><span class="mini">${pickleballCourtCount} SÂN NGOÀI TRỜI</span><h3>PICKLEBALL<br>COMPLEX</h3><span class="enter">BƯỚC VÀO KHU PICKLEBALL →</span></div></div></a></div>
+    </div>
+</section>
 
-    <!-- ===== QUY TRÌNH 4 BƯỚC ===== -->
-    <section class="py-5 my-3" data-reveal="zoom">
-        <div class="glass-card-light rounded-4 p-4 p-md-5">
-            <div class="row align-items-center mb-4">
-                <div class="col-lg-6">
-                    <span class="sz-badge sz-badge-dark mb-2">QUY TRÌNH ĐẶT SÂN</span>
-                    <h2 class="font-heading fs-2 mb-1">4 Bước Đơn Giản Ra Sân</h2>
-                </div>
-                <div class="col-lg-6 text-lg-end">
-                    <p class="text-slate-500 small mb-0">Hệ thống tối ưu giúp bạn hoàn thành giữ chỗ nhanh chóng chỉ trong vài thao tác.</p>
-                </div>
-            </div>
-            
-            <div class="row g-3">
-                <div class="col-md-3 col-6" data-reveal="fade-up" class="delay-1">
-                    <div class="process-card">
-                        <div class="process-number">01</div>
-                        <h3 class="h6 font-heading mb-1">Chọn loại sân</h3>
-                        <p class="small text-slate-500 mb-0">Lựa chọn Tennis hoặc Pickleball theo sở thích.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-6" data-reveal="fade-up" class="delay-2">
-                    <div class="process-card">
-                        <div class="process-number">02</div>
-                        <h3 class="h6 font-heading mb-1">Chọn khung giờ</h3>
-                        <p class="small text-slate-500 mb-0">Xem trực quan các slot giờ trống theo ngày.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-6" data-reveal="fade-up" class="delay-3">
-                    <div class="process-card">
-                        <div class="process-number">03</div>
-                        <h3 class="h6 font-heading mb-1">Xác nhận booking</h3>
-                        <p class="small text-slate-500 mb-0">Thêm phụ kiện thuê vợt, bóng hoặc nước uống.</p>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 col-6" data-reveal="fade-up" class="delay-4">
-                    <div class="process-card">
-                        <div class="process-number">04</div>
-                        <h3 class="h6 font-heading mb-1">Thanh toán &amp; ra sân</h3>
-                        <p class="small text-slate-500 mb-0">Nhận mã đặt sân và thanh toán linh hoạt tại quầy.</p>
-                    </div>
-                </div>
-            </div>
+<section class="section courts" id="courts">
+    <div class="shell">
+        <div class="section-head"><div><span class="eyebrow">HỆ THỐNG SÂN BÃI</span><h2>Hệ Thống ${tennisCourtCount + pickleballCourtCount} Sân Tiêu Chuẩn Quốc Tế.</h2></div><p>Thiết kế dành cho cả vận động viên chuyên nghiệp và cộng đồng yêu thể thao tại Hòa Lạc.</p></div>
+        <div class="zone-banners"><a class="zone-card tennis-zone" href="${ctx}/MainController?action=courts&amp;type=tennis"><img src="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Tennis Zone"><div class="zone-content"><span>ZONE A · ${tennisCourtCount} SÂN</span><h3>Tennis Arena</h3><p>Mặt sân acrylic ngoài trời, hệ thống chiếu sáng chống lóa.</p></div></a><a class="zone-card pickle-zone" href="${ctx}/MainController?action=courts&amp;type=pickleball"><img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Pickleball Zone"><div class="zone-content"><span>ZONE B · ${pickleballCourtCount} SÂN</span><h3>Pickleball Complex</h3><p>Không gian hiện đại, mặt sân bám tốt và phù hợp mọi lứa tuổi.</p></div></a></div>
+        <div class="filter-bar"><div><button class="filter-tab active" type="button" disabled>Tất cả sân</button><button class="filter-tab" type="button" disabled>Tennis</button><button class="filter-tab" type="button" disabled>Pickleball</button></div><span class="coming-soon">Coming Soon</span></div>
+        <div class="court-grid">
+            <c:forEach begin="1" end="10" var="placeholderIndex"><article class="court-item-card is-disabled" aria-disabled="true"><div class="court-thumb skeleton-court"><span class="sz-badge sz-badge-dark">Coming Soon</span></div><div class="court-body"><div class="court-topline"><span>SPORTZONE COURT</span><span>—</span></div><h3>Dữ liệu sân trên trang chủ</h3><p>Danh sách sân động đang được khóa tại trang chủ.</p><button class="btn ghost" type="button" disabled>Coming Soon</button></div></article></c:forEach>
         </div>
-    </section>
-</div>
+        <div class="text-center"><a class="btn primary" href="${ctx}/MainController?action=courts">Xem danh sách sân thực tế <span>→</span></a></div>
+    </div>
+</section>
 
+<section class="section benefits"><div class="shell"><div class="section-head"><div><span class="eyebrow">LỢI THẾ SPORTZONE</span><h2>Giữ Chỗ Nhanh Chóng · Tối Đa Thời Gian Thi Đấu.</h2></div><p>Mọi chi tiết được thiết kế để bạn tập trung vào trận đấu thay vì thủ tục.</p></div><div class="benefit-grid"><article class="benefit"><span class="n">01</span><h3>Đặt trong 60 giây</h3><p>Chọn sân, ngày và khung giờ trực tiếp trên lịch trống.</p></article><article class="benefit"><span class="n">02</span><h3>Giữ chỗ chắc chắn</h3><p>Booking cập nhật theo thời gian thực, hạn chế hoàn toàn trùng lịch.</p></article><article class="benefit"><span class="n">03</span><h3>Thanh toán linh hoạt</h3><p>Thanh toán QR hoặc tại quầy và nhận hóa đơn điện tử.</p></article><article class="benefit"><span class="n">04</span><h3>Chuẩn thi đấu</h3><p>Mặt sân acrylic, ánh sáng chống lóa và bảo trì định kỳ.</p></article></div></div></section>
+
+<section class="section" id="booking"><div class="shell process-wrap"><div class="process-image"><img src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="Thi đấu tại SportZone"></div><div><span class="eyebrow">QUY TRÌNH ĐẶT SÂN</span><h2>Từ Tra Cứu Đến Ra Sân Chỉ Trong 4 Bước.</h2><div class="steps"><div class="step"><span class="num">01</span><div><h3>Chọn phân khu</h3><p>Tennis hoặc Pickleball.</p></div></div><div class="step"><span class="num">02</span><div><h3>Chọn ngày và giờ</h3><p>Xem lịch trống trong 7 ngày.</p></div></div><div class="step"><span class="num">03</span><div><h3>Xác nhận booking</h3><p>Thêm dịch vụ cần thiết.</p></div></div><div class="step"><span class="num">04</span><div><h3>Thanh toán &amp; ra sân</h3><p>Nhận xác nhận và check-in tại quầy.</p></div></div></div></div></div></section>
+
+<section class="cta"><div class="shell"><div class="cta-box"><div><span class="eyebrow">SẴN SÀNG THI ĐẤU?</span><h2>Giữ Khung Giờ Đẹp Ngay Trước Khi Kín Lịch!</h2></div><a class="btn primary" href="${ctx}/MainController?action=courts">Đặt sân ngay <span>→</span></a></div></div></section>
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

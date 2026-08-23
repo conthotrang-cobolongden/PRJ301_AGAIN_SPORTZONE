@@ -1,0 +1,113 @@
+/* Exact CSS port from design-system/sportzone/error/sportzone-error-demo.html; preview/** excluded. */
+:root{
+      --ink:#0b1911;
+      --green:#1b5e3b;
+      --gold:#caa54b;
+      --cream:#f7f4ed;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --shadow:0 24px 60px rgba(11,25,17,.12);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(27,94,59,.08), transparent 45%),
+        linear-gradient(180deg, #fffdfa 0%, #f7f4ed 100%);
+      padding:100px 0 80px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+    }
+
+    a{text-decoration:none;color:inherit}
+    .container{max-width:680px;margin:0 auto;padding:0 24px;text-align:center}
+
+    /* SWITCHER */
+    .demo-view-switcher{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:36px;
+    }
+    .btn-view-tab{
+      border:1.5px solid var(--line);
+      background:rgba(255,255,255,.8);
+      padding:8px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-view-tab.active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+    }
+
+    .error-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:54px 40px;
+      box-shadow:var(--shadow);
+    }
+
+    .error-code{
+      font-family:"Montserrat",sans-serif;
+      font-size:84px;
+      font-weight:900;
+      line-height:1;
+      letter-spacing:-.04em;
+      margin-bottom:12px;
+    }
+    .error-code.code-403{color:#dc2626}
+    .error-code.code-404{color:var(--green)}
+    .error-code.code-500{color:#d97706}
+
+    .error-title{
+      font-family:"Montserrat",sans-serif;
+      font-size:24px;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+    .error-desc{
+      font-size:15px;
+      color:var(--muted);
+      line-height:1.6;
+      margin-bottom:32px;
+    }
+
+    .btn-home{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:var(--green);
+      color:#fff;
+      padding:12px 28px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:800;
+      box-shadow:0 6px 18px rgba(27,94,59,.25);
+      transition:all .2s;
+    }
+    .btn-home:hover{
+      transform:translateY(-2px);
+      box-shadow:0 8px 24px rgba(27,94,59,.35);
+    }
+
+    .error-view{display:none;animation:fadeIn .25s ease}
+    .error-view.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+

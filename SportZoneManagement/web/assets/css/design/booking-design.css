@@ -1,0 +1,359 @@
+/* Exact CSS port from design-system/sportzone/booking/sportzone-booking-demo.html; preview/** excluded. */
+/* ========================================================
+       SPORTZONE BOOKING DESIGN SYSTEM (UI/UX PRO MAX)
+       ======================================================== */
+    :root{
+      --ink:#0b1911;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --gold:#caa54b;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#fffdfa;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --line-strong:rgba(11,25,17,.18);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --danger-border:#fecaca;
+      --warning:#d97706;
+      --warning-bg:#fffbeb;
+      --warning-border:#fde68a;
+      --success:#15803d;
+      --success-bg:#f0fdf4;
+      --success-border:#bbf7d0;
+      --info:#0284c7;
+      --info-bg:#f0f9ff;
+      --info-border:#bae6fd;
+      --shadow-sm:0 8px 24px rgba(11,25,17,.06);
+      --shadow:0 20px 50px rgba(11,25,17,.1);
+      --shadow-lg:0 30px 80px rgba(11,25,17,.16);
+      --radius-sm:12px;
+      --radius:20px;
+      --radius-lg:28px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 80% 15%, rgba(27,94,59,.07), transparent 40%),
+        radial-gradient(circle at 15% 75%, rgba(202,165,75,.07), transparent 35%),
+        linear-gradient(180deg, #fffdfa 0%, #f7f4ed 100%);
+      padding:100px 0 80px;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* NAVBAR */
+    .sz-nav{
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:900;
+      background:rgba(255,253,250,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--line);
+      height:76px;
+      display:flex;
+      align-items:center;
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+    .brand-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.02em;
+      font-family:"Montserrat",sans-serif;
+    }
+    .brand-logo svg{width:36px;height:36px}
+    .brand-logo .zone{color:var(--green)}
+
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-link{font-size:14px;font-weight:700;color:var(--muted);transition:.2s}
+    .nav-link:hover,.nav-link.active{color:var(--green)}
+
+    /* TOP DEMO SWITCHER */
+    .demo-view-switcher{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:32px;
+    }
+    .btn-view-tab{
+      border:1.5px solid var(--line);
+      background:rgba(255,255,255,.8);
+      padding:8px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-view-tab.active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+      box-shadow:0 4px 14px rgba(11,25,17,.2);
+    }
+
+    /* BADGE PILLS */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .sz-badge-pending{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-confirmed{background:var(--info-bg);color:var(--info);border:1px solid var(--info-border)}
+    .sz-badge-completed{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-cancelled{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+    .sz-badge-paid{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-unpaid{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-none{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+
+    /* BACKEND OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-10px;
+      left:10px;
+      background:#d97706;
+      color:#fff;
+      font-size:9.5px;
+      font-weight:800;
+      padding:2px 7px;
+      border-radius:5px;
+      z-index:30;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:2px;
+      position:relative;
+    }
+
+    /* CARDS & FORMS */
+    .sz-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:28px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:24px;
+    }
+    .step-num{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:26px;
+      height:26px;
+      border-radius:50%;
+      background:var(--green);
+      color:#fff;
+      font-size:12.5px;
+      font-weight:800;
+      margin-right:8px;
+    }
+
+    /* TIME SLOT RADIO MATRIX */
+    .slot-grid-radio{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+    .slot-radio-label{
+      border:1.5px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:14px 8px;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s;
+      display:flex;
+      flex-direction:column;
+    }
+    .slot-radio-label input{display:none}
+    .slot-radio-label:hover{border-color:var(--green)}
+    .slot-radio-label.is-selected{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+      box-shadow:0 4px 14px rgba(27,94,59,.25);
+    }
+    .slot-radio-label.is-booked{
+      background:#fef2f2;
+      border-color:#fecaca;
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    /* SERVICE ROWS */
+    .service-item-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 14px;
+      border-radius:12px;
+      background:var(--cream);
+      border:1px solid var(--line);
+      margin-bottom:10px;
+    }
+    .service-item-row input[type="number"]{
+      width:60px;
+      padding:4px 8px;
+      border-radius:6px;
+      border:1px solid var(--line);
+      text-align:center;
+      font-weight:700;
+    }
+
+    /* SUMMARY STICKY BOX */
+    .summary-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1.5px solid var(--green);
+      padding:28px;
+      box-shadow:var(--shadow);
+      position:sticky;
+      top:100px;
+    }
+    .sum-row{
+      display:flex;
+      justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid rgba(11,25,17,.06);
+      font-size:13.5px;
+    }
+    .sum-row.total{
+      border-top:2px solid var(--ink);
+      border-bottom:0;
+      padding-top:16px;
+      font-size:18px;
+      font-weight:900;
+      color:var(--green);
+    }
+
+    /* DATA TABLES */
+    .table-responsive{width:100%;overflow-x:auto}
+    .sz-table{
+      width:100%;
+      border-collapse:collapse;
+      text-align:left;
+    }
+    .sz-table th{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding:12px 14px;
+      background:var(--cream);
+      border-bottom:1px solid var(--line);
+    }
+    .sz-table td{
+      padding:14px;
+      font-size:13.5px;
+      font-weight:600;
+      border-bottom:1px solid rgba(11,25,17,.05);
+      vertical-align:middle;
+    }
+    .sz-table tr:hover td{background:#fafcfb}
+
+    /* ACTION BUTTONS */
+    .btn-action{
+      padding:8px 16px;
+      border-radius:8px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12.5px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn-action-green{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+    }
+    .btn-action-green:hover{background:#13472d}
+
+    .btn-action-danger{
+      background:var(--danger-bg);
+      color:var(--danger);
+      border-color:var(--danger-border);
+    }
+
+    /* FLOATING INSPECTOR */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:24px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    .view-section{display:none;animation:fadeIn .25s ease}
+    .view-section.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+

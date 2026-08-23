@@ -28,6 +28,7 @@
 - Không.
 
 ---
+
 ## [2026-08-23 23:30] — CODEX — Đồng bộ schema/seed và reset DB runtime
 
 **Task:** Sửa hai file database và DB thực tế để booking không còn phụ thuộc `Bookings.CourtID`.
@@ -857,6 +858,33 @@
 
 ### Future feature đang khóa
 - Quản lý tài khoản, dịch vụ, báo cáo nâng cao, CRUD slot lẻ, checkout, manual no-show và refund.
+
+### Cần người dùng quyết định
+- Không.
+
+---
+
+## [2026-08-24] — CODEX — Port giao diện SportZone cuối sang JSP
+
+**Task:** Copy nguyên bản thiết kế trong `design-system/sportzone/**` sang JSP, loại trừ toàn bộ `preview/**`, chỉ thay dữ liệu demo bằng EL/JSTL và khóa phần chưa có backend bằng `Coming Soon`.
+**Trạng thái:** Xong
+
+### Đã làm
+- [x] Port layout, typography, màu, spacing, responsive, animation, card, form và table cho home, auth, court, booking, invoice, account, admin và error.
+- [x] Tách CSS nguyên bản theo từng nhóm trang vào `web/assets/css/design/`; giữ `app.css` làm lớp adapter dữ liệu động.
+- [x] Giữ nguyên route, GET/POST, form action, input/parameter, request/session attribute, CSRF, authorization và JavaScript hook hiện có.
+- [x] Admin giữ đủ dashboard doanh thu, quản lý sân/sinh slot tuần, booking vãng lai và check-in; phần chưa có backend vẫn hiện nhưng disabled + `Coming Soon`.
+- [x] Thêm `UiRedesignContractTest` vào regression batch để khóa contract và loại demo-only controls khỏi JSP production.
+
+### Verification thực tế
+- `ant clean compile-test`: 63 source + 39 test source compile thành công.
+- `AdminMvpRegressionBatchTest PASSED`, gồm toàn bộ regression cũ và `UiRedesignContractTest PASSED`.
+- `ant dist`: tạo `dist/SportZoneManagement.war` thành công.
+- Tomcat smoke: home, court list và login HTTP 200; CSS thiết kế được load; login desktop/mobile không tràn ngang; court list render 10 card động; không có console error.
+
+### Ghi chú
+- Không đọc hoặc sử dụng bất kỳ file nào trong `design-system/sportzone/preview/**` làm nguồn giao diện.
+- Không thay đổi Java, SQL, `web.xml` hay backend contract.
 
 ### Cần người dùng quyết định
 - Không.

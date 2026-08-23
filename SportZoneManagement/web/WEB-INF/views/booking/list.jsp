@@ -3,27 +3,31 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%-- U11: Booking của tôi (tab Sắp tới / Lịch sử) + U16: cột thanh toán --%>
 <c:set var="pageTitle" value="Booking của tôi — SportZone" scope="request"/>
+<c:set var="pageCss" value="booking-design.css" scope="request"/>
+<c:set var="pageBodyClass" value="sz-page-booking" scope="request"/>
+<c:set var="headerVariant" value="standard" scope="request"/>
+<c:set var="footerVariant" value="none" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
-<section class="container sz-section">
-    <div class="sz-pagehead">
+<section class="container view-section active" id="viewList">
+    <div class="booking-list-head">
         <div>
-            <p class="sz-kicker sz-kicker-dark mb-1">SportZone</p>
+            <span class="sz-badge sz-badge-completed">LỊCH SỬ THI ĐẤU</span>
             <h1>Booking của tôi</h1>
         </div>
-        <a class="btn btn-sz" href="${ctx}/MainController?action=courts">+ Đặt sân</a>
+        <a class="btn-action-green rounded-action" href="${ctx}/MainController?action=courts">+ Đặt Thêm Sân Mới</a>
     </div>
 
     <!-- Tabs: GET ?tab=upcoming|history -->
-    <ul class="nav nav-pills sz-tabs mb-4">
+    <ul class="booking-tabs">
         <li class="nav-item">
-            <a class="nav-link ${activeTab != 'history' ? 'active' : ''}" href="${ctx}/MainController?action=bookings">
+            <a class="filter-btn ${activeTab != 'history' ? 'active' : ''}" href="${ctx}/MainController?action=bookings">
                 Sắp tới <span class="sz-count">${upcomingList.size()}</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link ${activeTab == 'history' ? 'active' : ''}" href="${ctx}/MainController?action=bookings&amp;tab=history">
+            <a class="filter-btn ${activeTab == 'history' ? 'active' : ''}" href="${ctx}/MainController?action=bookings&amp;tab=history">
                 Lịch sử <span class="sz-count">${historyList.size()}</span>
             </a>
         </li>
@@ -37,8 +41,8 @@
 
     <c:choose>
         <c:when test="${not empty rows}">
-            <div class="table-responsive">
-                <table class="table table-bordered align-middle sz-table sz-table-cards">
+            <div class="sz-card"><div class="table-responsive">
+                <table class="sz-table sz-table-cards">
                     <thead>
                         <tr>
                             <th>Ngày chơi</th>
@@ -79,13 +83,13 @@
                                 </td>
                                 <td class="num" data-label="Tổng tiền"><fmt:formatNumber value="${b.totalAmount}" type="number" groupingUsed="true"/> đ</td>
                                 <td class="sz-td-actions">
-                                    <a class="btn btn-outline-success btn-sm" href="${ctx}/MainController?action=bookingDetail&amp;id=${b.bookingId}">Xem</a>
+                                    <a class="btn-action" href="${ctx}/MainController?action=bookingDetail&amp;id=${b.bookingId}">Xem đơn</a>
                                 </td>
                             </tr>
                         </c:forEach>
                     </tbody>
                 </table>
-            </div>
+            </div></div>
         </c:when>
         <c:otherwise>
             <div class="sz-empty">

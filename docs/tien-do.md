@@ -308,3 +308,15 @@ Verification hoàn tất đúng ngân sách 2 lượt:
 - Dữ liệu booking/slot chỉ dùng cho smoke đã được dọn sau khi kiểm tra.
 
 *Cập nhật lần cuối: 2026-08-24.*
+
+---
+
+## 2026-08-24 — Hoàn tất port giao diện SportZone cuối
+
+Toàn bộ JSP production đã được port theo các demo chuẩn trong `design-system/sportzone/**`, ngoại trừ `preview/**` bị loại hoàn toàn. Dữ liệu hard-code được thay bằng EL/JSTL theo contract backend hiện tại; các phần chưa có backend vẫn giữ giao diện nhưng bị disable và gắn `Coming Soon`.
+
+Phạm vi hoàn tất gồm shared header/footer, home, login/register, court list/detail, booking create/list/detail, invoice list/detail/payment, profile/password, admin dashboard/courts/bookings và các trang lỗi. CSS nguyên bản được tách theo nhóm trang tại `web/assets/css/design/`.
+
+Verification tổng hợp: 63 source + 39 test source compile; full `AdminMvpRegressionBatchTest` pass; UI contract mới pass; WAR build thành công; Tomcat smoke home/courts/login HTTP 200, CSS load đúng, responsive không tràn ngang và không có console error.
+
+*Cập nhật lần cuối: 2026-08-24.*
