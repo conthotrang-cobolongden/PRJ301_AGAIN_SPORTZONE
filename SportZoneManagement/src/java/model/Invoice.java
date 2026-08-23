@@ -79,4 +79,27 @@ public class Invoice {
     public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
     public BigDecimal getCourtAmount() { return courtAmount; }
     public void setCourtAmount(BigDecimal courtAmount) { this.courtAmount = courtAmount; }
+    public int getInvoiceId() { return invoiceID; }
+    public int getBookingId() { return bookingID; }
+    public java.sql.Timestamp getInvoiceDateValue() {
+        return invoiceDate == null ? null : java.sql.Timestamp.valueOf(invoiceDate);
+    }
+    public java.sql.Timestamp getPaidAtValue() {
+        return paidAt == null ? null : java.sql.Timestamp.valueOf(paidAt);
+    }
+    public java.sql.Date getSlotDateValue() {
+        return slotDate == null ? null : java.sql.Date.valueOf(slotDate);
+    }
+    public java.sql.Time getStartTimeValue() {
+        return startTime == null ? null : java.sql.Time.valueOf(startTime);
+    }
+    public java.sql.Time getEndTimeValue() {
+        return endTime == null ? null : java.sql.Time.valueOf(endTime);
+    }
+    public long getExpiresAtEpochMilli() {
+        return invoiceDate == null ? 0L
+                : invoiceDate.plusMinutes(15)
+                        .atZone(java.time.ZoneId.systemDefault())
+                        .toInstant().toEpochMilli();
+    }
 }

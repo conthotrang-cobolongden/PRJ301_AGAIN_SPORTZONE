@@ -17,8 +17,17 @@ public final class Views {
     public static final String BOOKING_DETAIL = ROOT + "booking/detail.jsp";
     public static final String INVOICE_LIST = ROOT + "invoice/list.jsp";
     public static final String INVOICE_DETAIL = ROOT + "invoice/detail.jsp";
+    public static final String INVOICE_PAYMENT = ROOT + "invoice/payment.jsp";
     public static final String PROFILE = ROOT + "account/profile.jsp";
     public static final String PASSWORD = ROOT + "account/password.jsp";
+    public static final String ACCOUNT_LOCKED
+            = ROOT + "error/account-locked.jsp";
+    public static final String ADMIN_DASHBOARD
+            = ROOT + "admin/dashboard.jsp";
+    public static final String ADMIN_COURTS
+            = ROOT + "admin/courts.jsp";
+    public static final String ADMIN_BOOKINGS
+            = ROOT + "admin/bookings.jsp";
 
     private Views() {
     }

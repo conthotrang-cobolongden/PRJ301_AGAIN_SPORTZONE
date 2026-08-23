@@ -4,8 +4,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-/** Model cua bang TimeSlots. Tag: U9, A11. */
+/**
+ * Model cua bang TimeSlots.
+ *
+ * Thuoc tinh past khong phai cot trong database. Servlet Phase 3
+ * tinh gia tri nay de JSP phan biet slot da qua trong ngay hien tai.
+ *
+ * Tag: U9, A11
+ */
 public class TimeSlot {
+
     private int timeSlotID;
     private int courtID;
     private LocalDate slotDate;
@@ -13,28 +21,106 @@ public class TimeSlot {
     private LocalTime endTime;
     private String status;
     private LocalDateTime createdAt;
+
+    /*
+     * View-only flag, khong phai cot trong bang TimeSlots.
+     */
     private boolean past;
 
-    public TimeSlot() { }
-    public TimeSlot(int timeSlotID, int courtID, LocalDate slotDate, LocalTime startTime,
-            LocalTime endTime, String status, LocalDateTime createdAt) {
-        this.timeSlotID = timeSlotID; this.courtID = courtID; this.slotDate = slotDate;
-        this.startTime = startTime; this.endTime = endTime; this.status = status; this.createdAt = createdAt;
+    public TimeSlot() {
     }
-    public int getTimeSlotID() { return timeSlotID; }
-    public void setTimeSlotID(int timeSlotID) { this.timeSlotID = timeSlotID; }
-    public int getCourtID() { return courtID; }
-    public void setCourtID(int courtID) { this.courtID = courtID; }
-    public LocalDate getSlotDate() { return slotDate; }
-    public void setSlotDate(LocalDate slotDate) { this.slotDate = slotDate; }
-    public LocalTime getStartTime() { return startTime; }
-    public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
-    public LocalTime getEndTime() { return endTime; }
-    public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public boolean isPast() { return past; }
-    public void setPast(boolean past) { this.past = past; }
+
+    public TimeSlot(
+            int timeSlotID,
+            int courtID,
+            LocalDate slotDate,
+            LocalTime startTime,
+            LocalTime endTime,
+            String status,
+            LocalDateTime createdAt
+    ) {
+        this.timeSlotID = timeSlotID;
+        this.courtID = courtID;
+        this.slotDate = slotDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
+
+    public int getTimeSlotID() {
+        return timeSlotID;
+    }
+
+    public void setTimeSlotID(int timeSlotID) {
+        this.timeSlotID = timeSlotID;
+    }
+
+    /**
+     * JavaBeans alias cho JSP EL ${s.timeSlotId}.
+     *
+     * Getter getTimeSlotID() duoc giu lai de khong pha code Java
+     * hien tai. JSP EL can property camel-case "timeSlotId".
+     *
+     * Tag: U9
+     */
+    public int getTimeSlotId() {
+        return timeSlotID;
+    }
+
+    public int getCourtID() {
+        return courtID;
+    }
+
+    public void setCourtID(int courtID) {
+        this.courtID = courtID;
+    }
+
+    public LocalDate getSlotDate() {
+        return slotDate;
+    }
+
+    public void setSlotDate(LocalDate slotDate) {
+        this.slotDate = slotDate;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public boolean isPast() {
+        return past;
+    }
+
+    public void setPast(boolean past) {
+        this.past = past;
+    }
 }

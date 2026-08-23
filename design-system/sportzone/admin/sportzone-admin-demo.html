@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Trung tâm quản trị & điều hành hệ thống tổ hợp sân thể thao Tennis & Pickleball." />
+  <title>SportZone — Admin Executive Suite &amp; Control Center</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro + Montserrat (100% Tiếng Việt Chuẩn) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ========================================================
+       SPORTZONE ADMIN SUITE (UI/UX PRO MAX - CHATGPT-STYLE SIDEBAR)
+       ======================================================== */
+    :root{
+      --admin-bg:#f7f9f8;
+      --admin-sidebar-bg:#ffffff;
+      --admin-sidebar-hover:#f0f5f2;
+      --admin-sidebar-active:#1b5e3b;
+      --ink:#0b1911;
+      --ink-soft:#14291e;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --green-glow:#4ade80;
+      --gold:#caa54b;
+      --gold-light:#e9c875;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#ffffff;
+      --muted:#607368;
+      --line:rgba(11,25,17,.08);
+      --line-strong:rgba(11,25,17,.15);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --danger-border:#fecaca;
+      --warning:#d97706;
+      --warning-bg:#fffbeb;
+      --warning-border:#fde68a;
+      --success:#15803d;
+      --success-bg:#f0fdf4;
+      --success-border:#bbf7d0;
+      --info:#0284c7;
+      --info-bg:#f0f9ff;
+      --info-border:#bae6fd;
+      --shadow-sm:0 4px 14px rgba(11,25,17,.04);
+      --shadow:0 12px 32px rgba(11,25,17,.07);
+      --shadow-lg:0 24px 64px rgba(11,25,17,.12);
+      --radius-sm:10px;
+      --radius:18px;
+      --radius-lg:26px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:var(--admin-bg);
+      display:flex;
+      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* BADGE PILLS */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .sz-badge-gold{background:var(--gold-surface);color:#917223;border:1px solid rgba(202,165,75,.35)}
+    .sz-badge-green{background:rgba(27,94,59,.12);color:var(--green);border:1px solid rgba(27,94,59,.25)}
+    .sz-badge-dark{background:var(--ink);color:#fff}
+    .sz-badge-active{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-frozen{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+    .sz-badge-pending{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-confirmed{background:var(--info-bg);color:var(--info);border:1px solid var(--info-border)}
+    .sz-badge-noshow{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+
+    /* BACKEND HIGHLIGHT OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-10px;
+      left:10px;
+      background:#d97706;
+      color:#fff;
+      font-size:9.5px;
+      font-weight:800;
+      padding:2px 7px;
+      border-radius:5px;
+      z-index:30;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+      animation:pulseTag 2s infinite;
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:2px;
+      position:relative;
+    }
+    @keyframes pulseTag{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.05)}
+    }
+
+    /* INSPECTOR CONTROL PANEL */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:24px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    /* ========================================================
+       SIDEBAR: CHATGPT-STYLE MODERN VECTOR ICON DESIGN
+       ======================================================== */
+    .admin-sidebar{
+      width:268px;
+      background:var(--admin-sidebar-bg);
+      color:var(--ink);
+      display:flex;
+      flex-direction:column;
+      border-right:1px solid var(--line);
+      flex-shrink:0;
+      user-select:none;
+      position:relative;
+      z-index:100;
+      transition:width .28s cubic-bezier(.2,.8,.2,1);
+      will-change:width;
+      overflow:hidden;
+    }
+
+    .sidebar-brand{
+      padding:16px 16px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid var(--line);
+      min-height:68px;
+    }
+    .brand-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      font-size:18px;
+      letter-spacing:-.02em;
+      font-family:"Montserrat",sans-serif;
+      color:var(--ink);
+      white-space:nowrap;
+    }
+    .brand-title svg{width:32px;height:32px;flex-shrink:0}
+    .brand-title .zone{color:var(--green)}
+
+    /* ChatGPT-style Icon Button for Collapse */
+    .btn-chatgpt-toggle{
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      border:1px solid transparent;
+      background:transparent;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .18s ease;
+      flex-shrink:0;
+    }
+    .btn-chatgpt-toggle:hover{
+      background:var(--admin-sidebar-hover);
+      color:var(--ink);
+      border-color:var(--line);
+    }
+
+    /* Topbar Toggle Button (Always Visible, Easy to Expand) */
+    .btn-topbar-toggle{
+      width:38px;
+      height:38px;
+      border-radius:9px;
+      border:1.5px solid var(--line);
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--ink);
+      cursor:pointer;
+      transition:all .2s ease;
+      flex-shrink:0;
+      box-shadow:0 2px 6px rgba(0,0,0,.04);
+    }
+    .btn-topbar-toggle:hover{
+      background:var(--admin-sidebar-hover);
+      color:var(--green);
+      border-color:var(--green);
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(27,94,59,.15);
+    }
+
+    .sidebar-nav{
+      flex:1;
+      padding:14px 10px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+    .nav-group-label{
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding:14px 12px 6px;
+      white-space:nowrap;
+      transition:opacity .2s ease;
+    }
+    .admin-nav-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:10px 12px;
+      border-radius:var(--radius-sm);
+      color:#2f4639;
+      font-size:13.5px;
+      font-weight:700;
+      cursor:pointer;
+      transition:all .18s ease;
+      white-space:nowrap;
+      position:relative;
+    }
+    .admin-nav-item:hover{
+      background:var(--admin-sidebar-hover);
+      color:var(--green);
+    }
+    .admin-nav-item.active{
+      background:linear-gradient(135deg,#1b5e3b 0%,#13472d 100%);
+      color:#fff;
+      box-shadow:0 4px 14px rgba(27,94,59,.22);
+    }
+    .admin-nav-item .nav-icon{
+      width:20px;
+      height:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      color:currentColor;
+    }
+    .admin-nav-item.active .nav-icon svg{
+      stroke:#fff;
+    }
+    .admin-nav-item .nav-label{
+      flex:1;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .admin-nav-item .badge-count{
+      background:rgba(202,165,75,.2);
+      color:#8a6405;
+      font-size:11px;
+      padding:2px 8px;
+      border-radius:999px;
+      font-weight:800;
+    }
+    .admin-nav-item.active .badge-count{
+      background:rgba(255,255,255,.25);
+      color:#fff;
+    }
+
+    /* Sidebar Footer Admin Profile */
+    .sidebar-profile{
+      padding:12px 14px;
+      background:#f8faf9;
+      border-top:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-height:64px;
+    }
+    .adm-avatar{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      background:linear-gradient(135deg,#1b5e3b,#caa54b);
+      color:#fff;
+      font-weight:900;
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      box-shadow:0 3px 8px rgba(27,94,59,.2);
+    }
+    .adm-info{flex:1;min-width:0}
+    .adm-info .name{font-size:12.5px;font-weight:800;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .adm-info .role{font-size:10.5px;color:var(--green);font-weight:700}
+    .adm-logout-btn{
+      color:#ef4444;
+      background:rgba(239,68,68,.08);
+      border:1px solid rgba(239,68,68,.2);
+      width:32px;
+      height:32px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition:.2s;
+      flex-shrink:0;
+    }
+    .adm-logout-btn:hover{background:#ef4444;color:#fff}
+
+    /* ========================================================
+       COLLAPSED MINI SIDEBAR STATE (CHATGPT EXACT FEEL)
+       ======================================================== */
+    body.sidebar-collapsed .admin-sidebar{
+      width:68px;
+    }
+    body.sidebar-collapsed .brand-title span,
+    body.sidebar-collapsed .sidebar-brand .sz-badge,
+    body.sidebar-collapsed .sidebar-brand .btn-chatgpt-toggle,
+    body.sidebar-collapsed .nav-group-label,
+    body.sidebar-collapsed .admin-nav-item .nav-label,
+    body.sidebar-collapsed .admin-nav-item .badge-count,
+    body.sidebar-collapsed .adm-info,
+    body.sidebar-collapsed .adm-logout-btn{
+      display:none;
+    }
+    body.sidebar-collapsed .sidebar-brand{
+      justify-content:center;
+      padding:16px 8px;
+      cursor:pointer;
+    }
+    body.sidebar-collapsed .admin-nav-item{
+      justify-content:center;
+      padding:11px 0;
+    }
+    body.sidebar-collapsed .admin-nav-item .nav-icon{
+      width:22px;
+      height:22px;
+    }
+    body.sidebar-collapsed .sidebar-profile{
+      justify-content:center;
+      padding:12px 6px;
+    }
+
+    /* ========================================================
+       MAIN VIEWPORT CONTAINER
+       ======================================================== */
+    .admin-viewport{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      background:var(--admin-bg);
+      min-width:0;
+    }
+
+    /* TOP HEADER BAR */
+    .admin-topbar{
+      height:68px;
+      background:#fff;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 24px;
+      gap:16px;
+      flex-shrink:0;
+    }
+    .topbar-left{display:flex;align-items:center;gap:12px}
+
+    .court-live-ticker{
+      display:flex;
+      align-items:center;
+      background:var(--cream);
+      padding:6px 14px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      color:#2b3e32;
+      border:1px solid var(--line);
+      white-space:nowrap;
+    }
+
+    .topbar-right{display:flex;align-items:center;gap:12px}
+    .quick-search{
+      position:relative;
+      width:240px;
+    }
+    .quick-search input{
+      width:100%;
+      padding:8px 14px 8px 34px;
+      border-radius:999px;
+      border:1.5px solid var(--line);
+      background:var(--cream);
+      font-size:13px;
+      font-weight:600;
+      outline:none;
+      transition:.2s;
+    }
+    .quick-search input:focus{
+      background:#fff;
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(27,94,59,.1);
+    }
+    .search-icon-svg{
+      position:absolute;
+      left:11px;
+      top:50%;
+      transform:translateY(-50%);
+      color:var(--muted);
+      pointer-events:none;
+      display:flex;
+      align-items:center;
+    }
+
+    .btn-create-booking{
+      background:linear-gradient(135deg,#1b5e3b 0%,#13472d 100%);
+      color:#fff;
+      border:0;
+      padding:9px 18px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      box-shadow:0 4px 14px rgba(27,94,59,.2);
+      transition:.2s;
+      white-space:nowrap;
+    }
+    .btn-create-booking:hover{
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(27,94,59,.3);
+    }
+
+    /* SCROLLABLE MAIN BODY */
+    .admin-main-scroll{
+      flex:1;
+      overflow-y:auto;
+      padding:28px 32px 60px;
+    }
+
+    /* VIEW SECTIONS (DYNAMIC TABS) */
+    .admin-view{display:none}
+    .admin-view.active{display:block;animation:fadeInView .25s ease}
+    @keyframes fadeInView{
+      from{opacity:0;transform:translateY(6px)}
+      to{opacity:1;transform:none}
+    }
+
+    .view-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-bottom:24px;
+    }
+    .view-title h1{font-size:26px;color:var(--ink);margin-bottom:4px}
+    .view-title p{font-size:13.5px;color:var(--muted);margin:0}
+
+    /* EXECUTIVE KPI GRID */
+    .kpi-grid{
+      display:grid;
+      grid-template-columns:repeat(6,1fr);
+      gap:16px;
+      margin-bottom:28px;
+    }
+    .kpi-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:20px;
+      box-shadow:var(--shadow-sm);
+      transition:transform .2s ease, box-shadow .2s ease;
+      position:relative;
+      border-top:4px solid var(--line);
+    }
+    .kpi-card:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow);
+    }
+    .kpi-card .label{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .kpi-card .val{font-family:"Montserrat",sans-serif;font-size:26px;font-weight:900;color:var(--ink);line-height:1}
+
+    .kpi-card.kpi-border-blue{border-top-color:#0284c7}
+    .kpi-card.kpi-border-green{border-top-color:#15803d}
+    .kpi-card.kpi-border-amber{border-top-color:#d97706}
+    .kpi-card.kpi-border-rose{border-top-color:#e11d48}
+    .kpi-card.kpi-border-emerald{border-top-color:#1b5e3b}
+    .kpi-card.kpi-border-gold{border-top-color:#caa54b}
+
+    /* CARDS & TABLES */
+    .admin-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:24px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:24px;
+    }
+    .card-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:18px;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+    .card-head-title{font-size:16px;font-weight:800;color:var(--ink)}
+
+    /* FILTER TRAY */
+    .pill-tray{
+      display:inline-flex;
+      gap:4px;
+      background:var(--cream);
+      padding:4px;
+      border-radius:999px;
+      border:1px solid var(--line);
+    }
+    .filter-pill{
+      border:0;
+      background:transparent;
+      padding:6px 16px;
+      border-radius:999px;
+      font-size:12.5px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:.2s;
+    }
+    .filter-pill.active{
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+    .filter-pill .count{
+      background:rgba(0,0,0,.06);
+      padding:1px 6px;
+      border-radius:999px;
+      font-size:11px;
+      margin-left:4px;
+    }
+
+    /* DATA TABLES */
+    .table-responsive{width:100%;overflow-x:auto}
+    .admin-table{
+      width:100%;
+      border-collapse:collapse;
+      text-align:left;
+    }
+    .admin-table th{
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--muted);
+      padding:12px 14px;
+      background:var(--cream);
+      border-bottom:1px solid var(--line);
+    }
+    .admin-table td{
+      padding:14px;
+      font-size:13.5px;
+      font-weight:600;
+      border-bottom:1px solid rgba(11,25,17,.05);
+      vertical-align:middle;
+    }
+    .admin-table tr:hover td{background:#fafcfb}
+    .admin-table .mono{font-family:Consolas,monospace;font-size:12.5px;font-weight:700;color:#334155}
+    .admin-table .money{font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink)}
+
+    /* ACTION BUTTONS */
+    .btn-action{
+      padding:7px 14px;
+      border-radius:8px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s;
+      display:inline-flex;
+      align-items:center;
+    }
+    .btn-action-green{
+      background:var(--success-bg);
+      color:var(--success);
+      border-color:var(--success-border);
+    }
+    .btn-action-green:hover{background:#dcfce7}
+
+    .btn-action-danger{
+      background:var(--danger-bg);
+      color:var(--danger);
+      border-color:var(--danger-border);
+    }
+    .btn-action-danger:hover{background:#fee2e2}
+
+    .btn-action-dark{
+      background:var(--ink);
+      color:#fff;
+      border-color:transparent;
+    }
+    .btn-action-dark:hover{background:#1a3827}
+
+    /* TIMESLOT GRID ADMIN TILES */
+    .admin-slot-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+      gap:14px;
+    }
+    .admin-slot-tile{
+      background:#fff;
+      border-radius:14px;
+      border:1.5px solid var(--line);
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-height:120px;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+    .admin-slot-tile:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-sm);
+    }
+    .admin-slot-tile.state-available{
+      border-color:#86efac;
+      background:linear-gradient(160deg,#f0fdf4,#dcfce7);
+    }
+    .admin-slot-tile.state-full{
+      border-color:#fca5a5;
+      background:linear-gradient(160deg,#fef2f2,#fee2e2);
+    }
+    .admin-slot-tile.state-maint{
+      border-color:#fde68a;
+      background:linear-gradient(160deg,#fffbeb,#fef3c7);
+    }
+    .slot-time{font-family:"Montserrat",sans-serif;font-size:15px;font-weight:800;color:var(--ink)}
+    .slot-status-text{font-size:11.5px;font-weight:800;margin:6px 0 2px}
+    .slot-subinfo{font-size:11.5px;color:var(--muted);font-weight:600}
+
+    /* RESPONSIVE */
+    @media(max-width:1200px){
+      .kpi-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    @media(max-width:860px){
+      .admin-sidebar{position:fixed;top:0;bottom:0;left:0;z-index:200;transform:translateX(-100%)}
+      body.sidebar-mobile-open .admin-sidebar{transform:translateX(0)}
+      .kpi-grid{grid-template-columns:repeat(2,1fr)}
+      .admin-topbar{padding:0 16px}
+      .admin-main-scroll{padding:20px 16px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==============================================
+       SIDEBAR: CHATGPT-STYLE CLEAN VECTOR ICON SUITE
+       ============================================== -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-brand" onclick="if(document.body.classList.contains('sidebar-collapsed')) toggleSidebar();" title="Bấm vào để mở rộng thanh bên">
+      <a class="brand-title" href="../home/sportzone-home-demo.html" onclick="if(document.body.classList.contains('sidebar-collapsed')){event.preventDefault();toggleSidebar();}">
+        <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="14" fill="#1b5e3b"/>
+          <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/>
+          <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="3.5" fill="#caa54b"/>
+        </svg>
+        <span>Sport<span class="zone">Zone</span></span>
+      </a>
+
+      <!-- ChatGPT-Style Sidebar Toggle Button -->
+      <button class="btn-chatgpt-toggle" onclick="toggleSidebar()" title="Đóng thanh bên">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="4"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-group-label">TỔNG QUAN</div>
+      
+      <!-- 1. Dashboard -->
+      <div class="admin-nav-item active" onclick="switchAdminView('dashboard')" title="Dashboard Điều Hành">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="7" height="9" x="3" y="3" rx="1"/>
+            <rect width="7" height="5" x="14" y="3" rx="1"/>
+            <rect width="7" height="9" x="14" y="12" rx="1"/>
+            <rect width="7" height="5" x="3" y="16" rx="1"/>
+          </svg>
+        </div>
+        <span class="nav-label">Dashboard Điều Hành</span>
+      </div>
+
+      <div class="nav-group-label">VẬN HÀNH SÂN</div>
+
+      <!-- 2. Bookings -->
+      <div class="admin-nav-item" onclick="switchAdminView('bookings')" title="Booking Hôm Nay">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="4" rx="2"/>
+            <path d="M16 2v4M8 2v4M3 10h18"/>
+            <path d="m9 16 2 2 4-4"/>
+          </svg>
+        </div>
+        <span class="nav-label">Booking Hôm Nay</span>
+        <span class="badge-count" id="navBookingCount">3 mới</span>
+      </div>
+
+      <!-- 3. TimeSlots -->
+      <div class="admin-nav-item" onclick="switchAdminView('timeslots')" title="Khung Giờ & Lịch Sân">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <span class="nav-label">Khung Giờ &amp; Lịch Sân</span>
+      </div>
+
+      <!-- 4. Courts -->
+      <div class="admin-nav-item" onclick="switchAdminView('courts')" title="Quản Lý 10 Sân Đấu">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20M2 12h20"/>
+          </svg>
+        </div>
+        <span class="nav-label">Quản Lý 10 Sân Đấu</span>
+      </div>
+
+      <div class="nav-group-label">TÀI CHÍNH &amp; THÀNH VIÊN</div>
+
+      <!-- 5. Invoices -->
+      <div class="admin-nav-item" onclick="switchAdminView('invoices')" title="Hóa Đơn & Doanh Thu">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <span class="nav-label">Hóa Đơn &amp; Doanh Thu</span>
+      </div>
+
+      <!-- 6. Users -->
+      <div class="admin-nav-item" onclick="switchAdminView('users')" title="Quản Lý Người Dùng">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <span class="nav-label">Quản Lý Người Dùng</span>
+      </div>
+
+      <div class="nav-group-label">LIÊN KẾT NHANH</div>
+
+      <!-- External Client Link -->
+      <a class="admin-nav-item" href="../home/sportzone-home-demo.html" target="_blank" title="Xem Trang Khách">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </div>
+        <span class="nav-label">Xem Trang Khách</span>
+      </a>
+
+      <!-- Profile Link -->
+      <a class="admin-nav-item" href="../account/sportzone-account-demo.html" target="_blank" title="Hồ Sơ Cá Nhân">
+        <div class="nav-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="5"/>
+            <path d="M20 21a8 8 0 0 0-16 0"/>
+          </svg>
+        </div>
+        <span class="nav-label">Hồ Sơ Cá Nhân</span>
+      </a>
+    </div>
+
+    <!-- Bottom Profile Box -->
+    <div class="sidebar-profile backend-bound">
+      <span class="backend-tag">sessionScope.account (Admin)</span>
+      <div class="adm-avatar">AD</div>
+      <div class="adm-info">
+        <div class="name">System Admin</div>
+        <div class="role">Quản Trị Viên Cấp Cao</div>
+      </div>
+      <button class="adm-logout-btn" onclick="alert('Đăng xuất phiên Admin')" title="Đăng xuất">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==============================================
+       MAIN VIEWPORT
+       ============================================== -->
+  <div class="admin-viewport">
+    
+    <!-- Topbar Header -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <!-- ChatGPT-Style Sidebar Toggle Icon on Topbar (Always Visible) -->
+        <button class="btn-topbar-toggle" onclick="toggleSidebar()" title="Đóng / Mở thanh bên (Sidebar)" id="btnTopbarSidebarToggle">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="4"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+          </svg>
+        </button>
+
+        <div class="court-live-ticker">
+          <span>10/10 Sân Đang Hoạt Động · 7 Khung Giờ Kín Chỗ Hôm Nay</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="quick-search">
+          <span class="search-icon-svg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </span>
+          <input type="text" placeholder="Tìm booking, mã HĐ, khách hàng..." />
+        </div>
+
+        <button class="btn-create-booking" onclick="switchAdminView('bookings')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Đặt Sân Tại Quầy</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Floating Inspector Toggle for Backend Verification -->
+    <div class="inspector-bar" id="inspectorBar">
+      <div class="toggle-switch" id="toggleInspector" title="Bật/Tắt hiển thị dữ liệu Backend đổ vào"></div>
+      <span>Xem dữ liệu Backend (${...})</span>
+    </div>
+
+    <!-- Scrollable Main Content -->
+    <main class="admin-main-scroll">
+      
+      <!-- ==============================================
+           VIEW 1: DASHBOARD TỔNG QUAN (A1)
+           ============================================== -->
+      <section class="admin-view active" id="viewDashboard">
+        <div class="view-header">
+          <div class="view-title">
+            <div class="sz-badge sz-badge-gold" style="margin-bottom:6px">EXECUTIVE OVERVIEW</div>
+            <h1>Bảng Điều Hành SportZone</h1>
+            <p>Số liệu thời gian thực của tổ hợp 10 sân Tennis &amp; Pickleball Hòa Lạc</p>
+          </div>
+          <div style="font-size:13.5px; font-weight:800; color:var(--green); background:#fff; padding:8px 18px; border-radius:999px; border:1px solid var(--line);">
+            Hôm nay: <b>Thứ 3, 18/08/2026</b>
+          </div>
+        </div>
+
+        <!-- 6 KPI Typography Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card kpi-border-blue backend-bound">
+            <span class="backend-tag">count(Users)</span>
+            <div class="label">Tổng Người Dùng</div>
+            <div class="val">128</div>
+          </div>
+
+          <div class="kpi-card kpi-border-green backend-bound">
+            <span class="backend-tag">count(Courts active)</span>
+            <div class="label">Sân Hoạt Động</div>
+            <div class="val">10 / 10</div>
+          </div>
+
+          <div class="kpi-card kpi-border-amber backend-bound">
+            <span class="backend-tag">Bookings(Pending)</span>
+            <div class="label">Chờ Xác Nhận</div>
+            <div class="val" style="color:var(--warning)">3</div>
+          </div>
+
+          <div class="kpi-card kpi-border-rose backend-bound">
+            <span class="backend-tag">Bookings(Cancelled)</span>
+            <div class="label">Hủy Hôm Nay</div>
+            <div class="val" style="color:var(--danger)">1</div>
+          </div>
+
+          <div class="kpi-card kpi-border-emerald backend-bound">
+            <span class="backend-tag">sum(Invoices today)</span>
+            <div class="label">Doanh Thu Ngày</div>
+            <div class="val">2,45 tr</div>
+          </div>
+
+          <div class="kpi-card kpi-border-gold backend-bound">
+            <span class="backend-tag">sum(Invoices month)</span>
+            <div class="label">Doanh Thu Tháng</div>
+            <div class="val">48,2 tr</div>
+          </div>
+        </div>
+
+        <!-- Live Court Status Matrix & Recent Bookings -->
+        <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:24px;">
+          
+          <div class="admin-card">
+            <div class="card-head">
+              <div class="card-head-title">Booking Cần Xử Lý Gấp</div>
+              <button class="btn-action btn-action-green" onclick="switchAdminView('bookings')">Xem tất cả (12)</button>
+            </div>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Mã</th>
+                    <th>Khách Hàng</th>
+                    <th>Sân Thi Đấu</th>
+                    <th>Khung Giờ</th>
+                    <th>Trạng Thái</th>
+                    <th style="text-align:right">Hành Động</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="mono">#BK-1026</td>
+                    <td><b>Lan Phạm</b><div style="font-size:11.5px;color:var(--muted)">0904 111 222</div></td>
+                    <td><span class="sz-badge sz-badge-gold">Pickleball P1</span></td>
+                    <td><b>16:00 – 17:00</b></td>
+                    <td><span class="sz-badge sz-badge-pending">Chờ xác nhận</span></td>
+                    <td style="text-align:right">
+                      <button class="btn-action btn-action-green" onclick="alert('Đã xác nhận #BK-1026')">Xác nhận</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="mono">#BK-1025</td>
+                    <td><b>Hùng Lê</b><div style="font-size:11.5px;color:var(--muted)">0912 333 444</div></td>
+                    <td><span class="sz-badge sz-badge-gold">Pickleball P2</span></td>
+                    <td><b>17:00 – 18:00</b></td>
+                    <td><span class="sz-badge sz-badge-pending">Chờ xác nhận</span></td>
+                    <td style="text-align:right">
+                      <button class="btn-action btn-action-green" onclick="alert('Đã xác nhận #BK-1025')">Xác nhận</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="mono">#BK-1024</td>
+                    <td><b>Minh Trần</b><div style="font-size:11.5px;color:var(--muted)">0901 234 567</div></td>
+                    <td><span class="sz-badge sz-badge-green">Tennis A1</span></td>
+                    <td><b>18:00 – 19:00</b></td>
+                    <td><span class="sz-badge sz-badge-confirmed">Đã xác nhận</span></td>
+                    <td style="text-align:right">
+                      <button class="btn-action btn-action-dark" onclick="alert('Hoàn thành trận đấu #BK-1024')">Hoàn tất</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Court Types Distribution -->
+          <div class="admin-card">
+            <div class="card-head">
+              <div class="card-head-title">Trạng Thái Sân Hôm Nay</div>
+            </div>
+            <div style="display:grid; gap:12px;">
+              <div style="background:var(--cream); padding:14px; border-radius:12px; border:1px solid var(--line);">
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:13.5px; margin-bottom:6px">
+                  <span>Tennis Zone A (5 Sân)</span>
+                  <span style="color:var(--green)">100% Hoạt động</span>
+                </div>
+                <div style="font-size:12px; color:var(--muted)">Sân A1, A2, A3, A4, A5 (Sẵn sàng phục vụ giờ vàng)</div>
+              </div>
+
+              <div style="background:var(--cream); padding:14px; border-radius:12px; border:1px solid var(--line);">
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:13.5px; margin-bottom:6px">
+                  <span>Pickleball Zone B (5 Sân)</span>
+                  <span style="color:var(--green)">100% Hoạt động</span>
+                </div>
+                <div style="font-size:12px; color:var(--muted)">Sân P1, P2, P3, P4, P5 (Mặt sân đạt chuẩn USAPA)</div>
+              </div>
+
+              <div style="background:#fffbeb; border:1px solid #fde68a; padding:14px; border-radius:12px; font-size:12.5px; color:#92400e; font-weight:700;">
+                <b>Ghi chú vận hành:</b> Khung giờ 18:00 – 21:00 hôm nay đã kín 100% các sân Tennis. Sẵn sàng hệ thống đèn chiếu sáng floodlight.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ==============================================
+           VIEW 2: BOOKING HÔM NAY (A2)
+           ============================================== -->
+      <section class="admin-view" id="viewBookings">
+        <div class="view-header">
+          <div class="view-title">
+            <div class="sz-badge sz-badge-green" style="margin-bottom:6px">QUẢN LÝ VẬN HÀNH</div>
+            <h1>Danh Sách Booking Hôm Nay</h1>
+            <p>Theo dõi, duyệt lịch đặt và cập nhật trạng thái ra sân của khách hàng.</p>
+          </div>
+
+          <div class="pill-tray">
+            <button class="filter-pill active" onclick="filterBookingsTable('all')">Tất cả <span class="count">6</span></button>
+            <button class="filter-pill" onclick="filterBookingsTable('pending')">Chờ xác nhận <span class="count">2</span></button>
+            <button class="filter-pill" onclick="filterBookingsTable('confirmed')">Đã xác nhận <span class="count">2</span></button>
+            <button class="filter-pill" onclick="filterBookingsTable('completed')">Hoàn thành <span class="count">1</span></button>
+            <button class="filter-pill" onclick="filterBookingsTable('noshow')">Không đến <span class="count">1</span></button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="table-responsive">
+            <table class="admin-table" id="bookingTable">
+              <thead>
+                <tr>
+                  <th>Mã Booking</th>
+                  <th>Khách Hàng</th>
+                  <th>Sân Đấu</th>
+                  <th>Khung Giờ</th>
+                  <th>Tổng Tiền</th>
+                  <th>Thanh Toán</th>
+                  <th>Trạng Thái</th>
+                  <th style="text-align:right">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-status="pending">
+                  <td class="mono">#BK-1026</td>
+                  <td><b>Lan Phạm</b><div style="font-size:11.5px;color:var(--muted)">0904 111 222</div></td>
+                  <td><span class="sz-badge sz-badge-gold">Pickleball P1</span></td>
+                  <td><b>06:00 – 07:00</b></td>
+                  <td class="money">150.000 đ</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td><span class="sz-badge sz-badge-pending">Chờ xác nhận</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-green" onclick="alert('Đã xác nhận booking!')">Duyệt sân</button>
+                  </td>
+                </tr>
+                <tr data-status="pending">
+                  <td class="mono">#BK-1025</td>
+                  <td><b>Hùng Lê</b><div style="font-size:11.5px;color:var(--muted)">0912 333 444</div></td>
+                  <td><span class="sz-badge sz-badge-gold">Pickleball P2</span></td>
+                  <td><b>07:00 – 08:00</b></td>
+                  <td class="money">150.000 đ</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td><span class="sz-badge sz-badge-pending">Chờ xác nhận</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-green" onclick="alert('Đã xác nhận booking!')">Duyệt sân</button>
+                  </td>
+                </tr>
+                <tr data-status="confirmed">
+                  <td class="mono">#BK-1024</td>
+                  <td><b>Minh Trần</b><div style="font-size:11.5px;color:var(--muted)">0901 234 567</div></td>
+                  <td><span class="sz-badge sz-badge-green">Tennis A1</span></td>
+                  <td><b>18:00 – 19:00</b></td>
+                  <td class="money">320.000 đ</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td><span class="sz-badge sz-badge-confirmed">Đã xác nhận</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-dark" onclick="alert('Đã hoàn thành lượt chơi!')">Hoàn tất</button>
+                    <button class="btn-action btn-action-danger" onclick="alert('Đã đánh dấu khách vắng mặt')">Đánh dấu vắng</button>
+                  </td>
+                </tr>
+                <tr data-status="confirmed">
+                  <td class="mono">#BK-1022</td>
+                  <td><b>Nam Võ</b><div style="font-size:11.5px;color:var(--muted)">0987 654 321</div></td>
+                  <td><span class="sz-badge sz-badge-green">Tennis A3</span></td>
+                  <td><b>07:00 – 08:00</b></td>
+                  <td class="money">200.000 đ</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td><span class="sz-badge sz-badge-confirmed">Đã xác nhận</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-dark" onclick="alert('Đã hoàn thành lượt chơi!')">Hoàn tất</button>
+                  </td>
+                </tr>
+                <tr data-status="completed">
+                  <td class="mono">#BK-1023</td>
+                  <td><b>Đức Nguyễn</b><div style="font-size:11.5px;color:var(--muted)">0933 444 555</div></td>
+                  <td><span class="sz-badge sz-badge-green">Tennis A2</span></td>
+                  <td><b>06:00 – 07:00</b></td>
+                  <td class="money">200.000 đ</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td><span class="sz-badge sz-badge-active">Hoàn thành</span></td>
+                  <td style="text-align:right">
+                    <span style="font-size:12px; color:var(--muted)">Đã xong</span>
+                  </td>
+                </tr>
+                <tr data-status="noshow" style="opacity:.65">
+                  <td class="mono">#BK-1020</td>
+                  <td><b>Tú Ngô</b><div style="font-size:11.5px;color:var(--muted)">0912 000 111</div></td>
+                  <td><span class="sz-badge sz-badge-gold">Pickleball P3</span></td>
+                  <td><b>08:00 – 09:00</b></td>
+                  <td class="money">150.000 đ</td>
+                  <td><span class="sz-badge sz-badge-frozen">Chưa thanh toán</span></td>
+                  <td><span class="sz-badge sz-badge-noshow">Không đến</span></td>
+                  <td style="text-align:right">
+                    <span style="font-size:12px; color:var(--danger)">Đã đóng</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           VIEW 3: QUẢN LÝ NGƯỜI DÙNG & PHÂN QUYỀN (A3)
+           ============================================== -->
+      <section class="admin-view" id="viewUsers">
+        <div class="view-header">
+          <div class="view-title">
+            <div class="sz-badge sz-badge-dark" style="margin-bottom:6px">PHÂN QUYỀN &amp; TÀI KHOẢN</div>
+            <h1>Quản Lý Người Dùng &amp; Quyền Truy Cập</h1>
+            <p>Tra cứu danh sách thành viên, quản lý tài khoản hoạt động hoặc khóa tài khoản vi phạm.</p>
+          </div>
+        </div>
+
+        <!-- 3 User KPI -->
+        <div class="row g-3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;">
+          <div class="kpi-card kpi-border-blue backend-bound">
+            <span class="backend-tag">count(Accounts)</span>
+            <div class="label">Tổng Tài Khoản</div>
+            <div class="val">128</div>
+          </div>
+          <div class="kpi-card kpi-border-green backend-bound">
+            <span class="backend-tag">count(Status == 'Active')</span>
+            <div class="label">Đang Hoạt Động</div>
+            <div class="val">121</div>
+          </div>
+          <div class="kpi-card kpi-border-rose backend-bound">
+            <span class="backend-tag">count(Status == 'Frozen')</span>
+            <div class="label">Đang Bị Tạm Khóa</div>
+            <div class="val" style="color:var(--danger)">7</div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Người Dùng</th>
+                  <th>Vai Trò</th>
+                  <th>Thông Tin Liên Hệ</th>
+                  <th>Đăng Nhập Cuối</th>
+                  <th>Trạng Thái</th>
+                  <th style="text-align:right">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div class="adm-avatar" style="background:#e2ece6; color:#1b5e3b;">VA</div>
+                      <div>
+                        <b>Nguyễn Văn A</b>
+                        <div class="mono" style="font-size:11px; color:var(--muted)">ID: #12 · Gold Member</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="sz-badge sz-badge-dark">USER</span></td>
+                  <td>
+                    <div>user1@sportzone.vn</div>
+                    <div style="font-size:12px; color:var(--muted)">0901 234 567</div>
+                  </td>
+                  <td style="font-size:12.5px">18/08/2026 08:12</td>
+                  <td><span class="sz-badge sz-badge-active" id="statusU1">HOẠT ĐỘNG</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-danger" onclick="toggleFreezeUser('statusU1', this)">Khóa tài khoản</button>
+                  </td>
+                </tr>
+
+                <tr style="opacity:.85">
+                  <td>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div class="adm-avatar" style="background:#fee2e2; color:#b91c1c;">U3</div>
+                      <div>
+                        <b>Lê Văn Frozen (User 3)</b>
+                        <div class="mono" style="font-size:11px; color:var(--muted)">ID: #27 · Vi phạm hủy sân</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="sz-badge sz-badge-dark">USER</span></td>
+                  <td>
+                    <div>user3@sportzone.vn</div>
+                    <div style="font-size:12px; color:var(--muted)">0903 333 333</div>
+                  </td>
+                  <td style="font-size:12.5px; color:var(--danger)">10/05/2026 (Bị khóa)</td>
+                  <td><span class="sz-badge sz-badge-frozen" id="statusU3">TẠM KHÓA</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-green" onclick="toggleFreezeUser('statusU3', this)">Mở khóa</button>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                      <div class="adm-avatar" style="background:var(--ink); color:#fff;">AD</div>
+                      <div>
+                        <b>System Admin</b>
+                        <div class="mono" style="font-size:11px; color:var(--muted)">ID: #1 · Super Administrator</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="sz-badge sz-badge-gold">ADMIN</span></td>
+                  <td>
+                    <div>admin@sportzone.vn</div>
+                    <div style="font-size:12px; color:var(--muted)">0988 888 888</div>
+                  </td>
+                  <td style="font-size:12.5px">18/08/2026 07:00</td>
+                  <td><span class="sz-badge sz-badge-active">HOẠT ĐỘNG</span></td>
+                  <td style="text-align:right">
+                    <span style="font-size:12px; color:var(--muted)">Toàn quyền</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           VIEW 4: QUẢN LÝ KHUNG GIỜ & LỊCH SÂN (A4)
+           ============================================== -->
+      <section class="admin-view" id="viewTimeslots">
+        <div class="view-header">
+          <div class="view-title">
+            <div class="sz-badge sz-badge-green" style="margin-bottom:6px">LỊCH THI ĐẤU &amp; KHUNG GIỜ</div>
+            <h1>Quản Lý Khung Giờ TimeSlots</h1>
+            <p>Trực quan hóa trạng thái 8 khung giờ tiêu chuẩn (06:00 – 21:00) cho 10 sân đấu.</p>
+          </div>
+          <button class="btn-action btn-action-dark" onclick="alert('Đã tự động tạo các khung giờ cho tuần tiếp theo!')">
+            Tự Động Sinh Slot Tuần Mới
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+            <div style="display:flex; gap:10px;">
+              <span class="sz-badge sz-badge-active">Còn trống</span>
+              <span class="sz-badge sz-badge-frozen">Kín chỗ</span>
+              <span class="sz-badge sz-badge-pending">Bảo trì</span>
+            </div>
+            <div style="font-size:13px; font-weight:800; color:var(--green)">
+              Hôm nay: Thứ 3, 18/08/2026 (560 Slot đang lưu hành)
+            </div>
+          </div>
+
+          <div class="admin-slot-grid">
+            <div class="admin-slot-tile state-available">
+              <div class="slot-time">06:00 – 07:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#15803d">CÒN TRỐNG</div>
+                <div class="slot-subinfo">3/10 sân đã đặt · 7 sân trống</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-available">
+              <div class="slot-time">07:00 – 08:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#15803d">CÒN TRỐNG</div>
+                <div class="slot-subinfo">5/10 sân đã đặt · 5 sân trống</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-available">
+              <div class="slot-time">08:00 – 09:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#15803d">CÒN TRỐNG</div>
+                <div class="slot-subinfo">2/10 sân đã đặt · 8 sân trống</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-maint">
+              <div class="slot-time">16:00 – 17:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#b45309">BẢO TRÌ SÂN A4</div>
+                <div class="slot-subinfo">9 sân hoạt động · Sân A4 quét vôi</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-full">
+              <div class="slot-time">17:00 – 18:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#b91c1c">KÍN CHỖ (GIỜ VÀNG)</div>
+                <div class="slot-subinfo">10/10 sân đã đặt đầy đủ</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-full">
+              <div class="slot-time">18:00 – 19:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#b91c1c">KÍN CHỖ (GIỜ VÀNG)</div>
+                <div class="slot-subinfo">10/10 sân đã đặt đầy đủ</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-full">
+              <div class="slot-time">19:00 – 20:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#b91c1c">KÍN CHỖ (GIỜ VÀNG)</div>
+                <div class="slot-subinfo">10/10 sân đã đặt đầy đủ</div>
+              </div>
+            </div>
+
+            <div class="admin-slot-tile state-available">
+              <div class="slot-time">20:00 – 21:00</div>
+              <div>
+                <div class="slot-status-text" style="color:#15803d">CÒN TRỐNG</div>
+                <div class="slot-subinfo">6/10 sân đã đặt · 4 sân trống</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           VIEW 5: QUẢN LÝ 10 SÂN ĐẤU (A5)
+           ============================================== -->
+      <section class="admin-view" id="viewCourts">
+        <div class="view-header">
+          <div class="view-title">
+            <div class="sz-badge sz-badge-gold" style="margin-bottom:6px">HẠ TẦNG SÂN THỂ THAO</div>
+            <h1>Danh Sách 10 Sân Tiêu Chuẩn Quốc Tế</h1>
+            <p>Quản lý biểu giá giờ vàng, bảo trì định kỳ và tình trạng mặt sân.</p>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+          <!-- Tennis Zone -->
+          <div class="admin-card">
+            <div class="card-head">
+              <div class="card-head-title">Tennis Complex · Zone A (5 Sân)</div>
+            </div>
+            <div style="display:grid; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Tennis A1</b> (Hard Court Mặt Cứng)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Tennis A2</b> (Hard Court Mặt Cứng)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Tennis A3</b> (Clay Court Đất Nện)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:#fffbeb; border:1px solid #fde68a; padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Tennis A4</b> (Bảo trì định kỳ 16h)</div>
+                <span class="sz-badge sz-badge-pending">Bảo trì</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Tennis A5</b> (Center Court Có Khán Đài)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pickleball Zone -->
+          <div class="admin-card">
+            <div class="card-head">
+              <div class="card-head-title">Pickleball Complex · Zone B (5 Sân)</div>
+            </div>
+            <div style="display:grid; gap:10px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Pickleball P1</b> (Pro Tour Edition)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Pickleball P2</b> (Cushion Acrylic)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Pickleball P3</b> (Indoor Mái Che)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Pickleball P4</b> (Pro Master Court)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; background:var(--cream); padding:12px 16px; border-radius:10px;">
+                <div><b>Sân Pickleball P5</b> (Training Match Zone)</div>
+                <span class="sz-badge sz-badge-active">Hoạt động</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================
+           VIEW 6: HÓA ĐƠN & DOANH THU (A6)
+           ============================================== -->
+      <section class="admin-view" id="viewInvoices">
+        <div class="view-header">
+          <div class="view-title">
+            <div class="sz-badge sz-badge-gold" style="margin-bottom:6px">TÀI CHÍNH &amp; HÓA ĐƠN</div>
+            <h1>Quản Lý Hóa Đơn &amp; Doanh Thu</h1>
+            <p>Tra cứu hóa đơn điện tử, đối soát tiền mặt và sao kê thanh toán ngân hàng.</p>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Mã Hóa Đơn</th>
+                  <th>Thời Gian</th>
+                  <th>Booking Gốc</th>
+                  <th>Khách Hàng</th>
+                  <th style="text-align:right">Tổng Tiền</th>
+                  <th>Hình Thức</th>
+                  <th>Trạng Thái</th>
+                  <th style="text-align:right">Thao Tác</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="mono">#INV-2041</td>
+                  <td>18/08/2026 14:22</td>
+                  <td><span class="mono">#BK-1024</span></td>
+                  <td><b>Minh Trần</b></td>
+                  <td class="money" style="text-align:right">320.000 đ</td>
+                  <td>Chuyển khoản QR</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-dark" onclick="alert('Đang tạo bản in hóa đơn điện tử #INV-2041')">In hóa đơn</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mono">#INV-2038</td>
+                  <td>18/08/2026 09:10</td>
+                  <td><span class="mono">#BK-1021</span></td>
+                  <td><b>Đức Nguyễn</b></td>
+                  <td class="money" style="text-align:right">200.000 đ</td>
+                  <td>Tiền mặt tại quầy</td>
+                  <td><span class="sz-badge sz-badge-active">Đã thanh toán</span></td>
+                  <td style="text-align:right">
+                    <button class="btn-action btn-action-dark" onclick="alert('Đang tạo bản in hóa đơn điện tử #INV-2038')">In hóa đơn</button>
+                  </td>
+                </tr>
+                <tr style="opacity:.65">
+                  <td class="mono">#INV-2036</td>
+                  <td>17/08/2026 18:05</td>
+                  <td><span class="mono">#BK-1019</span></td>
+                  <td><b>Hùng Lê</b></td>
+                  <td class="money" style="text-align:right">150.000 đ</td>
+                  <td>Chưa thanh toán</td>
+                  <td><span class="sz-badge sz-badge-frozen">Đã hủy</span></td>
+                  <td style="text-align:right">
+                    <span style="font-size:12px;color:var(--muted)">Đã hủy</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Toggle Sidebar Collapse / Expand (ChatGPT Style)
+    function toggleSidebar(){
+      document.body.classList.toggle('sidebar-collapsed');
+    }
+
+    // Tab switching between Admin Views
+    function switchAdminView(viewId){
+      document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
+
+      if(viewId === 'bookings'){
+        document.getElementById('viewBookings').classList.add('active');
+        document.querySelectorAll('.admin-nav-item')[1].classList.add('active');
+      } else if(viewId === 'timeslots'){
+        document.getElementById('viewTimeslots').classList.add('active');
+        document.querySelectorAll('.admin-nav-item')[2].classList.add('active');
+      } else if(viewId === 'courts'){
+        document.getElementById('viewCourts').classList.add('active');
+        document.querySelectorAll('.admin-nav-item')[3].classList.add('active');
+      } else if(viewId === 'invoices'){
+        document.getElementById('viewInvoices').classList.add('active');
+        document.querySelectorAll('.admin-nav-item')[4].classList.add('active');
+      } else if(viewId === 'users'){
+        document.getElementById('viewUsers').classList.add('active');
+        document.querySelectorAll('.admin-nav-item')[5].classList.add('active');
+      } else {
+        document.getElementById('viewDashboard').classList.add('active');
+        document.querySelectorAll('.admin-nav-item')[0].classList.add('active');
+      }
+    }
+
+    // Filter Bookings in View 2
+    function filterBookingsTable(status){
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const rows = document.querySelectorAll('#bookingTable tbody tr');
+      rows.forEach(r => {
+        const rowStatus = r.getAttribute('data-status');
+        if(status === 'all' || rowStatus === status){
+          r.style.display = '';
+        } else {
+          r.style.display = 'none';
+        }
+      });
+    }
+
+    // Toggle Freeze / Unfreeze user
+    function toggleFreezeUser(badgeId, btn){
+      const badge = document.getElementById(badgeId);
+      if(badge.classList.contains('sz-badge-active')){
+        badge.className = 'sz-badge sz-badge-frozen';
+        badge.textContent = 'TẠM KHÓA';
+        btn.className = 'btn-action btn-action-green';
+        btn.textContent = 'Mở khóa';
+        alert('Đã KHÓA tài khoản thành công! Người dùng này không thể đặt sân.');
+      } else {
+        badge.className = 'sz-badge sz-badge-active';
+        badge.textContent = 'HOẠT ĐỘNG';
+        btn.className = 'btn-action btn-action-danger';
+        btn.textContent = 'Khóa tài khoản';
+        alert('Đã MỞ KHÓA tài khoản thành công! Người dùng đã có thể đặt sân bình thường.');
+      }
+    }
+
+    // Backend Inspector Toggle
+    const toggleInspector = document.getElementById('toggleInspector');
+    if(toggleInspector){
+      toggleInspector.addEventListener('click',()=>{
+        const active = toggleInspector.classList.toggle('active');
+        document.body.classList.toggle('show-backend', active);
+      });
+    }
+  </script>
+</body>
+</html>

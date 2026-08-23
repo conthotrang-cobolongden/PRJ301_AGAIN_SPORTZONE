@@ -2,90 +2,21 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 </main>
-<div class="container pb-4">
-    <footer class="sz-footer-luxury">
-        <div class="row g-4">
-            <div class="col-lg-5">
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="sz-mark">SZ</span>
-                    <span class="fw-bold fs-4 text-white font-heading">SportZone</span>
-                </div>
-                <p class="small mb-3 text-slate-400" style="max-width:380px; line-height:1.6">
-                    Hệ thống đặt sân Tennis &amp; Pickleball hàng đầu — trải nghiệm đỉnh cao, giữ khung giờ vàng và thanh toán tiện lợi tại quầy.
-                </p>
-                <div class="d-flex gap-2">
-                    <span class="sz-badge sz-badge-gold"><i class="bi bi-shield-check"></i> Cam kết 100% giữ chỗ</span>
-                    <span class="sz-badge sz-badge-green"><i class="bi bi-clock-history"></i> Mở cửa 06:00 - 21:00</span>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6 ms-lg-auto">
-                <h6>Điều hướng nhanh</h6>
-                <div class="d-flex flex-column gap-2">
-                    <a href="${ctx}/home"><i class="bi bi-chevron-right me-1 small"></i>Trang chủ</a>
-                    <a href="${ctx}/courts"><i class="bi bi-chevron-right me-1 small"></i>Danh sách sân</a>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.account}">
-                            <a href="${ctx}/bookings"><i class="bi bi-chevron-right me-1 small"></i>Booking của tôi</a>
-                            <a href="${ctx}/invoices"><i class="bi bi-chevron-right me-1 small"></i>Hóa đơn</a>
-                        </c:when>
-                        <c:otherwise>
-                            <a href="${ctx}/login"><i class="bi bi-chevron-right me-1 small"></i>Đăng nhập</a>
-                            <a href="${ctx}/register"><i class="bi bi-chevron-right me-1 small"></i>Đăng ký tài khoản</a>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-            </div>
-            <div class="col-lg-3 col-6">
-                <h6>Thông tin liên hệ</h6>
-                <div class="d-flex flex-column gap-2.5 small text-slate-300">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-geo-alt-fill text-warning"></i>
-                        <span>Khu CNC Hòa Lạc, Thạch Thất, Hà Nội</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-telephone-fill text-warning"></i>
-                        <span>(+84) 901 234 567</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-envelope-fill text-warning"></i>
-                        <span>support@sportzone.vn</span>
-                    </div>
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-clock-fill text-warning"></i>
-                        <span>06:00 – 21:00 hằng ngày</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 sz-footer-divider small">
-            <span>© 2026 <b>SportZone</b> — Nền tảng đặt sân thể thao thế hệ mới. All rights reserved.</span>
-            <span class="badge bg-dark border border-secondary text-secondary font-monospace">PRJ301 · SE203366</span>
-        </div>
-    </footer>
-</div>
-
-<!-- Bootstrap 5 Bundle JS -->
+<c:if test="${footerVariant != 'none'}">
+<footer class="footer" id="contact"><div class="shell">
+    <div class="footer-grid">
+        <div><a class="brand" href="${ctx}/MainController?action=home"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="2" y="2" width="44" height="44" rx="14" fill="#fff"/><path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/><path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#0b1911" stroke-width="1.5"/><circle cx="24" cy="24" r="3.5" fill="#1b5e3b"/></svg><span>Sport<span class="zone">Zone</span></span></a><p>Tổ hợp thể thao Tennis &amp; Pickleball hàng đầu tại TP. Hồ Chí Minh. Tiêu chuẩn quốc tế, công nghệ đặt sân thông minh và dịch vụ tận tâm.</p></div>
+        <div><h4>Khám Phá</h4><a href="${ctx}/MainController?action=home">Trang chủ</a><a href="${ctx}/MainController?action=courts">Danh sách sân</a><a href="${ctx}/MainController?action=courts">Bảng giá thuê sân</a></div>
+        <div><h4>Tài Khoản</h4><c:choose><c:when test="${not empty sessionScope.account}"><a href="${ctx}/MainController?action=profile">Hồ sơ cá nhân</a><a href="${ctx}/MainController?action=bookings">Booking của tôi</a><a href="${ctx}/MainController?action=invoices">Lịch sử hóa đơn</a></c:when><c:otherwise><a href="${ctx}/MainController?action=login">Đăng nhập</a><a href="${ctx}/MainController?action=register">Đăng ký tài khoản</a></c:otherwise></c:choose></div>
+        <div><h4>Liên Hệ Trực Tiếp</h4><p>📍 Đường D1, Khu Công Nghệ Cao, TP. Thủ Đức, TP. Hồ Chí Minh</p><p>⏰ 06:00 – 21:00 hằng ngày</p><p>📞 (+84) 901 234 567</p><p>✉️ support@sportzone.vn</p></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 <b>SportZone</b>. All rights reserved. Nền tảng đặt sân thể thao thế hệ mới.</span><span>PRJ301 · SE203366 · FPT University TP.HCM</span></div>
+</div></footer>
+</c:if>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Smooth Scroll Reveal Script -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const revealElements = document.querySelectorAll("[data-reveal]");
-    
-    const revealOnScroll = function() {
-        const windowHeight = window.innerHeight;
-        revealElements.forEach(function(el) {
-            const elementTop = el.getBoundingClientRect().top;
-            const elementVisible = 100;
-            if (elementTop < windowHeight - elementVisible) {
-                el.classList.add("reveal-visible");
-            }
-        });
-    };
-    
-    window.addEventListener("scroll", revealOnScroll);
-    revealOnScroll(); // Run once on page load
-});
+document.documentElement.classList.add('js-enabled');
+(function(){var header=document.getElementById('header'),hamburger=document.getElementById('hamb'),mobileMenu=document.getElementById('mobileMenu');if(header){window.addEventListener('scroll',function(){header.classList.toggle('scrolled',window.scrollY>24);},{passive:true});}if(hamburger&&mobileMenu){function toggleMenu(force){var open=typeof force==='boolean'?force:!mobileMenu.classList.contains('open');mobileMenu.classList.toggle('open',open);document.body.classList.toggle('menu-open',open);hamburger.setAttribute('aria-expanded',String(open));mobileMenu.setAttribute('aria-hidden',String(!open));hamburger.textContent=open?'×':'☰';}hamburger.addEventListener('click',function(){toggleMenu();});mobileMenu.querySelectorAll('a').forEach(function(link){link.addEventListener('click',function(){toggleMenu(false);});});}var revealElements=document.querySelectorAll('[data-reveal]');function reveal(){var h=window.innerHeight;revealElements.forEach(function(el){if(el.getBoundingClientRect().top<h-80){el.classList.add('show');el.classList.add('reveal-visible');}});}window.addEventListener('scroll',reveal,{passive:true});reveal();})();
 </script>
 </body>
 </html>

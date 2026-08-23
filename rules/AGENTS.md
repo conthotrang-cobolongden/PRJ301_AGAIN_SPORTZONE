@@ -60,6 +60,47 @@ Do not silently invent important requirements.
 Minor implementation details that do not affect behavior may be resolved using the smallest reasonable assumption.
 
 ---
+## 2.1. Sub-Agent Usage — MANDATORY
+
+Do not automatically invoke, delegate to, or spawn any sub-agent.
+If a sub-agent could be useful, you may only suggest it to the user.
+Briefly explain:
+which sub-agent is suggested,
+why it may help,
+what task it would perform.
+Wait for the user’s explicit approval before using any sub-agent.
+If the user does not approve, continue without using sub-agents.
+Never treat silence, vague agreement, or general project permission as approval to use a sub-agent.
+This rule applies to all tasks unless the user explicitly overrides it for a specific task.
+
+
+## Code Guidance Mode — MANDATORY
+
+By default, do not modify project files directly.
+
+When the user asks to implement a feature:
+- Inspect only the necessary existing project files.
+- Explain the implementation approach step by step.
+- Provide complete, copy-paste-ready code for the required classes, methods, JSP sections, SQL, or configuration changes.
+- Clearly state where each code block should be placed.
+- Do not apply the changes to the repository.
+- Do not run tests, builds, commits, or deployment unless explicitly requested.
+- The user is responsible for applying the provided code.
+- After the user applies the code, assist with review, debugging, or verification on request.
+
+## 2.2. UI Rebuild Safety — MANDATORY
+
+Before any redesign, restyle, responsive rebuild, component rewrite, or JSP/CSS/JavaScript presentation change:
+
+- Read `rules/UI-REBUILD-GUARDRAILS.md` completely.
+- Default to **Contract-Preserving UI Rebuild**.
+- Preserve URL, HTTP method, form action, input name, hidden field, CSRF, request/session attribute, EL property, JSTL business condition, status code, role visibility, JavaScript hook, and backend behavior.
+- Treat Java, SQL, `web.xml`, dependency, build, and environment files as locked for UI-only work.
+- Create a contract snapshot before changing JSP markup.
+- If the requested UI requires any contract change, stop and use the Contract Change Gate from `UI-REBUILD-GUARDRAILS.md` before editing.
+- Do not claim a UI rebuild is complete until static contract comparison and relevant runtime smoke checks have been performed or explicitly left for the user.
+
+The user's explicit approval for a coordinated UI + backend change may override this boundary only for the specific contract and scope approved.
 
 ## 3. Scope Boundary — MANDATORY
 

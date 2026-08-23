@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Quản lý hóa đơn điện tử & Phiếu thu thanh toán dịch vụ thể thao." />
+  <title>SportZone — Hóa Đơn Điện Tử &amp; Phiếu Thu</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro + Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================================
+       SPORTZONE INVOICE DESIGN SYSTEM (UI/UX PRO MAX)
+       ======================================================== */
+    :root{
+      --ink:#0b1911;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --gold:#caa54b;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#fffdfa;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --danger-border:#fecaca;
+      --warning:#d97706;
+      --warning-bg:#fffbeb;
+      --warning-border:#fde68a;
+      --success:#15803d;
+      --success-bg:#f0fdf4;
+      --success-border:#bbf7d0;
+      --shadow-sm:0 8px 24px rgba(11,25,17,.06);
+      --shadow:0 20px 50px rgba(11,25,17,.1);
+      --radius-sm:12px;
+      --radius:20px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 80% 15%, rgba(27,94,59,.07), transparent 40%),
+        radial-gradient(circle at 15% 75%, rgba(202,165,75,.07), transparent 35%),
+        linear-gradient(180deg, #fffdfa 0%, #f7f4ed 100%);
+      padding:100px 0 80px;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
+    .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* NAVBAR */
+    .sz-nav{
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:900;
+      background:rgba(255,253,250,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--line);
+      height:76px;
+      display:flex;
+      align-items:center;
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+    .brand-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.02em;
+      font-family:"Montserrat",sans-serif;
+    }
+    .brand-logo svg{width:36px;height:36px}
+    .brand-logo .zone{color:var(--green)}
+
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-link{font-size:14px;font-weight:700;color:var(--muted);transition:.2s}
+    .nav-link:hover,.nav-link.active{color:var(--green)}
+
+    /* TOP DEMO SWITCHER */
+    .demo-view-switcher{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:32px;
+    }
+    .btn-view-tab{
+      border:1.5px solid var(--line);
+      background:rgba(255,255,255,.8);
+      padding:8px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-view-tab.active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+      box-shadow:0 4px 14px rgba(11,25,17,.2);
+    }
+
+    /* BADGES */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .sz-badge-paid{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-unpaid{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-cancelled{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+
+    /* BACKEND OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-10px;
+      left:10px;
+      background:#d97706;
+      color:#fff;
+      font-size:9.5px;
+      font-weight:800;
+      padding:2px 7px;
+      border-radius:5px;
+      z-index:30;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:2px;
+      position:relative;
+    }
+
+    /* CARDS */
+    .sz-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:28px;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:24px;
+    }
+
+    /* PRINTABLE E-RECEIPT (LUXURY INVOICE) */
+    .invoice-sheet{
+      background:#fff;
+      border-radius:24px;
+      border:1px solid var(--line);
+      padding:48px;
+      box-shadow:var(--shadow);
+      max-width:840px;
+      margin:0 auto;
+      position:relative;
+    }
+    .invoice-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      border-bottom:2px solid var(--ink);
+      padding-bottom:24px;
+      margin-bottom:28px;
+    }
+    .invoice-meta-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px;
+      margin-bottom:32px;
+    }
+    .receipt-table{
+      width:100%;
+      border-collapse:collapse;
+      margin-bottom:28px;
+    }
+    .receipt-table th{
+      background:var(--cream);
+      padding:12px;
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+    }
+    .receipt-table td{
+      padding:14px 12px;
+      border-bottom:1px solid rgba(11,25,17,.06);
+      font-size:13.5px;
+    }
+
+    /* FLOATING INSPECTOR */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:24px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    .view-section{display:none;animation:fadeIn .25s ease}
+    .view-section.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <header class="sz-nav">
+    <div class="container nav-inner">
+      <a class="brand-logo" href="../home/sportzone-home-demo.html">
+        <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="14" fill="#1b5e3b"/>
+          <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/>
+          <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="3.5" fill="#caa54b"/>
+        </svg>
+        <span>Sport<span class="zone">Zone</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a class="nav-link" href="../home/sportzone-home-demo.html">Trang Chủ</a>
+        <a class="nav-link" href="../court/sportzone-court-demo.html">Danh Sách Sân</a>
+        <a class="nav-link" href="../booking/sportzone-booking-demo.html">Đặt Sân</a>
+        <a class="nav-link active" href="sportzone-invoice-demo.html">Hóa Đơn</a>
+        <a class="nav-link" href="../account/sportzone-account-demo.html">Tài Khoản</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- View Switcher -->
+  <div class="container">
+    <div class="demo-view-switcher">
+      <button class="btn-view-tab active" id="tabList" onclick="switchInvoiceTab('list')">I1: Danh Sách Hóa Đơn (List.jsp)</button>
+      <button class="btn-view-tab" id="tabDetail" onclick="switchInvoiceTab('detail')">I2: Hóa Đơn Điện Tử Chuẩn In (Detail.jsp)</button>
+    </div>
+  </div>
+
+  <!-- Floating Inspector Toggle for Backend Verification -->
+  <div class="inspector-bar" id="inspectorBar">
+    <div class="toggle-switch" id="toggleInspector" title="Bật/Tắt hiển thị dữ liệu Backend đổ vào"></div>
+    <span>Xem biến JSP (${...})</span>
+  </div>
+
+  <main class="container">
+
+    <!-- ==============================================
+         VIEW 1: INVOICE LIST (LIST.JSP - U14)
+         ============================================== -->
+    <section class="view-section active" id="viewInvoiceList">
+      <div style="margin-bottom:28px">
+        <span class="sz-badge sz-badge-paid" style="margin-bottom:6px">TÀI CHÍNH &amp; THANH TOÁN</span>
+        <h1>Hóa Đơn &amp; Lịch Sử Thanh Toán</h1>
+        <p style="color:var(--muted)">Tra cứu hóa đơn điện tử, sao kê chi phí sân thi đấu và dịch vụ.</p>
+      </div>
+
+      <div class="sz-card backend-bound">
+        <span class="backend-tag">U14: ${invoiceList}</span>
+        <div style="overflow-x:auto">
+          <table style="width:100%; border-collapse:collapse; text-align:left;">
+            <thead>
+              <tr style="background:var(--cream); border-bottom:1px solid var(--line);">
+                <th style="padding:12px 16px; font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--muted)">Mã HĐ</th>
+                <th style="padding:12px 16px; font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--muted)">Ngày Lập</th>
+                <th style="padding:12px 16px; font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--muted)">Mã Booking</th>
+                <th style="padding:12px 16px; font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--muted)">Hình Thức</th>
+                <th style="padding:12px 16px; font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--muted); text-align:right">Tổng Tiền</th>
+                <th style="padding:12px 16px; font-size:11.5px; font-weight:800; text-transform:uppercase; color:var(--muted)">Trạng Thái</th>
+                <th style="padding:12px 16px; text-align:right"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:16px; font-family:monospace; font-weight:800">#INV-2041</td>
+                <td style="padding:16px">18/08/2026 14:22</td>
+                <td style="padding:16px"><span style="font-family:monospace; font-weight:700">#BK-1024</span></td>
+                <td style="padding:16px">Chuyển khoản QR</td>
+                <td style="padding:16px; text-align:right; font-weight:800; color:var(--green)">460.000 đ</td>
+                <td style="padding:16px"><span class="sz-badge sz-badge-paid">Đã thanh toán</span></td>
+                <td style="padding:16px; text-align:right">
+                  <button style="border:1px solid var(--line); background:#fff; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer" onclick="switchInvoiceTab('detail')">Xem bản in</button>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:16px; font-family:monospace; font-weight:800">#INV-2038</td>
+                <td style="padding:16px">15/08/2026 09:10</td>
+                <td style="padding:16px"><span style="font-family:monospace; font-weight:700">#BK-1018</span></td>
+                <td style="padding:16px">Tiền mặt tại quầy</td>
+                <td style="padding:16px; text-align:right; font-weight:800; color:var(--green)">180.000 đ</td>
+                <td style="padding:16px"><span class="sz-badge sz-badge-paid">Đã thanh toán</span></td>
+                <td style="padding:16px; text-align:right">
+                  <button style="border:1px solid var(--line); background:#fff; padding:6px 14px; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer" onclick="switchInvoiceTab('detail')">Xem bản in</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==============================================
+         VIEW 2: PRINTABLE E-RECEIPT (DETAIL.JSP - U15)
+         ============================================== -->
+    <section class="view-section" id="viewInvoiceDetail">
+      <div style="display:flex; justify-content:space-between; align-items:center; max-width:840px; margin:0 auto 20px;">
+        <button style="border:1px solid var(--line); background:#fff; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:800; cursor:pointer" onclick="switchInvoiceTab('list')">&larr; Quay lại danh sách</button>
+        <button style="background:var(--green); color:#fff; border:0; padding:9px 20px; border-radius:999px; font-size:13px; font-weight:800; cursor:pointer; box-shadow:0 4px 14px rgba(27,94,59,.2)" onclick="window.print()">In Hóa Đơn / Xuất PDF</button>
+      </div>
+
+      <div class="invoice-sheet backend-bound">
+        <span class="backend-tag">U15: ${invoice} E-Receipt</span>
+        
+        <div class="invoice-top">
+          <div>
+            <div class="brand-logo" style="margin-bottom:8px">
+              <svg viewBox="0 0 48 48" role="img" aria-hidden="true" style="width:40px;height:40px">
+                <rect x="2" y="2" width="44" height="44" rx="14" fill="#1b5e3b"/>
+                <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/>
+                <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/>
+                <circle cx="24" cy="24" r="3.5" fill="#caa54b"/>
+              </svg>
+              <span>Sport<span class="zone">Zone</span></span>
+            </div>
+            <div style="font-size:12.5px; color:var(--muted)">Tổ Hợp Thể Thao Cao Cấp Hòa Lạc · Hà Nội</div>
+            <div style="font-size:12.5px; color:var(--muted)">Hotline: 0988 888 888 · contact@sportzone.vn</div>
+          </div>
+
+          <div style="text-align:right">
+            <h1 style="font-size:24px; color:var(--green); margin-bottom:4px">HÓA ĐƠN ĐIỆN TỬ</h1>
+            <div style="font-family:monospace; font-size:15px; font-weight:800">Mã HĐ: #INV-2041</div>
+            <div style="font-size:12.5px; color:var(--muted); margin-top:4px">Ngày lập: 18/08/2026 14:22</div>
+          </div>
+        </div>
+
+        <div class="invoice-meta-grid">
+          <div>
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); margin-bottom:4px">Khách Hàng</div>
+            <div style="font-size:15px; font-weight:800">Nguyễn Văn A</div>
+            <div style="font-size:13px; color:var(--muted)">Email: user1@sportzone.vn · SĐT: 0901 234 567</div>
+          </div>
+          <div>
+            <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); margin-bottom:4px">Thông Tin Booking Gốc</div>
+            <div style="font-size:14px; font-weight:800">Mã Đơn #BK-1024 · Sân Tennis A1</div>
+            <div style="font-size:13px; color:var(--muted)">Khung giờ: 16:00 – 17:00 (18/08/2026)</div>
+          </div>
+        </div>
+
+        <!-- Line Items Table -->
+        <table class="receipt-table">
+          <thead>
+            <tr>
+              <th>Khoản Mục / Dịch Vụ</th>
+              <th style="text-align:center">Số Lượng</th>
+              <th style="text-align:right">Đơn Giá</th>
+              <th style="text-align:right">Thành Tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Thuê Sân Tennis A1</b> (Khung giờ 16:00 – 17:00)</td>
+              <td style="text-align:center">1 giờ</td>
+              <td style="text-align:right">320.000 đ</td>
+              <td style="text-align:right; font-weight:800">320.000 đ</td>
+            </tr>
+            <tr>
+              <td>Thuê Vợt Tennis Cao Cấp (Wilson Pro)</td>
+              <td style="text-align:center">2 cây</td>
+              <td style="text-align:right">50.000 đ</td>
+              <td style="text-align:right; font-weight:800">100.000 đ</td>
+            </tr>
+            <tr>
+              <td>Nước Khoáng Bổ Sung Điện Giải Pocari</td>
+              <td style="text-align:center">2 chai</td>
+              <td style="text-align:right">20.000 đ</td>
+              <td style="text-align:right; font-weight:800">40.000 đ</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Totals & Payment Method -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div style="background:var(--cream); padding:16px; border-radius:14px; border:1px solid var(--line); max-width:320px;">
+            <div style="font-size:12px; font-weight:800; color:var(--muted); margin-bottom:4px">HÌNH THỨC THANH TOÁN</div>
+            <div style="font-size:14px; font-weight:800; color:var(--green)">Chuyển khoản QR (MB Bank)</div>
+            <div style="font-size:12px; color:var(--muted)">Trạng thái: <b>ĐÃ THANH TOÁN THÀNH CÔNG</b></div>
+          </div>
+
+          <div style="text-align:right">
+            <div style="font-size:13px; color:var(--muted); margin-bottom:6px">Thuế GTGT (VAT 8%): Đã bao gồm</div>
+            <div style="font-size:24px; font-weight:900; color:var(--green)">Tổng Cộng: 460.000 đ</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    function switchInvoiceTab(tab){
+      document.getElementById('tabList').classList.toggle('active', tab === 'list');
+      document.getElementById('tabDetail').classList.toggle('active', tab === 'detail');
+      document.getElementById('viewInvoiceList').classList.toggle('active', tab === 'list');
+      document.getElementById('viewInvoiceDetail').classList.toggle('active', tab === 'detail');
+    }
+
+    const toggleInspector = document.getElementById('toggleInspector');
+    if(toggleInspector){
+      toggleInspector.addEventListener('click',()=>{
+        const active = toggleInspector.classList.toggle('active');
+        document.body.classList.toggle('show-backend', active);
+      });
+    }
+  </script>
+</body>
+</html>

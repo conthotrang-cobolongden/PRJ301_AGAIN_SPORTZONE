@@ -14,6 +14,16 @@ GO
 
 SET NOCOUNT ON;
 
+-- SCHEMA_CONTRACT_BOOKINGS_V3:
+-- Fail before seeding when this script is accidentally run against the legacy DB.
+IF OBJECT_ID(N'dbo.Bookings', N'U') IS NULL
+    THROW 51010, N'Canonical schema is missing. Run 01_SportZoneDB_Schema.sql first.', 1;
+IF COL_LENGTH(N'dbo.Bookings', N'TimeSlotID') IS NULL
+    THROW 51011, N'Legacy Bookings schema detected: TimeSlotID is missing.', 1;
+IF COL_LENGTH(N'dbo.Bookings', N'CourtID') IS NOT NULL
+    THROW 51012, N'Legacy Bookings schema detected: remove direct CourtID by rerunning 01.', 1;
+GO
+
 -- -----------------------------------------------------------------------------
 -- 1. Roles
 -- -----------------------------------------------------------------------------
@@ -90,7 +100,7 @@ SET IDENTITY_INSERT Services OFF;
 GO
 
 -- -----------------------------------------------------------------------------
--- 6. Time slots — next 7 days, all active courts, fixed hour templates
+-- 6. Time slots — initial next 7 days; Admin MVP can generate later weeks
 -- Hours: 06-07, 07-08, 08-09, 16-17, 17-18, 18-19, 19-20, 20-21
 -- -----------------------------------------------------------------------------
 ;WITH Days AS (

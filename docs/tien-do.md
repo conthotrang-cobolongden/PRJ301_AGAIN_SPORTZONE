@@ -15,12 +15,49 @@
 | Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
 | Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
 | Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
-| Java web (Servlet / JSP / Filter) | **P1+P2 đã dựng lại và verify** | Branch `codex/phase-2-auth`: clean WAR, 12/12 contract và Tomcat smoke đều pass |
+| Java web (Servlet / JSP / Filter) | **P1–P5 đã dựng lại và verify** | Phase 5 trên branch `codex/phase4-profile`: regression batch và FrozenAccountFilterTest đều pass |
 | Phase 2 — Auth & phân quyền | **Xong — verify 2026-08-22 23:23** | A1, A2, U1, U2, U3; login/register/logout, CSRF, AuthFilter và RoleFilter |
-| Phase 3+4 — Xem sân & Hồ sơ (U4–U9) | **Tiếp theo** | JSP/design còn; dựng lại backend trên nền P1+P2 đã verify |
-| Phase 5–9 | Chưa bắt đầu trong working copy mới | Làm tuần tự sau khi P1–P4 được dựng lại và verify |
+| Phase 3 — Xem sân & lịch | **Xong — verify 2026-08-23** | U7, U8, U9 và count sân U19; `/courts`, `/court`, lịch 7 ngày |
+| Phase 4 — Hồ sơ (U4–U6) | **Xong — verify 2026-08-23** | Profile dùng chung User/Admin, cập nhật thông tin, đổi mật khẩu, CSRF và session refresh |
+| Phase 5 — Đặt sân, xem booking, hạng thành viên | **Xong — verify 2026-08-23** | U10–U12; user không được hủy; membership chỉ hiển thị; Frozen bị cách ly khỏi ứng dụng |
+| Phase 6 — Thanh toán giả lập + hóa đơn User | **Đã triển khai — verify 2026-08-23** | QR giả lập, pay/cancel, timeout 15 phút, chỉ xem invoice Paid; toàn bộ route qua MainController |
+| Phase 7–9 | Chưa bắt đầu | Chức năng Admin và báo cáo chưa triển khai |
 
-**Nguồn trạng thái hiện hành:** `rules/new-plan-0954.md`. Các entry ngày 17/08 bên dưới được giữ nguyên làm lịch sử, không phản ánh code đang còn trong working copy mới.
+---
+## 2026-08-23 (17:33) — Hoàn tất Phase 5 Đặt sân và hạng thành viên
+
+- Branch: `codex/phase4-profile`.
+- Hoàn tất U10: tạo booking trong transaction, snapshot giá sân/dịch vụ, khóa slot và không tạo Invoice.
+- Hoàn tất U11–U12: user xem danh sách/chi tiết booking của chính mình; không có chức năng hủy booking theo quyết định hiện hành.
+- Profile hiển thị tổng chi tiêu tháng từ Invoice `Paid` và hạng MEMBER/SILVER/PLATINUM/VIP; chưa áp dụng khuyến mãi hay quyền lợi, không đổi schema database.
+- Account `Frozen` xác thực xong bị chuyển tới trang khóa; chỉ được truy cập `/account-locked`, `/logout`, `/assets/*`, không vào được `/home` hay chức năng nghiệp vụ.
+- Verify mới trước commit: `Phase5RegressionBatchTest PASSED`; `AuthServletTest PASSED`; `FrozenAccountFilterTest PASSED`.
+- Việc tiếp theo: Phase 6 hóa đơn phía User U14–U18.
+
+---
+## 2026-08-23 (16:08) — Hoàn tất Phase 4 Hồ sơ cá nhân
+
+- Branch: `codex/phase4`.
+- Hoàn tất U4: User/Admin xem chung trang hồ sơ; Frozen User vẫn xem được cảnh báo trạng thái.
+- Hoàn tất U5: cập nhật họ tên, email và số điện thoại; validate server, normalize và loại trừ chính account khi kiểm tra unique.
+- Hoàn tất U6: xác minh mật khẩu hiện tại, lưu SHA-256 của mật khẩu mới, giữ phiên đăng nhập và không lưu hash trong session.
+- Mọi POST `/profile` và `/password` đều kiểm tra CSRF trước khi đọc dữ liệu form.
+- Targeted DAO/Service/Web tests, Clean and Build và 12/12 Tomcat smoke đều pass.
+- Mật khẩu `user1` đã được khôi phục về giá trị seed `User@123` sau smoke test.
+- Việc tiếp theo: Phase 5 đặt và hủy sân U10–U13.
+
+---
+
+## 2026-08-23 (13:22) — Hoàn tất Phase 3 Xem sân & lịch
+
+- Branch: `codex/phase-3-courts`.
+- Hoàn tất U7: danh sách 10 sân active, filter Tennis/Pickleball và hiển thị đúng trạng thái Maintenance/Unavailable.
+- Hoàn tất U8: chi tiết sân gồm loại, giá, vị trí, mô tả, ảnh/placeholder và chặn hành động đặt khi sân không Available.
+- Hoàn tất U9: lịch theo ngày trong cửa sổ 7 ngày, đủ trạng thái Available/Booked/Closed và đánh dấu slot đã qua.
+- Hoàn thiện phần U19: số sân Tennis/Pickleball trên `/home` lấy từ database thay vì hard-code.
+- Thêm contract/integration tests cho model, DAO, servlet, routing và JSP; giữ `/courts`, `/court` là public routes.
+- Người dùng xác nhận targeted tests, Clean and Build, deploy Tomcat 9 và smoke các route `/home`, `/courts`, `/court` đều pass.
+- Việc tiếp theo: Phase 4 hồ sơ cá nhân và đổi mật khẩu (U4–U6).
 
 ---
 
@@ -254,3 +291,32 @@ Trên `docs/erd.png` cần:
 ---
 
 *Cập nhật lần cuối: 2026-08-17.*
+
+---
+
+## 2026-08-24 — Hoàn tất Admin MVP (gộp Phase 7 + 8)
+
+Admin hiện có đúng phạm vi MVP đã chốt: dashboard 4 chỉ số, quản lý giá/trạng thái sân an toàn với booking tương lai, sinh slot tuần idempotent, xem/lọc/chi tiết booking, tạo và thanh toán booking `Khách vãng lai`, check-in, lazy NoShow và lazy Completed. Không triển khai checkout, manual no-show, refund, quản lý tài khoản/dịch vụ hay báo cáo nâng cao.
+
+Database đã thêm `Bookings.CheckInAt` và trạng thái `CheckedIn` bằng migration không xóa dữ liệu. Tuần bắt đầu 2026-08-31 đã được sinh đủ 560 slot; lần chạy thứ hai bỏ qua cả 560 slot.
+
+Verification hoàn tất đúng ngân sách 2 lượt:
+
+- Phase 1: domain/database contracts pass.
+- Phase 2: 63 source + 38 test source compile, full regression pass, WAR build thành công.
+- Tomcat runtime pass dashboard/courts/bookings, phân quyền 403 cho User, rule khóa sân, booking vãng lai + QR/Paid/Confirmed, check-in, NoShow và Completed.
+- Dữ liệu booking/slot chỉ dùng cho smoke đã được dọn sau khi kiểm tra.
+
+*Cập nhật lần cuối: 2026-08-24.*
+
+---
+
+## 2026-08-24 — Hoàn tất port giao diện SportZone cuối
+
+Toàn bộ JSP production đã được port theo các demo chuẩn trong `design-system/sportzone/**`, ngoại trừ `preview/**` bị loại hoàn toàn. Dữ liệu hard-code được thay bằng EL/JSTL theo contract backend hiện tại; các phần chưa có backend vẫn giữ giao diện nhưng bị disable và gắn `Coming Soon`.
+
+Phạm vi hoàn tất gồm shared header/footer, home, login/register, court list/detail, booking create/list/detail, invoice list/detail/payment, profile/password, admin dashboard/courts/bookings và các trang lỗi. CSS nguyên bản được tách theo nhóm trang tại `web/assets/css/design/`.
+
+Verification tổng hợp: 63 source + 39 test source compile; full `AdminMvpRegressionBatchTest` pass; UI contract mới pass; WAR build thành công; Tomcat smoke home/courts/login HTTP 200, CSS load đúng, responsive không tràn ngang và không có console error.
+
+*Cập nhật lần cuối: 2026-08-24.*

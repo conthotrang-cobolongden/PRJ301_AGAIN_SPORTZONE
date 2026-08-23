@@ -9,6 +9,7 @@ SQL Server database for **PRJ301 Sports Complex** (Tennis + Pickleball).
 | `01_SportZoneDB_Schema.sql` | Drop/create DB + all tables, indexes, constraints |
 | `02_SportZoneDB_Seed.sql` | Master data + sample bookings/invoices |
 | `00_SportZoneDB_Init_All.sql` | Optional SQLCMD runner (`:r`) — needs SQLCMD Mode |
+| `03_SportZoneDB_AdminMvp_Migration.sql` | Non-destructive upgrade for Admin MVP check-in lifecycle |
 
 ## How to run
 
@@ -28,6 +29,10 @@ sqlcmd -S localhost -U SA -P 12345 -C -I -i 02_SportZoneDB_Seed.sql
 `-I` = `QUOTED_IDENTIFIER ON` (required for filtered unique index on Bookings).
 
 > Script `01` **drops** database `SportZoneDB` if it exists. Do not run on production data.
+
+For a database already created by Phase 1–6, do not rerun schema/seed. Execute
+`03_SportZoneDB_AdminMvp_Migration.sql` once to add `Bookings.CheckInAt`, the
+`CheckedIn` status and the updated active-slot unique index.
 
 **Verified:** schema + seed run successfully on local SQL Server (10 courts, 560 time slots, sample bookings/invoices).
 

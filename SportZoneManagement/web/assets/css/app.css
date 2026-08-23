@@ -605,3 +605,120 @@ body {
     font-size: 2.8rem;
   }
 }
+
+/* Production adapters: preserve the approved design while binding live data. */
+.sz-page-home .sz-main,
+.sz-page-auth .sz-main,
+.sz-page-court .sz-main,
+.sz-page-booking .sz-main,
+.sz-page-invoice .sz-main,
+.sz-page-account .sz-main,
+.sz-page-admin .sz-main,
+.sz-page-error .sz-main {
+  min-height: 0;
+  padding: 0;
+}
+
+.coming-soon,
+.coming-badge {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  border: 1px solid rgba(217, 154, 36, 0.38);
+  border-radius: 999px;
+  padding: 0.25rem 0.65rem;
+  background: rgba(217, 154, 36, 0.12);
+  color: #9a6511;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.is-disabled,
+.locked-actions,
+.account-coming-soon {
+  position: relative;
+  opacity: 0.72;
+}
+
+.is-disabled a,
+.is-disabled button,
+.locked-actions button,
+.account-coming-soon button {
+  pointer-events: none;
+}
+
+.court-media-placeholder,
+.skeleton-court {
+  display: grid;
+  min-height: 230px;
+  place-items: center;
+  background: linear-gradient(145deg, #e9efe9, #d8e4da);
+  color: #55705f;
+}
+
+.court-media-placeholder.detail-media { min-height: 420px; border-radius: 18px; }
+.detail-badges,
+.invoice-actions,
+.booking-list-head,
+.booking-detail-head,
+.invoice-page-head,
+.account-section-title,
+.detail-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.detail-description,
+.empty-state,
+.action-note,
+.admin-empty { color: #6b7f71; }
+.detail-action,
+.booking-submit,
+.rounded-action { border-radius: 999px; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; margin-right: 6px; border-radius: 50%; background: currentColor; }
+
+.booking-page-intro { margin-bottom: 28px; }
+.booking-create-grid,
+.booking-detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 28px; align-items: start; }
+.slot-display-time { display: block; font-weight: 900; }
+.slot-display-state { display: block; margin-top: 4px; font-size: 0.72rem; }
+.booking-code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.invoice-list-table { min-width: 880px; }
+.invoice-amount { font-weight: 900; }
+.invoice-view-btn,
+.invoice-print-btn { white-space: nowrap; }
+.invoice-brand { display: flex; align-items: center; gap: 12px; }
+.invoice-brand-mark { display: grid; width: 48px; height: 48px; place-items: center; border-radius: 14px; background: #0e2017; color: #d99a24; font-weight: 900; }
+.invoice-title { margin: 0; }
+.invoice-label { color: #758479; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.invoice-detail-list { display: grid; gap: 12px; }
+.invoice-linked { padding: 14px; border-radius: 12px; background: #f3f7f3; }
+.payment-shell { max-width: 760px; }
+.payment-card { text-align: center; }
+.payment-qr { width: min(260px, 70vw); aspect-ratio: 1; object-fit: contain; }
+.danger-action { color: #b42318; }
+
+.locked-contact { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 24px; margin: -8px 0 28px; color: #5b6f60; }
+.error-page-shell { padding-top: 72px; padding-bottom: 72px; }
+
+.admin-detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start; }
+.admin-kv { display: flex; justify-content: space-between; gap: 24px; padding: 14px 0; border-bottom: 1px solid #e5ebe6; }
+.admin-kv span { color: #6f7e72; }
+.full { width: 100%; justify-content: center; }
+.locked-actions { display: grid; gap: 10px; margin-top: 18px; }
+.locked-actions button { border: 1px solid #dce5de; border-radius: 10px; padding: 11px; background: #f3f6f4; color: #829087; }
+.record-count { color: #6f7e72; font-size: 0.8rem; font-weight: 800; }
+
+@media (max-width: 900px) {
+  .booking-create-grid,
+  .booking-detail-grid,
+  .admin-detail-grid { grid-template-columns: 1fr; }
+  .booking-detail-head,
+  .invoice-page-head,
+  .account-section-title { align-items: flex-start; flex-direction: column; }
+}

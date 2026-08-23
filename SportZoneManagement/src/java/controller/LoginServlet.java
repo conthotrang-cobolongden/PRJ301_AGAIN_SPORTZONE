@@ -14,7 +14,9 @@ import utils.CsrfUtil;
 import utils.SessionUtil;
 import utils.Views;
 
-/** Handles login form display and credential submission. */
+/**
+ * Handles login form display and credential submission.
+ */
 public class LoginServlet extends HttpServlet {
 
     private final AuthService authService;
@@ -33,8 +35,17 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (SessionUtil.isLoggedIn(request.getSession(false))) {
-            response.sendRedirect(request.getContextPath() + "/home");
+        HttpSession existingSession
+                = request.getSession(false);
+
+        if (SessionUtil.isLoggedIn(existingSession)) {
+            String target = SessionUtil.isFrozen(existingSession)
+                    ? "/MainController?action=accountLocked"
+                    : "/MainController?action=home";
+
+            response.sendRedirect(
+                    request.getContextPath() + target
+            );
             return;
         }
 
@@ -70,8 +81,29 @@ public class LoginServlet extends HttpServlet {
         }
 
         HttpSession session = request.getSession();
-        SessionUtil.storeLoggedInAccount(session, account);
-        consumeTarget(request, response, session);
+
+        SessionUtil.storeLoggedInAccount(
+                session,
+                account
+        );
+
+        if (SessionUtil.isFrozen(session)) {
+            session.removeAttribute(
+                    AppConstants.SESSION_REDIRECT_AFTER_LOGIN
+            );
+
+            response.sendRedirect(
+                    request.getContextPath()
+                    + "/MainController?action=accountLocked"
+            );
+            return;
+        }
+
+        consumeTarget(
+                request,
+                response,
+                session
+        );
     }
 
     private void consumeTarget(HttpServletRequest request, HttpServletResponse response,
@@ -81,7 +113,8 @@ public class LoginServlet extends HttpServlet {
         session.removeAttribute(AppConstants.SESSION_REDIRECT_AFTER_LOGIN);
         String target = savedTarget instanceof String
                 && ((String) savedTarget).startsWith("/")
-                ? (String) savedTarget : "/home";
+                ? (String) savedTarget
+                : "/MainController?action=home";
         response.sendRedirect(request.getContextPath() + target);
     }
 }
