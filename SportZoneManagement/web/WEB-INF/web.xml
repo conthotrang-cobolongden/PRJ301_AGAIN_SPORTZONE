@@ -161,6 +161,22 @@
         <servlet-class>controller.InvoiceDetailServlet</servlet-class>
     </servlet>
 
+    <!-- ===== ADMIN MVP: named dispatch targets only ===== -->
+    <servlet>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <servlet-class>controller.AdminDashboardServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AdminCourtsServlet</servlet-name>
+        <servlet-class>controller.AdminCourtsServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AdminBookingsServlet</servlet-name>
+        <servlet-class>controller.AdminBookingsServlet</servlet-class>
+    </servlet>
+
     <!-- ===== PUBLIC ROUTE MAPPINGS ===== -->
 
     <servlet-mapping>

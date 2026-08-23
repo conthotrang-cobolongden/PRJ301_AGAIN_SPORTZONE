@@ -7,6 +7,9 @@
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
 <section class="container sz-section">
+    <c:if test="${sessionScope.roleName == 'Admin'}">
+        <div class="alert alert-info">Booking này được ghi nhận cho <strong>Khách vãng lai</strong>.</div>
+    </c:if>
     <div class="sz-pagehead">
         <div>
             <p class="sz-kicker sz-kicker-dark mb-1">SportZone</p>

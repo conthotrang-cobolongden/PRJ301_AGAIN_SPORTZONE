@@ -21,6 +21,6 @@
             <div class="sz-kv sz-kv-total"><dt>Tổng cộng</dt><dd><fmt:formatNumber value="${invoice.finalAmount}" groupingUsed="true"/> đ</dd></div>
         </dl>
     </div>
-    <div class="text-center mt-3"><a class="btn btn-outline-success" href="${ctx}/MainController?action=bookingDetail&amp;id=${invoice.bookingId}">Xem booking liên kết</a></div>
+    <div class="text-center mt-3"><a class="btn btn-outline-success" href="${ctx}/MainController?action=${sessionScope.roleName == 'Admin' ? 'adminBookings' : 'bookingDetail'}&amp;id=${invoice.bookingId}">Xem booking liên kết</a></div>
 </section>
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

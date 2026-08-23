@@ -125,8 +125,9 @@ public final class Phase5BookingWebContractTest {
         );
 
         require(
-                source.contains("ROLE_USER"),
-                "Chi role User duoc dat san"
+                source.contains("ROLE_USER")
+                && source.contains("ROLE_ADMIN"),
+                "User va Admin deu duoc tao booking; role khac bi chan"
         );
 
         require(
@@ -144,13 +145,12 @@ public final class Phase5BookingWebContractTest {
         );
 
         require(
-                source.contains(
-                        "\"/MainController?action=bookingDetail&id=\""
-                )
+                source.contains("adminBookings&id=")
+                && source.contains("bookingDetail&id=")
                 && source.contains(
                         "\"&created=1\""
                 ),
-                "Create success phai PRG sang detail"
+                "Create success phai PRG sang detail theo role"
         );
     }
 

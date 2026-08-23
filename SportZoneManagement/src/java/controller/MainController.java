@@ -51,6 +51,12 @@ public class MainController extends HttpServlet {
                 return "InvoicesServlet";
             case "invoiceDetail":
                 return "InvoiceDetailServlet";
+            case "adminDashboard":
+                return "AdminDashboardServlet";
+            case "adminCourts":
+                return "AdminCourtsServlet";
+            case "adminBookings":
+                return "AdminBookingsServlet";
             default:
                 return null;
         }

@@ -291,3 +291,20 @@ Trên `docs/erd.png` cần:
 ---
 
 *Cập nhật lần cuối: 2026-08-17.*
+
+---
+
+## 2026-08-24 — Hoàn tất Admin MVP (gộp Phase 7 + 8)
+
+Admin hiện có đúng phạm vi MVP đã chốt: dashboard 4 chỉ số, quản lý giá/trạng thái sân an toàn với booking tương lai, sinh slot tuần idempotent, xem/lọc/chi tiết booking, tạo và thanh toán booking `Khách vãng lai`, check-in, lazy NoShow và lazy Completed. Không triển khai checkout, manual no-show, refund, quản lý tài khoản/dịch vụ hay báo cáo nâng cao.
+
+Database đã thêm `Bookings.CheckInAt` và trạng thái `CheckedIn` bằng migration không xóa dữ liệu. Tuần bắt đầu 2026-08-31 đã được sinh đủ 560 slot; lần chạy thứ hai bỏ qua cả 560 slot.
+
+Verification hoàn tất đúng ngân sách 2 lượt:
+
+- Phase 1: domain/database contracts pass.
+- Phase 2: 63 source + 38 test source compile, full regression pass, WAR build thành công.
+- Tomcat runtime pass dashboard/courts/bookings, phân quyền 403 cho User, rule khóa sân, booking vãng lai + QR/Paid/Confirmed, check-in, NoShow và Completed.
+- Dữ liệu booking/slot chỉ dùng cho smoke đã được dọn sau khi kiểm tra.
+
+*Cập nhật lần cuối: 2026-08-24.*

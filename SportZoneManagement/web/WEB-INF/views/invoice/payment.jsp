@@ -9,7 +9,7 @@
     <div class="sz-card text-center"><c:choose>
         <c:when test="${invoice.paymentStatus == 'Cancelled'}">
             <div class="alert alert-secondary mb-3">Thanh toán đã bị hủy hoặc hết hạn.</div>
-            <a class="btn btn-sz-outline" href="${ctx}/MainController?action=bookingDetail&amp;id=${invoice.bookingId}">Về booking</a>
+            <a class="btn btn-sz-outline" href="${ctx}/MainController?action=${sessionScope.roleName == 'Admin' ? 'adminBookings' : 'bookingDetail'}&amp;id=${invoice.bookingId}">Về booking</a>
         </c:when>
         <c:otherwise>
             <img src="${ctx}/assets/img/payment-qr.svg" width="220" height="220" alt="QR thanh toán giả lập" class="img-fluid border rounded p-2 bg-white"/>

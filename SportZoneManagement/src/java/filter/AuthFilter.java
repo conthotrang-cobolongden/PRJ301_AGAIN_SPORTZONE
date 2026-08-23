@@ -70,7 +70,10 @@ public class AuthFilter implements Filter {
                 && !"accountLocked".equals(action)
                 && !"invoicePayment".equals(action)
                 && !"invoices".equals(action)
-                && !"invoiceDetail".equals(action);
+                && !"invoiceDetail".equals(action)
+                && !"adminDashboard".equals(action)
+                && !"adminCourts".equals(action)
+                && !"adminBookings".equals(action);
     }
 
     @Override

@@ -25,7 +25,8 @@ public class InvoiceDetailServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        if (!AppConstants.ROLE_USER.equals(account.getRoleName())) {
+        if (!AppConstants.ROLE_USER.equals(account.getRoleName())
+                && !AppConstants.ROLE_ADMIN.equals(account.getRoleName())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
