@@ -1,5 +1,8 @@
 package model;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,6 +43,11 @@ public final class ModelContractTest {
                 "bookingID", "serviceID", "quantity", "priceAtOrder", "lineTotal")),
                 "BookingService must map the composite key and computed total");
 
+        // U7-U9: camel-case JavaBeans properties used by court JSP EL.
+        requireReadableProperty(Court.class, "courtId");
+        requireReadableProperty(Court.class, "imageUrl");
+        requireReadableProperty(TimeSlot.class, "timeSlotId");
+
         System.out.println("ModelContractTest PASSED");
     }
 
@@ -59,6 +67,20 @@ public final class ModelContractTest {
     private static void requireFullConstructor(Class<?> type) {
         require(type.getDeclaredConstructors().length >= 2,
                 type.getSimpleName() + " must have a full constructor");
+    }
+
+    private static void requireReadableProperty(Class<?> type, String propertyName)
+            throws IntrospectionException {
+        for (PropertyDescriptor property
+                : Introspector.getBeanInfo(type).getPropertyDescriptors()) {
+            if (propertyName.equals(property.getName())
+                    && property.getReadMethod() != null) {
+                return;
+            }
+        }
+        throw new AssertionError(type.getSimpleName()
+                + " must expose readable JavaBeans property '"
+                + propertyName + "' for JSP EL");
     }
 
     private static void require(boolean condition, String message) {
