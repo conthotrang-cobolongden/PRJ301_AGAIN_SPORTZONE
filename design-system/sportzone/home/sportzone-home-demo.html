@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Tổ hợp thể thao Tennis & Pickleball cao cấp tại Khu CNC Hòa Lạc. Tra cứu lịch trống và đặt sân theo thời gian thực." />
+  <title>SportZone — Tổ Hợp Thể Thao Tennis &amp; Pickleball Cao Cấp</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro (100% tiếng Việt chuẩn) + Montserrat (Thể thao sang trọng) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root{
+      --ink:#0b1911;
+      --ink-soft:#14291e;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --green-glow:#4ade80;
+      --gold:#caa54b;
+      --gold-light:#e9c875;
+      --gold-glow:#fde047;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#fffdfa;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --soft:rgba(27,94,59,.06);
+      --shadow-sm:0 8px 24px rgba(11,25,17,.06);
+      --shadow:0 24px 60px rgba(11,25,17,.12);
+      --shadow-lg:0 36px 90px rgba(11,25,17,.18);
+      --radius-sm:14px;
+      --radius:24px;
+      --radius-lg:32px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:var(--paper);
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    body.menu-open{overflow:hidden}
+    a{text-decoration:none;color:inherit}
+    img{display:block;width:100%;height:100%;object-fit:cover}
+    button{font:inherit}
+    .shell{width:min(1400px,calc(100% - 56px));margin:auto}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* BADGE PILLS */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 13px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .sz-badge-gold{background:var(--gold-surface);color:#917223;border:1px solid rgba(202,165,75,.35)}
+    .sz-badge-green{background:rgba(27,94,59,.1);color:var(--green);border:1px solid rgba(27,94,59,.25)}
+    .sz-badge-tennis{background:rgba(27,94,59,.12);color:var(--green);border:1px solid rgba(27,94,59,.2)}
+    .sz-badge-pickle{background:rgba(202,165,75,.15);color:#917223;border:1px solid rgba(202,165,75,.3)}
+    .sz-badge-available{background:#dcfce7;color:#15803d;border:1px solid #bbf7d0}
+    .sz-badge-maintenance{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+    .sz-badge-dark{background:var(--ink);color:#fff}
+    .sz-badge-white{background:rgba(255,255,255,.94);color:var(--ink);backdrop-filter:blur(10px);box-shadow:var(--shadow-sm)}
+
+    /* BACKEND HIGHLIGHT OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-12px;
+      left:14px;
+      background:#d97706;
+      color:#fff;
+      font-size:10px;
+      font-weight:800;
+      padding:3px 9px;
+      border-radius:6px;
+      z-index:20;
+      letter-spacing:.04em;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+      animation:pulseTag 2s infinite;
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:3px;
+      position:relative;
+    }
+    @keyframes pulseTag{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.05)}
+    }
+
+    /* INSPECTOR CONTROL PANEL */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    /* HEADER */
+    .header{position:fixed;inset:0 0 auto;z-index:100;transition:.35s ease;border-bottom:1px solid transparent}
+    .header.scrolled{background:rgba(255,253,250,.94);backdrop-filter:blur(20px);border-color:var(--line);box-shadow:0 12px 36px rgba(11,25,17,.06)}
+    .nav{height:88px;display:flex;align-items:center;justify-content:space-between;gap:32px}
+    .brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:-.03em;font-size:22px;white-space:nowrap;font-family:"Montserrat",sans-serif}
+    .brand svg{width:42px;height:42px;filter:drop-shadow(0 8px 14px rgba(11,25,17,.14))}
+    .brand .zone{color:var(--green)}
+    .menu{display:flex;align-items:center;gap:32px;font-size:14px;font-weight:700;color:#2c3e33}
+    .menu a{position:relative;padding:10px 0;transition:color .2s ease}
+    .menu a:hover{color:var(--green)}
+    .menu a:after{content:"";position:absolute;left:50%;right:50%;bottom:2px;height:2px;background:var(--green);border-radius:2px;transition:.25s ease}
+    .menu a:hover:after{left:0;right:0}
+    .nav-actions{display:flex;align-items:center;gap:10px}
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:11px 22px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--ink);
+      font-size:13.5px;
+      font-weight:800;
+      transition:all .25s cubic-bezier(.2,.7,.2,1);
+      cursor:pointer;
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(11,25,17,.1)}
+    .btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .btn.primary:hover{background:var(--ink-soft);box-shadow:0 14px 32px rgba(11,25,17,.24)}
+    .btn.green{background:var(--green);color:#fff;border-color:var(--green)}
+    .btn.green:hover{background:var(--green-light);box-shadow:0 14px 32px rgba(27,94,59,.3)}
+    .btn.gold{background:linear-gradient(135deg,#caa54b,#b38d36);color:#fff;border:0;box-shadow:0 12px 28px rgba(202,165,75,.28)}
+    .btn.gold:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(202,165,75,.38)}
+    .btn.sm{padding:8px 16px;font-size:12.5px}
+    .hamb{display:none;width:46px;height:46px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.92);font-size:22px;cursor:pointer}
+
+    /* HERO */
+    .hero{
+      min-height:100svh;
+      position:relative;
+      display:flex;
+      align-items:center;
+      padding:136px 0 80px;
+      background:
+        radial-gradient(circle at 74% 28%,rgba(27,94,59,.11),transparent 36%),
+        radial-gradient(circle at 15% 85%,rgba(202,165,75,.09),transparent 30%),
+        linear-gradient(180deg,#fffdfa 0%,#f8f4ec 100%);
+    }
+    .hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+    .hero-grid{display:grid;grid-template-columns:1.02fr 1.15fr;gap:68px;align-items:center}
+    
+    .kicker{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:18px}
+    .kicker .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(202,165,75,.25)}
+    
+    h1{font-size:clamp(48px,5.8vw,86px);line-height:1.04;color:var(--ink);letter-spacing:-.03em}
+    h1 .accent-text{
+      background:linear-gradient(135deg,var(--green) 0%,#2e7d56 50%,var(--gold) 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    
+    .hero .lead{font-size:16.5px;line-height:1.75;color:var(--muted);max-width:620px;margin:24px 0 32px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+    
+    .trust-row{display:flex;flex-wrap:wrap;gap:24px;margin-top:36px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:#4c5b52;font-weight:700}
+    .trust-row span{display:flex;align-items:center;gap:8px}
+    .trust-row i{color:var(--green);font-size:15px;font-style:normal}
+
+    .hero-visual{height:min(76vh,740px);min-height:560px;position:relative}
+    .photo-main{position:absolute;inset:0 0 0 10%;overflow:hidden;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg)}
+    .photo-main img{transform:scale(1.04);animation:heroBreath 9s ease-in-out infinite alternate}
+    @keyframes heroBreath{to{transform:scale(1.08)}}
+    .photo-main:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(7,20,13,.65) 100%)}
+    
+    .hero-stat-floating{
+      position:absolute;
+      left:0;
+      bottom:8%;
+      z-index:4;
+      width:48%;
+      min-width:240px;
+      background:rgba(255,253,250,.95);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.9);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:0 24px 50px rgba(11,25,17,.16);
+    }
+    .hero-stat-floating .stat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .hero-stat-floating .stat-num{font-family:"Montserrat",sans-serif;font-size:34px;font-weight:900;color:var(--green);line-height:1}
+    .hero-stat-floating p{font-size:13px;color:var(--muted);line-height:1.5;margin:6px 0 0;font-weight:600}
+    
+    .court-coordinate{
+      position:absolute;
+      right:24px;
+      top:24px;
+      z-index:4;
+      background:rgba(11,25,17,.85);
+      color:white;
+      border:1px solid rgba(255,255,255,.2);
+      backdrop-filter:blur(12px);
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.12em;
+    }
+    .scroll-cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#708076}.scroll-cue i{display:block;width:1px;height:34px;background:linear-gradient(var(--gold),transparent);animation:cue 1.8s ease-in-out infinite}@keyframes cue{50%{height:48px}}
+
+    /* TICKER */
+    .ticker{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff;position:relative}
+    .ticker-track{display:flex;width:max-content;animation:ticker 28s linear infinite}
+    .ticker span{padding:18px 36px;font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#4c5b52;white-space:nowrap;display:flex;align-items:center;gap:36px}
+    .ticker span:after{content:"✦";color:var(--gold);font-size:14px}
+    @keyframes ticker{to{transform:translateX(-50%)}}
+
+    /* ========================================================
+       GRAND KINETIC STADIUM ENTRANCE GATE (SUPERCHARGED SPORT THEME)
+       ======================================================== */
+    .gateway{height:230vh;position:relative;background:#050c08}
+    .gateway-stage{
+      position:sticky;
+      top:0;
+      height:100vh;
+      overflow:hidden;
+      background:#06100a;
+      perspective:1600px;
+      transform-style:preserve-3d;
+    }
+    .gateway-scene{position:absolute;inset:0}
+    .gateway-scene img{
+      transform:scale(1.18);
+      filter:saturate(.95) contrast(1.08);
+      will-change:transform;
+      backface-visibility:hidden;
+      transform:translateZ(0);
+    }
+    .gateway-scene:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,12,8,.35),rgba(4,12,8,.75))}
+    
+    .gateway-copy{position:absolute;inset:0;z-index:4;display:grid;place-items:center;text-align:center;color:white;padding:24px;pointer-events:none}
+    .gateway-copy-inner{
+      max-width:920px;
+      transform:translateY(40px) scale(.96);
+      opacity:0;
+      will-change:transform,opacity;
+      backface-visibility:hidden;
+    }
+    .gateway-copy .kicker{color:#f5df9e;justify-content:center}
+    .gateway-copy h2{font-size:clamp(44px,5.8vw,84px);line-height:1.05;margin:16px 0;color:#fff}
+    .gateway-copy p{max-width:680px;margin:0 auto;color:#d7e2dc;line-height:1.75;font-size:16.5px;font-weight:500}
+    
+    /* THE GRAND DOORS - HARDWARE ACCELERATED */
+    .door{
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:50.1%;
+      z-index:8;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(27,94,59,.35), transparent 75%),
+        linear-gradient(145deg, #091710 0%, #0d2218 45%, #050c08 100%);
+      will-change:transform,opacity;
+      backface-visibility:hidden;
+      transform-style:preserve-3d;
+      transform:translateZ(0);
+      overflow:hidden;
+      box-shadow:0 0 100px rgba(0,0,0,.6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-top:2px solid rgba(202,165,75,.4);
+      border-bottom:2px solid rgba(202,165,75,.4);
+    }
+    .door.left{
+      left:0;
+      border-right:2px solid rgba(202,165,75,.7);
+      transform-origin:left center;
+    }
+    .door.right{
+      right:0;
+      border-left:2px solid rgba(202,165,75,.7);
+      transform-origin:right center;
+    }
+
+    /* Laser Stadium Seam Beam in Center */
+    .door-center-laser{
+      position:absolute;
+      top:0;
+      bottom:0;
+      width:3px;
+      background:linear-gradient(180deg,transparent,#caa54b 30%,#fde047 50%,#caa54b 70%,transparent);
+      box-shadow:0 0 18px #fde047, 0 0 32px rgba(202,165,75,.6);
+      z-index:15;
+      animation:laserPulse 2.4s ease-in-out infinite alternate;
+    }
+    .door.left .door-center-laser{right:0}
+    .door.right .door-center-laser{left:0}
+    @keyframes laserPulse{
+      0%{opacity:.6;filter:brightness(1)}
+      100%{opacity:1;filter:brightness(1.5)}
+    }
+
+    /* Internal Carbon Mesh & Court Wireframes on Doors */
+    .door-texture{
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(202,165,75,.2);
+      border-radius:20px;
+      background:
+        radial-gradient(circle at 50% 15%, rgba(202,165,75,.08), transparent 50%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 2px, transparent 2px, transparent 12px);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding:40px 32px;
+      overflow:hidden;
+      box-shadow:inset 0 0 40px rgba(0,0,0,.7);
+    }
+    .door-top-light{
+      height:4px;
+      width:60%;
+      margin:0 auto;
+      background:linear-gradient(90deg,transparent,#caa54b,#fff,#caa54b,transparent);
+      border-radius:999px;
+      box-shadow:0 0 16px rgba(202,165,75,.8);
+    }
+    
+    .door-badge-plate{
+      background:rgba(8,20,14,.88);
+      border:1px solid rgba(202,165,75,.35);
+      backdrop-filter:blur(16px);
+      border-radius:18px;
+      padding:24px 20px;
+      text-align:center;
+      box-shadow:0 16px 40px rgba(0,0,0,.5), inset 0 0 20px rgba(202,165,75,.06);
+    }
+    .door-crest{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      color:var(--gold-light);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+    .door-main-title{
+      font-family:"Montserrat",sans-serif;
+      font-size:clamp(32px,3.8vw,52px);
+      font-weight:900;
+      color:#fff;
+      letter-spacing:.04em;
+      text-shadow:0 4px 18px rgba(0,0,0,.6);
+      line-height:1;
+      margin-bottom:8px;
+    }
+    .door-subtitle{
+      font-size:12px;
+      font-weight:700;
+      color:#b5c7bd;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    /* Court SVG Wireframes */
+    .door-court-svg{
+      width:min(260px,75%);
+      margin:20px auto 0;
+      opacity:.85;
+      filter:drop-shadow(0 0 10px rgba(202,165,75,.35));
+    }
+    .door-status-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:5px 14px;
+      border-radius:999px;
+      background:rgba(27,94,59,.4);
+      border:1px solid rgba(74,222,128,.4);
+      color:#86efac;
+      font-size:10.5px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-top:14px;
+    }
+    .door-status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 8px #4ade80}
+
+    /* Center Vault Titanium Split Handle */
+    .vault-handle{
+      position:absolute;
+      top:50%;
+      width:74px;
+      height:140px;
+      transform:translateY(-50%);
+      background:linear-gradient(180deg,#1e3629 0%,#0e1f16 100%);
+      border:2px solid var(--gold);
+      box-shadow:0 0 24px rgba(202,165,75,.35);
+      z-index:16;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+    .door.left .vault-handle{
+      right:-2px;
+      border-radius:70px 0 0 70px;
+      border-right:0;
+    }
+    .door.right .vault-handle{
+      left:-2px;
+      border-radius:0 70px 70px 0;
+      border-left:0;
+    }
+    .vault-handle-inner{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:radial-gradient(circle,#caa54b 30%,#8d6d24 100%);
+      box-shadow:0 0 12px rgba(202,165,75,.7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:16px;
+    }
+
+    .gateway-progress{
+      position:absolute;
+      z-index:18;
+      left:50%;
+      bottom:32px;
+      transform:translateX(-50%);
+      width:min(440px,70vw);
+      height:3px;
+      background:rgba(255,255,255,.16);
+      border-radius:999px;
+      overflow:hidden;
+    }
+    .gateway-progress i{display:block;height:100%;width:0;background:var(--gold);will-change:width;border-radius:999px}
+
+    /* SECTION BASICS */
+    .section{padding:100px 0}
+    .section-head{display:grid;grid-template-columns:1.1fr .8fr;gap:60px;align-items:end;margin-bottom:44px}
+    .section-head h2{font-size:clamp(36px,4vw,58px);line-height:1.08}
+    .section-head p{margin:0;color:var(--muted);line-height:1.75;font-size:16px}
+    .eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+    /* ZONE HERO BANNERS */
+    .zone-banners{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:52px}
+    .zone-card{
+      position:relative;
+      height:360px;
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      display:flex;
+      align-items:flex-end;
+      padding:32px;
+      color:#fff;
+      transition:transform .4s ease, box-shadow .4s ease;
+    }
+    .zone-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg)}
+    .zone-card img{position:absolute;inset:0;z-index:1;transition:transform .8s ease}
+    .zone-card:hover img{transform:scale(1.05)}
+    .zone-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(7,20,13,.85) 100%);z-index:2}
+    .zone-content{position:relative;z-index:3;width:100%}
+    .zone-content h3{font-size:30px;margin:8px 0 6px;color:#fff}
+    .zone-content p{font-size:14px;color:#d8e5de;margin:0 0 16px;line-height:1.5}
+    .zone-pill{position:absolute;top:24px;left:24px;z-index:3}
+
+    /* COURTS FILTER TABS */
+    .courts-filter-bar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-bottom:32px;
+      padding-bottom:20px;
+      border-bottom:1px solid var(--line);
+    }
+    .filter-tabs{display:flex;align-items:center;gap:8px;background:rgba(11,25,17,.05);padding:6px;border-radius:999px}
+    .filter-tab{
+      border:0;
+      background:transparent;
+      padding:9px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+    .filter-tab.active{
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 4px 14px rgba(11,25,17,.08);
+    }
+    .filter-tab .count{
+      display:inline-block;
+      margin-left:5px;
+      padding:2px 7px;
+      background:rgba(11,25,17,.08);
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+    }
+    .filter-tab.active .count{background:var(--gold-surface);color:#917223}
+
+    /* DETAILED 10-COURT GRID */
+    .court-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:24px}
+    .court-item-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      overflow:hidden;
+      box-shadow:var(--shadow-sm);
+      display:flex;
+      flex-direction:column;
+      transition:all .35s cubic-bezier(.2,.7,.2,1);
+    }
+    .court-item-card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow);
+      border-color:rgba(27,94,59,.25);
+    }
+    .court-thumb{
+      position:relative;
+      height:210px;
+      overflow:hidden;
+      background:#1b2e23;
+    }
+    .court-thumb img{transition:transform .7s ease}
+    .court-item-card:hover .court-thumb img{transform:scale(1.06)}
+    .court-thumb:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.4) 100%)}
+    .thumb-type{position:absolute;top:14px;left:14px;z-index:2}
+    .thumb-status{position:absolute;top:14px;right:14px;z-index:2}
+    
+    .court-item-body{padding:22px;display:flex;flex-direction:column;flex-grow:1}
+    .court-item-body h4{font-size:20px;margin:0 0 6px;color:var(--ink)}
+    .court-loc{font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:6px;margin-bottom:14px;font-weight:600}
+    .court-specs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:18px;
+      font-size:11.5px;
+      font-weight:700;
+      color:#4a5950;
+    }
+    .court-specs span{
+      background:var(--cream);
+      padding:4px 10px;
+      border-radius:6px;
+    }
+    
+    .court-item-footer{
+      margin-top:auto;
+      padding-top:16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .court-item-footer .price{
+      font-family:"Montserrat",sans-serif;
+      font-size:19px;
+      font-weight:900;
+      color:var(--green);
+    }
+    .court-item-footer .price span{
+      font-family:"Be Vietnam Pro",sans-serif;
+      font-size:12px;
+      font-weight:600;
+      color:var(--muted);
+    }
+
+    /* BENEFITS */
+    .benefits{background:#fff}
+    .benefit-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+    .benefit{padding:38px 30px;border-right:1px solid var(--line);min-height:230px;transition:background .25s ease}
+    .benefit:hover{background:var(--cream)}
+    .benefit:last-child{border-right:0}
+    .benefit .n{font-family:"Montserrat",sans-serif;font-size:34px;font-weight:900;color:var(--gold);line-height:1}
+    .benefit h3{font-size:17px;margin:20px 0 8px;font-weight:800}
+    .benefit p{font-size:13.5px;color:var(--muted);line-height:1.65;margin:0;font-weight:500}
+
+    /* PROCESS */
+    .process-wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+    .process-image{height:640px;border-radius:var(--radius-lg);overflow:hidden;position:relative;box-shadow:var(--shadow-lg)}
+    .process-image:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(7,20,13,.5))}
+    .steps{display:grid}
+    .step{display:grid;grid-template-columns:56px 1fr;gap:18px;padding:24px 0;border-bottom:1px solid var(--line)}
+    .step:last-child{border-bottom:0}
+    .step .num{font-family:"Montserrat",sans-serif;font-size:28px;font-weight:900;color:var(--gold);line-height:1}
+    .step h3{margin:0 0 6px;font-size:17.5px;font-weight:800}
+    .step p{margin:0;color:var(--muted);font-size:14px;line-height:1.65;font-weight:500}
+
+    /* CTA */
+    .cta{padding:0 0 100px;background:#fff}
+    .cta-box{
+      background:linear-gradient(135deg,#13472d 0%,#1b5e3b 60%,#103823 100%);
+      color:#fff;
+      border-radius:var(--radius-lg);
+      padding:64px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:48px;
+      align-items:center;
+      position:relative;
+      overflow:hidden;
+      box-shadow:var(--shadow-lg);
+    }
+    .cta-box:after{content:"";position:absolute;width:420px;height:420px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-100px;top:-120px;box-shadow:0 0 0 70px rgba(255,255,255,.03),0 0 0 140px rgba(255,255,255,.02)}
+    .cta h2{font-size:clamp(36px,4.2vw,58px);line-height:1.08;max-width:850px;color:#fff}
+    .cta p{color:#d8e8dd;line-height:1.75;max-width:720px;font-size:16px;margin:14px 0 0}
+    .cta .btn{position:relative;z-index:2}
+
+    /* FOOTER */
+    .footer{background:var(--ink);color:#d1ded7;padding:80px 0 32px}
+    .footer-grid{display:grid;grid-template-columns:1.35fr .72fr .72fr 1fr;gap:48px;padding-bottom:52px}
+    .footer .brand{color:#fff;margin-bottom:18px}
+    .footer h4{font-family:"Montserrat",sans-serif;font-size:13.5px;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin:6px 0 20px;font-weight:800}
+    .footer p,.footer a{font-size:13.5px;color:#9eb0a5;line-height:1.75}
+    .footer a{display:block;margin:10px 0;transition:color .2s ease}
+    .footer a:hover{color:#fff}
+    .footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:26px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:12.5px;color:#788c80}
+
+    /* REVEALS - SAFE OPACITY (NEVER BLANK) */
+    [data-reveal]{opacity:1;transform:none;transition:opacity .7s ease,transform .7s ease}
+    @media(min-width:768px){
+      .js-enabled [data-reveal]{opacity:0;transform:translateY(30px)}
+      .js-enabled [data-reveal].show{opacity:1;transform:none}
+      .js-enabled [data-reveal="right"]{transform:translateX(36px)}
+      .js-enabled [data-reveal="right"].show{opacity:1;transform:none}
+    }
+
+    /* MOBILE MENU */
+    .mobile-menu{position:fixed;z-index:95;inset:0;background:rgba(255,253,250,.98);backdrop-filter:blur(20px);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:26px;font-family:"Montserrat",sans-serif;font-size:32px;font-weight:800;transform:translateY(-100%);transition:.55s cubic-bezier(.2,.75,.15,1)}
+    .mobile-menu.open{transform:none}
+    .mobile-menu .small-link{font-family:"Be Vietnam Pro",sans-serif;font-size:14px;font-weight:800;margin-top:12px}
+
+    @media(max-width:1020px){
+      .menu,.nav-actions>.login{display:none}.hamb{display:block}.hero-grid,.section-head,.process-wrap{grid-template-columns:1fr}.hero-grid{gap:46px}.hero{padding-top:120px}.hero-visual{height:560px;min-height:0}.section-head{gap:20px}.zone-banners{grid-template-columns:1fr}.benefit-grid{grid-template-columns:1fr 1fr}.benefit:nth-child(2){border-right:0}.benefit:nth-child(-n+2){border-bottom:1px solid var(--line)}.footer-grid{grid-template-columns:1.2fr 1fr 1fr}.footer-grid>div:last-child{grid-column:1/-1}.cta-box{grid-template-columns:1fr}.shell{width:min(100% - 34px,1400px)}
+    }
+    @media(max-width:660px){
+      .nav{height:74px}.brand{font-size:19px}.brand svg{width:38px;height:38px}.nav-actions .primary{display:none}.hero{min-height:auto;padding:110px 0 72px}.hero h1{font-size:clamp(40px,11vw,56px)}.hero .lead{font-size:15px}.hero-actions .btn{width:100%}.hero-visual{height:440px}.photo-main{inset:0}.hero-stat-floating{width:86%;bottom:-18px;padding:18px}.court-coordinate{right:14px;top:14px}.scroll-cue{display:none}.ticker span{padding:14px 22px}.ticker span:after{margin-left:22px}.gateway{height:180vh}.door-texture{padding:24px 16px}.door-main-title{font-size:28px}.vault-handle{display:none}.section{padding:72px 0}.section-head h2{font-size:32px}.zone-card{height:300px;padding:24px}.zone-content h3{font-size:24px}.court-grid{grid-template-columns:1fr}.benefit-grid{grid-template-columns:1fr}.benefit{border-right:0!important;border-bottom:1px solid var(--line)!important}.benefit:last-child{border-bottom:0!important}.process-image{height:380px}.cta{padding-bottom:72px}.cta-box{padding:36px 24px;border-radius:24px}.footer{padding-top:60px}.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-grid>div:first-child,.footer-grid>div:last-child{grid-column:1/-1}.shell{width:calc(100% - 24px)}
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.gateway{height:auto}.gateway-stage{position:relative;height:80vh}.door{display:none}.gateway-copy-inner{opacity:1;transform:none}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Inspector Toggle for Backend Verification -->
+  <div class="inspector-bar" id="inspectorBar">
+    <div class="toggle-switch" id="toggleInspector" title="Bật/Tắt hiển thị dữ liệu Backend đổ vào"></div>
+    <span>👁 Xem dữ liệu Backend đổ vào (${...})</span>
+  </div>
+
+  <header class="header" id="header">
+    <div class="shell nav">
+      <a class="brand" href="#home" aria-label="SportZone Home">
+        <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="14" fill="#0b1911"/>
+          <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6" opacity=".9"/>
+          <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5" opacity=".9"/>
+          <circle cx="24" cy="24" r="3.5" fill="#1b5e3b" stroke="#fff" stroke-width="1.2"/>
+        </svg>
+        <span>Sport<span class="zone">Zone</span></span>
+      </a>
+      
+      <nav class="menu" aria-label="Điều hướng chính">
+        <a href="#home">Trang chủ</a>
+        <a href="#courts">Danh sách sân</a>
+        <a href="#booking">Cách đặt sân</a>
+        <a href="#contact">Liên hệ</a>
+      </nav>
+      
+      <div class="nav-actions">
+        <!-- Backend session mapping: If sessionScope.account empty -> Show Login/Register; else -> Profile/Bookings -->
+        <div class="backend-bound" style="display:inline-flex; gap:10px;">
+          <span class="backend-tag">JSTL c:choose sessionScope.account</span>
+          <a class="btn login" href="#courts">Đăng nhập</a>
+          <a class="btn primary" href="#courts">Xem sân trống <span>→</span></a>
+        </div>
+        <button class="hamb" id="hamb" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <a href="#home">Trang chủ</a>
+    <a href="#courts">Danh sách sân</a>
+    <a href="#booking">Cách đặt sân</a>
+    <a href="#contact">Liên hệ</a>
+    <a href="#courts" class="small-link">Đăng nhập / Đăng ký</a>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+      <div class="shell hero-grid">
+        <div data-reveal>
+          <div class="kicker"><span class="dot"></span> SportZone · Tổ Hợp Tennis &amp; Pickleball Cao Cấp</div>
+          <h1>
+            Khung Giờ Vàng.<br>
+            <span class="accent-text">Sẵn Sàng Ra Sân.</span>
+          </h1>
+          <p class="lead">
+            Hệ thống 10 sân Tennis &amp; Pickleball tiêu chuẩn quốc tế tại Khu CNC Hòa Lạc. Tra cứu lịch trống theo thời gian thực, giữ chỗ tức thì trong 60 giây và tận hưởng không gian thể thao đỉnh cao.
+          </p>
+          
+          <div class="hero-actions">
+            <a class="btn green" href="#courts">Đặt sân ngay <span>→</span></a>
+            <a class="btn" href="#booking">Quy trình đặt sân</a>
+          </div>
+          
+          <div class="trust-row">
+            <span class="backend-bound">
+              <span class="backend-tag">${tennisCourtCount}</span>
+              <i>✓</i> <b>5 Sân Tennis</b> Acrylic Chuẩn Giải Đấu
+            </span>
+            <span class="backend-bound">
+              <span class="backend-tag">${pickleballCourtCount}</span>
+              <i>✓</i> <b>5 Sân Pickleball</b> Đèn LED Chống Lóa
+            </span>
+            <span><i>✓</i> Mở Cửa 06:00 – 21:00 Hằng Ngày</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" data-reveal="right">
+          <div class="photo-main">
+            <!-- Full HD Crisp Sports Imagery -->
+            <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1920&q=88" alt="Sân Tennis cao cấp tại SportZone" />
+            <div class="court-coordinate">ZONE A · TENNIS COMPLEX</div>
+          </div>
+          
+          <!-- Dynamic Stat Floating Card -->
+          <div class="hero-stat-floating backend-bound">
+            <span class="backend-tag">Dynamic Data from CourtDAO</span>
+            <div class="stat-head">
+              <span class="sz-badge sz-badge-gold">TỔ HỢP THI ĐẤU</span>
+              <span class="sz-badge sz-badge-green">LIVE STATUS</span>
+            </div>
+            <div class="stat-num">10 Sân Active</div>
+            <p>5 Sân Tennis Zone A + 5 Sân Pickleball Zone B sẵn sàng phục vụ hôm nay.</p>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-cue"><span>Cuộn để khám phá</span><i></i></div>
+    </section>
+
+    <!-- TICKER BAR -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Tennis Zone A · 5 Sân</span>
+        <span>Pickleball Zone B · 5 Sân</span>
+        <span>Mặt Sân Acrylic Chuẩn Quốc Tế</span>
+        <span>Hệ Thống Đèn LED Chống Lóa 500 Lux</span>
+        <span>Giữ Chỗ Thời Gian Thực 100%</span>
+        <span>Mở Cửa 06:00 – 21:00</span>
+        
+        <span>Tennis Zone A · 5 Sân</span>
+        <span>Pickleball Zone B · 5 Sân</span>
+        <span>Mặt Sân Acrylic Chuẩn Quốc Tế</span>
+        <span>Hệ Thống Đèn LED Chống Lóa 500 Lux</span>
+        <span>Giữ Chỗ Thời Gian Thực 100%</span>
+        <span>Mở Cửa 06:00 – 21:00</span>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         GRAND KINETIC STADIUM ENTRANCE GATE
+         ======================================================== -->
+    <section class="gateway" id="gateway" aria-label="Chuyển cảnh vào khu sân thể thao">
+      <div class="gateway-stage">
+        <div class="gateway-scene" id="gatewayScene">
+          <img id="gatewayImage" src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=1920&q=90" alt="Toàn cảnh cụm sân SportZone" />
+        </div>
+        
+        <div class="gateway-copy">
+          <div class="gateway-copy-inner" id="gatewayCopy">
+            <div class="kicker"><span class="dot"></span> Không Gian Thể Thao Đỉnh Cao</div>
+            <h2>Bước Vào Trận Đấu Của Bạn.</h2>
+            <p>Zone A Tennis bứt phá tốc độ, Zone B Pickleball sôi động gắn kết. Đặt sân trực tuyến tiện lợi — sẵn sàng bùng nổ trên từng đường bóng.</p>
+          </div>
+        </div>
+        
+        <!-- LEFT DOOR: ZONE A TENNIS ARENA -->
+        <div class="door left" id="doorLeft">
+          <div class="door-center-laser"></div>
+          
+          <div class="door-texture">
+            <div class="door-top-light"></div>
+            
+            <div class="door-badge-plate">
+              <div class="door-crest">★ SPORTZONE GRAND ARENA ★</div>
+              <div class="door-main-title">ZONE A</div>
+              <div class="door-subtitle">TENNIS COMPLEX · 5 SÂN ACRYLIC</div>
+              
+              <!-- Laser Tennis Court Wireframe -->
+              <div class="door-court-svg">
+                <svg viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Outer Court Bounds -->
+                  <rect x="10" y="10" width="200" height="100" rx="3" stroke="#caa54b" stroke-width="1.8" stroke-opacity="0.9"/>
+                  <!-- Singles Tramlines -->
+                  <line x1="10" y1="24" x2="210" y2="24" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.6"/>
+                  <line x1="10" y1="96" x2="210" y2="96" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.6"/>
+                  <!-- Service Boxes -->
+                  <line x1="55" y1="24" x2="55" y2="96" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.7"/>
+                  <line x1="165" y1="24" x2="165" y2="96" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.7"/>
+                  <line x1="55" y1="60" x2="165" y2="60" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.7"/>
+                  <!-- Center Net -->
+                  <line x1="110" y1="6" x2="110" y2="114" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="4 3"/>
+                  <circle cx="110" cy="60" r="4" fill="#caa54b"/>
+                </svg>
+              </div>
+              
+              <div class="door-status-pill">
+                <span class="door-status-dot"></span> SẴN SÀNG THI ĐẤU
+              </div>
+            </div>
+            
+            <div style="font-size:11px; font-weight:800; letter-spacing:.16em; color:#859a8e; text-align:center;">
+              ITF STANDARD · NIGHT LIGHTING 500 LUX
+            </div>
+          </div>
+          
+          <!-- Titanium Center Vault Lock (Left Half) -->
+          <div class="vault-handle">
+            <div class="vault-handle-inner">✦</div>
+          </div>
+        </div>
+        
+        <!-- RIGHT DOOR: ZONE B PICKLEBALL COMPLEX -->
+        <div class="door right" id="doorRight">
+          <div class="door-center-laser"></div>
+          
+          <div class="door-texture">
+            <div class="door-top-light"></div>
+            
+            <div class="door-badge-plate">
+              <div class="door-crest">★ SPORTZONE GRAND ARENA ★</div>
+              <div class="door-main-title">ZONE B</div>
+              <div class="door-subtitle">PICKLEBALL · 5 SÂN ĐA NĂNG</div>
+              
+              <!-- Laser Pickleball Court Wireframe -->
+              <div class="door-court-svg">
+                <svg viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Outer Court Bounds -->
+                  <rect x="10" y="10" width="200" height="100" rx="3" stroke="#caa54b" stroke-width="1.8" stroke-opacity="0.9"/>
+                  <!-- Non-Volley Kitchen Zone -->
+                  <rect x="70" y="10" width="80" height="100" fill="rgba(202,165,75,0.12)" stroke="#caa54b" stroke-width="1.4" stroke-opacity="0.8"/>
+                  <!-- Centerline for Left/Right Service Courts -->
+                  <line x1="10" y1="60" x2="70" y2="60" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.7"/>
+                  <line x1="150" y1="60" x2="210" y2="60" stroke="#caa54b" stroke-width="1.2" stroke-opacity="0.7"/>
+                  <!-- Center Net -->
+                  <line x1="110" y1="6" x2="110" y2="114" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="4 3"/>
+                  <circle cx="110" cy="60" r="4" fill="#caa54b"/>
+                </svg>
+              </div>
+              
+              <div class="door-status-pill">
+                <span class="door-status-dot"></span> SẴN SÀNG THI ĐẤU
+              </div>
+            </div>
+            
+            <div style="font-size:11px; font-weight:800; letter-spacing:.16em; color:#859a8e; text-align:center;">
+              DYNAMIC SURFACE · OUTDOOR FLOODLIGHT
+            </div>
+          </div>
+          
+          <!-- Titanium Center Vault Lock (Right Half) -->
+          <div class="vault-handle">
+            <div class="vault-handle-inner">✦</div>
+          </div>
+        </div>
+        
+        <div class="gateway-progress"><i id="gatewayBar"></i></div>
+      </div>
+    </section>
+
+    <!-- COURTS CATALOG SECTION -->
+    <section class="section courts" id="courts">
+      <div class="shell">
+        <div class="section-head" data-reveal>
+          <div>
+            <div class="eyebrow"><span class="dot"></span> Lựa Chọn Không Gian Thi Đấu</div>
+            <h2>Hệ Thống 10 Sân Tiêu Chuẩn Quốc Tế.</h2>
+          </div>
+          <p>Mặt sân Acrylic giảm chấn thương, hệ thống chiếu sáng tiêu chuẩn giải đấu và dịch vụ tiện ích tại chỗ giúp bạn hoàn toàn an tâm thi đấu.</p>
+        </div>
+        
+        <!-- 2 Main Zone Banners -->
+        <div class="zone-banners">
+          <!-- Zone A Banner -->
+          <div class="zone-card backend-bound">
+            <span class="backend-tag">${ctx}/courts?type=tennis</span>
+            <img src="https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?auto=format&fit=crop&w=1400&q=88" alt="Tennis Zone A" />
+            <div class="zone-pill"><span class="sz-badge sz-badge-white">ZONE A · TENNIS COMPLEX</span></div>
+            <div class="zone-content">
+              <h3>5 Sân Tennis Acrylic</h3>
+              <p>Mặt sân cứng 8 lớp chuẩn ITF, trang bị hệ thống dàn đèn LED 500 Lux thi đấu ban đêm.</p>
+              <button class="btn gold sm" onclick="filterCourts('tennis')">Xem 5 sân Tennis ↓</button>
+            </div>
+          </div>
+
+          <!-- Zone B Banner -->
+          <div class="zone-card backend-bound">
+            <span class="backend-tag">${ctx}/courts?type=pickleball</span>
+            <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1400&q=88" alt="Pickleball Zone B" />
+            <div class="zone-pill"><span class="sz-badge sz-badge-white">ZONE B · PICKLEBALL COMPLEX</span></div>
+            <div class="zone-content">
+              <h3>5 Sân Pickleball Đa Năng</h3>
+              <p>Môn thể thao hiện đại, mặt sân êm ái chống trơn trượt, phù hợp giao lưu và rèn luyện thể lực.</p>
+              <button class="btn gold sm" onclick="filterCourts('pickleball')">Xem 5 sân Pickleball ↓</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Filter Bar -->
+        <div class="courts-filter-bar backend-bound">
+          <span class="backend-tag">JSTL Tab Filter: ?type=all|tennis|pickleball</span>
+          <div class="filter-tabs">
+            <button class="filter-tab active" id="tabAll" onclick="filterCourts('all')">Tất cả <span class="count">10</span></button>
+            <button class="filter-tab" id="tabTennis" onclick="filterCourts('tennis')">Tennis Zone A <span class="count">5</span></button>
+            <button class="filter-tab" id="tabPickleball" onclick="filterCourts('pickleball')">Pickleball Zone B <span class="count">5</span></button>
+          </div>
+          <div class="d-flex align-items-center gap-2" style="font-size:13px; font-weight:700; color:var(--muted)">
+            <span style="color:var(--green)">●</span> 09 Sân Sẵn Sàng &nbsp;|&nbsp; <span style="color:#b91c1c">●</span> 01 Sân Bảo Trì
+          </div>
+        </div>
+
+        <!-- 10 DETAILED COURTS LIST (Directly matching Database seed) -->
+        <div class="court-grid" id="courtGrid">
+          
+          <!-- TENNIS 1 -->
+          <article class="court-item-card backend-bound" data-type="tennis">
+            <span class="backend-tag">Court ID: 1 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=800&q=80" alt="Tennis Court 1" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-tennis">Tennis</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Tennis Court 1</h4>
+              <div class="court-loc">📍 Zone A · Sân số 1</div>
+              <div class="court-specs">
+                <span>Acrylic 8 Lớp</span>
+                <span>Ngoài Trời</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">150.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- TENNIS 2 -->
+          <article class="court-item-card backend-bound" data-type="tennis">
+            <span class="backend-tag">Court ID: 2 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1622163642998-1ea32b0bbc67?auto=format&fit=crop&w=800&q=80" alt="Tennis Court 2" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-tennis">Tennis</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Tennis Court 2</h4>
+              <div class="court-loc">📍 Zone A · Sân số 2</div>
+              <div class="court-specs">
+                <span>Acrylic 8 Lớp</span>
+                <span>Độ Nảy Chuẩn</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">150.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- TENNIS 3 -->
+          <article class="court-item-card backend-bound" data-type="tennis">
+            <span class="backend-tag">Court ID: 3 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&w=800&q=80" alt="Tennis Court 3" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-tennis">Tennis</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Tennis Court 3</h4>
+              <div class="court-loc">📍 Zone A · Sân số 3</div>
+              <div class="court-specs">
+                <span>Hard Court</span>
+                <span>Tiêu Chuẩn ITF</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">150.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- TENNIS 4 -->
+          <article class="court-item-card backend-bound" data-type="tennis">
+            <span class="backend-tag">Court ID: 4 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1587280501635-68a0e82cd5ff?auto=format&fit=crop&w=800&q=80" alt="Tennis Court 4" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-tennis">Tennis</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Tennis Court 4</h4>
+              <div class="court-loc">📍 Zone A · Sân số 4 (Đèn Đêm)</div>
+              <div class="court-specs">
+                <span>Dàn Đèn LED 500 Lux</span>
+                <span>Chống Lóa</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">180.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- TENNIS 5 (MAINTENANCE) -->
+          <article class="court-item-card backend-bound" data-type="tennis">
+            <span class="backend-tag">Court ID: 5 (${c.courtName} - Maintenance)</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=800&q=80" alt="Tennis Court 5" style="filter:grayscale(.7)" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-tennis">Tennis</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-maintenance">Bảo Trì</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Tennis Court 5</h4>
+              <div class="court-loc">📍 Zone A · Sân số 5 (VIP)</div>
+              <div class="court-specs">
+                <span>Bảo Trì Mặt Sân</span>
+                <span>Tạm Khóa Slot</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">150.000 đ <span>/ giờ</span></div>
+                <button class="btn sm" disabled style="opacity:.6; cursor:not-allowed">Đang bảo trì</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- PICKLEBALL 1 -->
+          <article class="court-item-card backend-bound" data-type="pickleball">
+            <span class="backend-tag">Court ID: 6 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=800&q=80" alt="Pickleball Court 1" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-pickle">Pickleball</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Pickleball Court 1</h4>
+              <div class="court-loc">📍 Zone B · Sân số 1</div>
+              <div class="court-specs">
+                <span>Sân Đa Năng</span>
+                <span>Chống Trơn Trượt</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">120.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PICKLEBALL 2 -->
+          <article class="court-item-card backend-bound" data-type="pickleball">
+            <span class="backend-tag">Court ID: 7 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1613918431703-aa50889e3be9?auto=format&fit=crop&w=800&q=80" alt="Pickleball Court 2" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-pickle">Pickleball</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Pickleball Court 2</h4>
+              <div class="court-loc">📍 Zone B · Sân số 2</div>
+              <div class="court-specs">
+                <span>Mặt Sân Êm</span>
+                <span>Vạch Sơn Sắc Nét</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">120.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PICKLEBALL 3 -->
+          <article class="court-item-card backend-bound" data-type="pickleball">
+            <span class="backend-tag">Court ID: 8 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&q=80" alt="Pickleball Court 3" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-pickle">Pickleball</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Pickleball Court 3</h4>
+              <div class="court-loc">📍 Zone B · Sân số 3</div>
+              <div class="court-specs">
+                <span>Không Gian Thoáng</span>
+                <span>Lưới Tiêu Chuẩn</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">120.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PICKLEBALL 4 -->
+          <article class="court-item-card backend-bound" data-type="pickleball">
+            <span class="backend-tag">Court ID: 9 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=800&q=80" alt="Pickleball Court 4" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-pickle">Pickleball</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Pickleball Court 4</h4>
+              <div class="court-loc">📍 Zone B · Sân số 4 (Đèn Đêm)</div>
+              <div class="court-specs">
+                <span>Dàn Đèn LED 400 Lux</span>
+                <span>Chơi Tối Tiện Lợi</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">140.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PICKLEBALL 5 -->
+          <article class="court-item-card backend-bound" data-type="pickleball">
+            <span class="backend-tag">Court ID: 10 (${c.courtName})</span>
+            <div class="court-thumb">
+              <img src="https://images.unsplash.com/photo-1544919982-b61976f0ba43?auto=format&fit=crop&w=800&q=80" alt="Pickleball Court 5" />
+              <div class="thumb-type"><span class="sz-badge sz-badge-pickle">Pickleball</span></div>
+              <div class="thumb-status"><span class="sz-badge sz-badge-available">Trống</span></div>
+            </div>
+            <div class="court-item-body">
+              <h4>Pickleball Court 5</h4>
+              <div class="court-loc">📍 Zone B · Sân số 5</div>
+              <div class="court-specs">
+                <span>Mặt Sân Mới 100%</span>
+                <span>Rộng Rãi</span>
+                <span>Khung Giờ 06-21h</span>
+              </div>
+              <div class="court-item-footer">
+                <div class="price">120.000 đ <span>/ giờ</span></div>
+                <a class="btn green sm" href="#courts">Đặt sân ngay →</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- BENEFITS SECTION -->
+    <section class="section benefits">
+      <div class="shell">
+        <div class="section-head" data-reveal>
+          <div>
+            <div class="eyebrow"><span class="dot"></span> Trải Nghiệm Đặt Sân Thông Minh</div>
+            <h2>Giữ Chỗ Nhanh Chóng · Tối Đa Thời Gian Thi Đấu.</h2>
+          </div>
+          <p>Loại bỏ hoàn toàn rủi ro trùng lịch hay chờ đợi xác nhận thủ công. Mọi thao tác đều được tự động hóa chính xác trên hệ thống.</p>
+        </div>
+        
+        <div class="benefit-grid" data-reveal>
+          <article class="benefit">
+            <div class="n">01</div>
+            <h3>Lịch Trống Thời Gian Thực</h3>
+            <p>Tra cứu trực quan khung giờ còn trống trong 7 ngày liên tiếp theo từng sân cụ thể.</p>
+          </article>
+          
+          <article class="benefit">
+            <div class="n">02</div>
+            <h3>Giữ Chỗ Tức Thì 60s</h3>
+            <p>Xác nhận giữ sân ngay lập tức trên hệ thống với thuật toán chống xung đột lịch 100%.</p>
+          </article>
+          
+          <article class="benefit">
+            <div class="n">03</div>
+            <h3>Dịch Vụ Phụ Kiện Tại Chỗ</h3>
+            <p>Dễ dàng đặt thêm vợt thi đấu cao cấp, bóng nỉ chuẩn giải và nước giải khát theo nhu cầu.</p>
+          </article>
+          
+          <article class="benefit">
+            <div class="n">04</div>
+            <h3>Thanh Toán Linh Hoạt</h3>
+            <p>Linh hoạt thanh toán tiền mặt hoặc chuyển khoản QR tiện lợi tại quầy lễ tân khi ra sân.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS / HOW TO BOOK -->
+    <section class="section" id="booking">
+      <div class="shell process-wrap">
+        <div class="process-image" data-reveal>
+          <img src="https://images.unsplash.com/photo-1560012057-4372e14c5085?auto=format&fit=crop&w=1600&q=88" alt="Phụ kiện và bóng tennis tại SportZone" />
+        </div>
+        
+        <div data-reveal="right">
+          <div class="eyebrow"><span class="dot"></span> Quy Trình 4 Bước</div>
+          <h2 style="font-size:clamp(36px,4.2vw,56px);line-height:1.08">Từ Tra Cứu Đến Ra Sân Chỉ Trong 4 Bước.</h2>
+          
+          <div class="steps">
+            <div class="step">
+              <div class="num">01</div>
+              <div>
+                <h3>Chọn Môn Thể Thao</h3>
+                <p>Lựa chọn Tennis Zone A hoặc Pickleball Zone B tùy theo sở thích và số lượng người chơi.</p>
+              </div>
+            </div>
+            
+            <div class="step">
+              <div class="num">02</div>
+              <div>
+                <h3>Chọn Ngày &amp; Khung Giờ Vàng</h3>
+                <p>Xem bảng ma trận slot giờ trống và chọn thời gian thi đấu phù hợp nhất với bạn.</p>
+              </div>
+            </div>
+            
+            <div class="step">
+              <div class="num">03</div>
+              <div>
+                <h3>Xác Nhận &amp; Nhận Mã Đặt Sân</h3>
+                <p>Hệ thống lập tức khóa khung giờ của bạn và tạo đơn đặt sân để bạn theo dõi trong hồ sơ.</p>
+              </div>
+            </div>
+            
+            <div class="step">
+              <div class="num">04</div>
+              <div>
+                <h3>Đến Sân &amp; Bắt Đầu Trận Đấu</h3>
+                <p>Xuất trình mã đặt sân tại quầy lễ tân SportZone Hòa Lạc và tự tin bước vào trận đấu.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="cta">
+      <div class="shell">
+        <div class="cta-box" data-reveal>
+          <div>
+            <div class="eyebrow" style="color:var(--gold-light)"><span class="dot" style="background:var(--gold-light)"></span> Sẵn Sàng Cho Trận Đấu Hôm Nay?</div>
+            <h2>Giữ Khung Giờ Đẹp Ngay Trước Khi Kín Lịch!</h2>
+            <p>Hệ thống cập nhật liên tục các khung giờ sáng sớm và chiều tối. Chọn sân và đặt ngay bây giờ.</p>
+          </div>
+          <a class="btn gold" href="#courts" style="font-size:15px; padding:15px 32px;">Khám phá danh sách sân →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contact">
+    <div class="shell">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#home">
+            <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+              <rect x="2" y="2" width="44" height="44" rx="14" fill="#fff"/>
+              <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/>
+              <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#0b1911" stroke-width="1.5"/>
+              <circle cx="24" cy="24" r="3.5" fill="#1b5e3b"/>
+            </svg>
+            <span>Sport<span class="zone">Zone</span></span>
+          </a>
+          <p>Tổ hợp thể thao Tennis &amp; Pickleball hàng đầu tại Khu CNC Hòa Lạc. Tiêu chuẩn quốc tế, công nghệ đặt sân thông minh và dịch vụ tận tâm.</p>
+        </div>
+        
+        <div>
+          <h4>Khám Phá</h4>
+          <a href="#home">Trang chủ</a>
+          <a href="#courts">Danh sách sân</a>
+          <a href="#booking">Quy trình đặt sân</a>
+          <a href="#courts">Bảng giá thuê sân</a>
+        </div>
+        
+        <div>
+          <h4>Tài Khoản</h4>
+          <a href="#courts">Đăng nhập</a>
+          <a href="#courts">Đăng ký tài khoản</a>
+          <a href="#courts">Booking của tôi</a>
+          <a href="#courts">Lịch sử hóa đơn</a>
+        </div>
+        
+        <div>
+          <h4>Liên Hệ Trực Tiếp</h4>
+          <p>📍 Khu CNC Hòa Lạc, Thạch Thất, Hà Nội</p>
+          <p>⏰ 06:00 – 21:00 hằng ngày</p>
+          <p>📞 (+84) 901 234 567</p>
+          <p>✉️ support@sportzone.vn</p>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <span>© 2026 <b>SportZone</b>. All rights reserved. Nền tảng đặt sân thể thao thế hệ mới.</span>
+        <span>PRJ301 · SE203366 · FPT University Hòa Lạc</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.documentElement.classList.add('js-enabled');
+
+    const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+    const header=document.getElementById('header');
+    const hamburger=document.getElementById('hamb');
+    const mobileMenu=document.getElementById('mobileMenu');
+    const toggleInspector=document.getElementById('toggleInspector');
+
+    // Header sticky scroll blur
+    addEventListener('scroll',()=>header.classList.toggle('scrolled',scrollY>24),{passive:true});
+
+    // Mobile Hamburger
+    function toggleMenu(force){
+      const open=typeof force==='boolean'?force:!mobileMenu.classList.contains('open');
+      mobileMenu.classList.toggle('open',open);
+      document.body.classList.toggle('menu-open',open);
+      hamburger.setAttribute('aria-expanded',String(open));
+      mobileMenu.setAttribute('aria-hidden',String(!open));
+      hamburger.textContent=open?'×':'☰';
+    }
+    hamburger.addEventListener('click',()=>toggleMenu());
+    mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>toggleMenu(false)));
+
+    // Backend Inspector Toggle
+    if(toggleInspector){
+      toggleInspector.addEventListener('click',()=>{
+        const active=toggleInspector.classList.toggle('active');
+        document.body.classList.toggle('show-backend',active);
+      });
+    }
+
+    // Interactive Court Filter Tabs (All / Tennis / Pickleball)
+    function filterCourts(type){
+      const tabs = document.querySelectorAll('.filter-tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      if(type === 'tennis') document.getElementById('tabTennis').classList.add('active');
+      else if(type === 'pickleball') document.getElementById('tabPickleball').classList.add('active');
+      else document.getElementById('tabAll').classList.add('active');
+
+      const cards = document.querySelectorAll('.court-item-card');
+      cards.forEach(card => {
+        const ctype = card.getAttribute('data-type');
+        if(type === 'all' || ctype === type){
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Scroll Reveal Observer
+    const io=new IntersectionObserver(entries=>entries.forEach(e=>{
+      if(e.isIntersecting)e.target.classList.add('show');
+    }),{threshold:.08});
+    document.querySelectorAll('[data-reveal]').forEach(el=>io.observe(el));
+
+    // High-Precision Physics Inertial LERP Engine
+    const gateway = document.getElementById('gateway');
+    const left = document.getElementById('doorLeft');
+    const right = document.getElementById('doorRight');
+    const copy = document.getElementById('gatewayCopy');
+    const image = document.getElementById('gatewayImage');
+    const bar = document.getElementById('gatewayBar');
+
+    let targetProgress = 0;
+    let currentProgress = 0;
+    let isLoopRunning = false;
+
+    // Hermite Smoothstep function for organic physical acceleration/deceleration
+    function smoothstep(min, max, value) {
+      const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+      return x * x * (3 - 2 * x);
+    }
+
+    function calculateTargetProgress() {
+      if (!gateway) return;
+      const rect = gateway.getBoundingClientRect();
+      const scrollable = gateway.offsetHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      targetProgress = clamp((-rect.top) / scrollable, 0, 1);
+      
+      if (!isLoopRunning) {
+        isLoopRunning = true;
+        requestAnimationFrame(renderPhysicsLoop);
+      }
+    }
+
+    function renderPhysicsLoop() {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        isLoopRunning = false;
+        return;
+      }
+
+      // Smooth exponential inertial dampening (LERP factor 0.082)
+      const diff = targetProgress - currentProgress;
+      currentProgress += diff * 0.082;
+
+      // Apply transformations based on smoothed progress
+      const p = currentProgress;
+
+      // 1. Doors Opening: Smooth Hermite curve
+      const openEased = smoothstep(0.03, 0.72, p);
+      const travel = openEased * 104; // Glide outwards from 0% to 104%
+      const swingAngle = openEased * 9.0; // 3D Perspective gate swing
+
+      left.style.transform = `translate3d(-${travel}%, 0, 0) rotateY(${swingAngle}deg)`;
+      right.style.transform = `translate3d(${travel}%, 0, 0) rotateY(${-swingAngle}deg)`;
+      
+      // Subtle opacity dissipation at the very end
+      const doorOpacity = 1 - smoothstep(0.70, 0.96, p) * 0.35;
+      left.style.opacity = doorOpacity;
+      right.style.opacity = doorOpacity;
+
+      // 2. Arena Copy Reveal (Text floats up and settles gently)
+      const copyEased = smoothstep(0.20, 0.58, p);
+      copy.style.opacity = copyEased;
+      const translateY = 42 * (1 - copyEased);
+      const scale = 0.95 + (0.05 * copyEased);
+      copy.style.transform = `translate3d(0, ${translateY}px, 0) scale(${scale})`;
+
+      // 3. Background Court Zoom & Parallax
+      const imgScale = 1.20 - (openEased * 0.16);
+      const imgY = (p - 0.5) * -4;
+      image.style.transform = `translate3d(0, ${imgY}%, 0) scale(${imgScale})`;
+
+      // 4. Progress bar
+      bar.style.width = `${p * 100}%`;
+
+      // Continue loop until physics settle
+      if (Math.abs(diff) > 0.0001) {
+        requestAnimationFrame(renderPhysicsLoop);
+      } else {
+        currentProgress = targetProgress;
+        isLoopRunning = false;
+      }
+    }
+
+    addEventListener('scroll', calculateTargetProgress, { passive: true });
+    addEventListener('resize', calculateTargetProgress);
+    calculateTargetProgress();
+  </script>
+</body>
+</html>

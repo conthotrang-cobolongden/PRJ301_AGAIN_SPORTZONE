@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Danh sách & Chi tiết 10 sân thể thao tiêu chuẩn quốc tế Tennis & Pickleball Hòa Lạc." />
+  <title>SportZone — Khám Phá &amp; Đặt Sân Thi Đấu</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro + Montserrat (100% Tiếng Việt Chuẩn) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ========================================================
+       SPORTZONE COURT DESIGN SYSTEM (UI/UX PRO MAX)
+       ======================================================== */
+    :root{
+      --ink:#0b1911;
+      --ink-soft:#14291e;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --green-glow:#4ade80;
+      --gold:#caa54b;
+      --gold-light:#e9c875;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#fffdfa;
+      --muted:#57695e;
+      --line:rgba(11,25,17,.1);
+      --line-strong:rgba(11,25,17,.18);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --danger-border:#fecaca;
+      --warning:#d97706;
+      --warning-bg:#fffbeb;
+      --warning-border:#fde68a;
+      --success:#15803d;
+      --success-bg:#f0fdf4;
+      --success-border:#bbf7d0;
+      --shadow-sm:0 8px 24px rgba(11,25,17,.06);
+      --shadow:0 20px 50px rgba(11,25,17,.1);
+      --shadow-lg:0 30px 80px rgba(11,25,17,.16);
+      --radius-sm:12px;
+      --radius:20px;
+      --radius-lg:28px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 80% 15%, rgba(27,94,59,.07), transparent 40%),
+        radial-gradient(circle at 15% 75%, rgba(202,165,75,.07), transparent 35%),
+        linear-gradient(180deg, #fffdfa 0%, #f7f4ed 100%);
+      padding:100px 0 80px;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
+    .container{max-width:1240px;margin:0 auto;padding:0 24px}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* NAVBAR */
+    .sz-nav{
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:900;
+      background:rgba(255,253,250,.92);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--line);
+      height:76px;
+      display:flex;
+      align-items:center;
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+    .brand-logo{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-.02em;
+      font-family:"Montserrat",sans-serif;
+    }
+    .brand-logo svg{width:36px;height:36px}
+    .brand-logo .zone{color:var(--green)}
+
+    .nav-links{display:flex;align-items:center;gap:28px}
+    .nav-link{font-size:14px;font-weight:700;color:var(--muted);transition:.2s}
+    .nav-link:hover,.nav-link.active{color:var(--green)}
+
+    /* TOP DEMO SWITCHER */
+    .demo-view-switcher{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      margin-bottom:32px;
+    }
+    .btn-view-tab{
+      border:1.5px solid var(--line);
+      background:rgba(255,255,255,.8);
+      padding:8px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .btn-view-tab.active{
+      background:var(--ink);
+      color:#fff;
+      border-color:var(--ink);
+      box-shadow:0 4px 14px rgba(11,25,17,.2);
+    }
+
+    /* BADGE PILLS */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+    .sz-badge-tennis{background:rgba(27,94,59,.12);color:var(--green);border:1px solid rgba(27,94,59,.25)}
+    .sz-badge-pickle{background:var(--gold-surface);color:#917223;border:1px solid rgba(202,165,75,.35)}
+    .sz-badge-available{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+    .sz-badge-maint{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+    .sz-badge-full{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+
+    /* BACKEND OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-10px;
+      left:10px;
+      background:#d97706;
+      color:#fff;
+      font-size:9.5px;
+      font-weight:800;
+      padding:2px 7px;
+      border-radius:5px;
+      z-index:30;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:2px;
+      position:relative;
+    }
+
+    /* ========================================================
+       PAGE 1: COURT LIST (U7)
+       ======================================================== */
+    .court-hero{
+      text-align:center;
+      max-width:760px;
+      margin:0 auto 40px;
+    }
+    .court-hero h1{font-size:38px;margin-bottom:12px;color:var(--ink)}
+    .court-hero p{font-size:16px;color:var(--muted);line-height:1.6}
+
+    /* Filter Pills */
+    .filter-bar{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-bottom:36px;
+    }
+    .filter-btn{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:9px 24px;
+      border-radius:999px;
+      font-size:13.5px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s;
+    }
+    .filter-btn:hover{color:var(--green);border-color:var(--green)}
+    .filter-btn.active{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+      box-shadow:0 4px 16px rgba(27,94,59,.25);
+    }
+
+    /* Court Grid */
+    .court-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(360px,1fr));
+      gap:28px;
+      margin-bottom:60px;
+    }
+    .court-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      overflow:hidden;
+      box-shadow:var(--shadow-sm);
+      transition:all .25s ease;
+      display:flex;
+      flex-direction:column;
+    }
+    .court-card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow);
+      border-color:rgba(27,94,59,.25);
+    }
+    .court-card-media{
+      position:relative;
+      height:220px;
+      background:#e8ede9;
+      overflow:hidden;
+    }
+    .court-card-media img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:transform .5s ease;
+    }
+    .court-card:hover .court-card-media img{
+      transform:scale(1.05);
+    }
+    .court-badge-floating{
+      position:absolute;
+      top:14px;
+      left:14px;
+      display:flex;
+      gap:8px;
+    }
+    .court-card-body{
+      padding:24px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+    .court-title{font-size:19px;font-weight:800;margin-bottom:6px;color:var(--ink)}
+    .court-location{
+      font-size:13px;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-bottom:18px;
+    }
+    .court-features{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      margin-bottom:20px;
+    }
+    .feat-tag{
+      background:var(--cream);
+      color:var(--muted);
+      font-size:11.5px;
+      font-weight:700;
+      padding:4px 10px;
+      border-radius:6px;
+    }
+    .court-card-foot{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-top:1px solid rgba(11,25,17,.06);
+      padding-top:16px;
+    }
+    .court-price{
+      font-family:"Montserrat",sans-serif;
+      font-size:20px;
+      font-weight:900;
+      color:var(--green);
+    }
+    .court-price span{
+      font-size:12px;
+      font-weight:600;
+      color:var(--muted);
+      font-family:"Be Vietnam Pro",sans-serif;
+    }
+    .btn-book-court{
+      background:linear-gradient(135deg,#1b5e3b 0%,#13472d 100%);
+      color:#fff;
+      padding:9px 20px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      box-shadow:0 4px 14px rgba(27,94,59,.2);
+      transition:all .2s;
+    }
+    .btn-book-court:hover{
+      transform:translateY(-1px);
+      box-shadow:0 6px 18px rgba(27,94,59,.3);
+    }
+
+    /* ========================================================
+       PAGE 2: COURT DETAIL & 7-DAY MATRIX (U8 + U9)
+       ======================================================== */
+    .detail-container{
+      display:none;
+      animation:fadeIn .25s ease;
+    }
+    .detail-container.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    .back-btn-row{margin-bottom:24px}
+    .btn-back{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:13.5px;
+      font-weight:800;
+      color:var(--green);
+      cursor:pointer;
+    }
+
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1.2fr 1.8fr;
+      gap:36px;
+    }
+    .detail-card{
+      background:#fff;
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      padding:32px;
+      box-shadow:var(--shadow-sm);
+    }
+
+    /* Date Selector Pills (7 Days) */
+    .date-scroller{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding-bottom:12px;
+      margin-bottom:24px;
+    }
+    .date-pill{
+      min-width:76px;
+      padding:12px 8px;
+      border-radius:14px;
+      border:1.5px solid var(--line);
+      background:#fff;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s;
+      flex-shrink:0;
+    }
+    .date-pill:hover{border-color:var(--green)}
+    .date-pill.active{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+      box-shadow:0 4px 14px rgba(27,94,59,.25);
+    }
+    .date-pill .day-name{font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:2px}
+    .date-pill .day-num{font-family:"Montserrat",sans-serif;font-size:17px;font-weight:900}
+
+    /* 8 TimeSlots Interactive Grid */
+    .slot-matrix{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:28px;
+    }
+    .slot-card{
+      border:1.5px solid var(--line);
+      background:#fff;
+      border-radius:12px;
+      padding:14px 10px;
+      text-align:center;
+      cursor:pointer;
+      transition:all .2s;
+      position:relative;
+    }
+    .slot-card.available{
+      background:#f0fdf4;
+      border-color:#86efac;
+    }
+    .slot-card.available:hover{
+      transform:translateY(-2px);
+      box-shadow:0 6px 14px rgba(21,128,61,.15);
+      border-color:var(--green);
+    }
+    .slot-card.booked{
+      background:#fef2f2;
+      border-color:#fecaca;
+      opacity:.65;
+      cursor:not-allowed;
+    }
+    .slot-card.past{
+      background:#f3f4f6;
+      border-color:#e5e7eb;
+      opacity:.5;
+      cursor:not-allowed;
+    }
+    .slot-card.selected{
+      background:var(--green);
+      color:#fff;
+      border-color:var(--green);
+      box-shadow:0 6px 18px rgba(27,94,59,.3);
+    }
+    .slot-time{
+      font-family:"Montserrat",sans-serif;
+      font-size:14px;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+    .slot-price{
+      font-size:11.5px;
+      font-weight:700;
+      opacity:.85;
+    }
+
+    /* Specs Key Value */
+    .spec-row{
+      display:flex;
+      justify-content:space-between;
+      padding:12px 0;
+      border-bottom:1px solid rgba(11,25,17,.06);
+      font-size:13.5px;
+    }
+    .spec-label{color:var(--muted);font-weight:600}
+    .spec-val{font-weight:800;color:var(--ink)}
+
+    /* FLOATING INSPECTOR */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:24px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    @media(max-width:960px){
+      .detail-grid{grid-template-columns:1fr}
+      .slot-matrix{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="sz-nav">
+    <div class="container nav-inner">
+      <a class="brand-logo" href="../home/sportzone-home-demo.html">
+        <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+          <rect x="2" y="2" width="44" height="44" rx="14" fill="#1b5e3b"/>
+          <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6"/>
+          <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="3.5" fill="#caa54b"/>
+        </svg>
+        <span>Sport<span class="zone">Zone</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a class="nav-link" href="../home/sportzone-home-demo.html">Trang Chủ</a>
+        <a class="nav-link active" href="sportzone-court-demo.html">Danh Sách Sân</a>
+        <a class="nav-link" href="../booking/sportzone-booking-demo.html">Đặt Sân</a>
+        <a class="nav-link" href="../account/sportzone-account-demo.html">Tài Khoản</a>
+        <a class="nav-link" href="../admin/sportzone-admin-demo.html" style="color:var(--gold); font-weight:800">Admin Suite</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- View Switcher -->
+  <div class="container">
+    <div class="demo-view-switcher">
+      <button class="btn-view-tab active" id="tabList" onclick="showCourtView('list')">C1: Danh Sách Sân (List.jsp)</button>
+      <button class="btn-view-tab" id="tabDetail" onclick="showCourtView('detail')">C2: Chi Tiết Sân &amp; Lưới Khung Giờ (Detail.jsp)</button>
+    </div>
+  </div>
+
+  <!-- Floating Inspector Toggle for Backend Verification -->
+  <div class="inspector-bar" id="inspectorBar">
+    <div class="toggle-switch" id="toggleInspector" title="Bật/Tắt hiển thị dữ liệu Backend đổ vào"></div>
+    <span>Xem biến JSP (${...})</span>
+  </div>
+
+  <!-- ==============================================
+       VIEW 1: COURT LIST (U7)
+       ============================================== -->
+  <main class="container" id="courtListView">
+    <div class="court-hero">
+      <span class="sz-badge sz-badge-tennis" style="margin-bottom:12px">TỔ HỢP 10 SÂN ĐẠT CHUẨN QUỐC TẾ</span>
+      <h1>Chọn Sân &amp; Lên Lịch Tranh Tài</h1>
+      <p class="backend-bound">
+        <span class="backend-tag">${tennisCount + pickleballCount} Sân đang hoạt động</span>
+        Hệ thống 5 sân Tennis mặt cứng chuẩn ITF và 5 sân Pickleball Pro Tour tại Hòa Lạc. Mở cửa 06:00 – 21:00 hằng ngày.
+      </p>
+    </div>
+
+    <!-- Filter Buttons (Tennis / Pickleball / All) -->
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterCourts('all', this)">Tất Cả (10)</button>
+      <button class="filter-btn" onclick="filterCourts('tennis', this)">Tennis (5)</button>
+      <button class="filter-btn" onclick="filterCourts('pickleball', this)">Pickleball (5)</button>
+    </div>
+
+    <!-- Court Cards Grid -->
+    <div class="court-grid">
+      
+      <!-- Card 1: Tennis A1 -->
+      <article class="court-card backend-bound" data-type="tennis">
+        <span class="backend-tag">c in courtList (A1)</span>
+        <div class="court-card-media">
+          <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=800&q=80" alt="Sân Tennis A1" />
+          <div class="court-badge-floating">
+            <span class="sz-badge sz-badge-tennis">Tennis</span>
+            <span class="sz-badge sz-badge-available">Trống</span>
+          </div>
+        </div>
+        <div class="court-card-body">
+          <div>
+            <h2 class="court-title">Sân Tennis A1 (Center Court)</h2>
+            <div class="court-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Khu phức hợp thể thao Zone A · Hòa Lạc</span>
+            </div>
+            <div class="court-features">
+              <span class="feat-tag">Mặt Cứng Hard Court</span>
+              <span class="feat-tag">Đèn LED 1200 Lux</span>
+              <span class="feat-tag">Khán đài 200 chỗ</span>
+            </div>
+          </div>
+          <div class="court-card-foot">
+            <div class="court-price">320.000 đ <span>/ giờ</span></div>
+            <button class="btn-book-court" onclick="openCourtDetail('A1')">Đặt Sân</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 2: Tennis A2 -->
+      <article class="court-card backend-bound" data-type="tennis">
+        <span class="backend-tag">c in courtList (A2)</span>
+        <div class="court-card-media">
+          <img src="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&w=800&q=80" alt="Sân Tennis A2" />
+          <div class="court-badge-floating">
+            <span class="sz-badge sz-badge-tennis">Tennis</span>
+            <span class="sz-badge sz-badge-available">Trống</span>
+          </div>
+        </div>
+        <div class="court-card-body">
+          <div>
+            <h2 class="court-title">Sân Tennis A2 (Pro Master)</h2>
+            <div class="court-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Khu phức hợp thể thao Zone A · Hòa Lạc</span>
+            </div>
+            <div class="court-features">
+              <span class="feat-tag">Sơn Acrylic 8 lớp</span>
+              <span class="feat-tag">Bóng nảy chuẩn ITF</span>
+            </div>
+          </div>
+          <div class="court-card-foot">
+            <div class="court-price">280.000 đ <span>/ giờ</span></div>
+            <button class="btn-book-court" onclick="openCourtDetail('A2')">Đặt Sân</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3: Pickleball P1 -->
+      <article class="court-card backend-bound" data-type="pickleball">
+        <span class="backend-tag">c in courtList (P1)</span>
+        <div class="court-card-media">
+          <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80" alt="Sân Pickleball P1" />
+          <div class="court-badge-floating">
+            <span class="sz-badge sz-badge-pickle">Pickleball</span>
+            <span class="sz-badge sz-badge-available">Trống</span>
+          </div>
+        </div>
+        <div class="court-card-body">
+          <div>
+            <h2 class="court-title">Sân Pickleball P1 (Pro Tour)</h2>
+            <div class="court-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Tổ hợp Pickleball Zone B · Hòa Lạc</span>
+            </div>
+            <div class="court-features">
+              <span class="feat-tag">Chuẩn USAPA</span>
+              <span class="feat-tag">Lưới Cố Định Cao Cấp</span>
+              <span class="feat-tag">Hàng Rào Cách Âm</span>
+            </div>
+          </div>
+          <div class="court-card-foot">
+            <div class="court-price">180.000 đ <span>/ giờ</span></div>
+            <button class="btn-book-court" onclick="openCourtDetail('P1')">Đặt Sân</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 4: Pickleball P2 -->
+      <article class="court-card backend-bound" data-type="pickleball">
+        <span class="backend-tag">c in courtList (P2)</span>
+        <div class="court-card-media">
+          <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=800&q=80" alt="Sân Pickleball P2" />
+          <div class="court-badge-floating">
+            <span class="sz-badge sz-badge-pickle">Pickleball</span>
+            <span class="sz-badge sz-badge-available">Trống</span>
+          </div>
+        </div>
+        <div class="court-card-body">
+          <div>
+            <h2 class="court-title">Sân Pickleball P2 (Cushion Acrylic)</h2>
+            <div class="court-location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>Tổ hợp Pickleball Zone B · Hòa Lạc</span>
+            </div>
+            <div class="court-features">
+              <span class="feat-tag">Đệm Êm Giảm Chấn</span>
+              <span class="feat-tag">Ghế Nghỉ Có Mái Che</span>
+            </div>
+          </div>
+          <div class="court-card-foot">
+            <div class="court-price">160.000 đ <span>/ giờ</span></div>
+            <button class="btn-book-court" onclick="openCourtDetail('P2')">Đặt Sân</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <!-- ==============================================
+       VIEW 2: COURT DETAIL & 7-DAY MATRIX (U8 + U9)
+       ============================================== -->
+  <main class="container detail-container" id="courtDetailView">
+    <div class="back-btn-row">
+      <div class="btn-back" onclick="showCourtView('list')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+        <span>Quay lại danh sách tất cả sân</span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <!-- Left Column: Court Info & Specs -->
+      <div class="detail-card backend-bound">
+        <span class="backend-tag">${court} Court Details</span>
+        <div style="height:260px; border-radius:16px; overflow:hidden; margin-bottom:24px;">
+          <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1000&q=80" alt="Tennis A1" style="width:100%;height:100%;object-fit:cover;" />
+        </div>
+
+        <div style="display:flex; gap:8px; margin-bottom:12px">
+          <span class="sz-badge sz-badge-tennis">Tennis Zone A</span>
+          <span class="sz-badge sz-badge-available">Sẵn Sàng</span>
+        </div>
+
+        <h1 style="font-size:26px; margin-bottom:8px">Sân Tennis A1 (Center Court)</h1>
+        <p style="font-size:13.5px; color:var(--muted); margin-bottom:20px; line-height:1.6">
+          Sân thi đấu trung tâm đạt tiêu chuẩn quốc tế ITF với hệ thống đèn cao áp 1200 Lux không chói mắt, khán đài 200 chỗ ngồi và phòng thay đồ VIP.
+        </p>
+
+        <div class="spec-row"><span class="spec-label">Vị trí</span><span class="spec-val">Khu A · Hòa Lạc</span></div>
+        <div class="spec-row"><span class="spec-label">Mặt sân</span><span class="spec-val">Hard Court (DecoTurf 8 lớp)</span></div>
+        <div class="spec-row"><span class="spec-label">Giờ mở cửa</span><span class="spec-val">06:00 – 21:00 hằng ngày</span></div>
+        <div class="spec-row"><span class="spec-label">Giá thuê tiêu chuẩn</span><span class="spec-val" style="color:var(--green)">320.000 đ / giờ</span></div>
+
+        <div style="margin-top:28px">
+          <a class="btn-book-court" style="display:block; text-align:center; padding:12px" href="../booking/sportzone-booking-demo.html">
+            Tiến Hành Đặt Khung Giờ Đã Chọn
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Column: 7-Day Date Picker & 8 TimeSlots Matrix -->
+      <div class="detail-card backend-bound">
+        <span class="backend-tag">U9: ${slotList} Matrix</span>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <h2 style="font-size:18px">Chọn Ngày &amp; Khung Giờ</h2>
+          <span class="sz-badge sz-badge-pickle">Tháng 08 / 2026</span>
+        </div>
+
+        <!-- 7-Day Scroller -->
+        <div class="date-scroller">
+          <div class="date-pill active" onclick="selectDate(this)">
+            <div class="day-name">Hôm nay</div>
+            <div class="day-num">18/08</div>
+          </div>
+          <div class="date-pill" onclick="selectDate(this)">
+            <div class="day-name">T.Tư</div>
+            <div class="day-num">19/08</div>
+          </div>
+          <div class="date-pill" onclick="selectDate(this)">
+            <div class="day-name">T.Năm</div>
+            <div class="day-num">20/08</div>
+          </div>
+          <div class="date-pill" onclick="selectDate(this)">
+            <div class="day-name">T.Sáu</div>
+            <div class="day-num">21/08</div>
+          </div>
+          <div class="date-pill" onclick="selectDate(this)">
+            <div class="day-name">T.Bảy</div>
+            <div class="day-num">22/08</div>
+          </div>
+          <div class="date-pill" onclick="selectDate(this)">
+            <div class="day-name">C.Nhật</div>
+            <div class="day-num">23/08</div>
+          </div>
+          <div class="date-pill" onclick="selectDate(this)">
+            <div class="day-name">T.Hai</div>
+            <div class="day-num">24/08</div>
+          </div>
+        </div>
+
+        <!-- TimeSlots Grid -->
+        <div class="slot-matrix">
+          <div class="slot-card past">
+            <div class="slot-time">06:00 – 07:00</div>
+            <div class="slot-price">Đã qua</div>
+          </div>
+          <div class="slot-card past">
+            <div class="slot-time">07:00 – 08:00</div>
+            <div class="slot-price">Đã qua</div>
+          </div>
+          <div class="slot-card booked">
+            <div class="slot-time">08:00 – 09:00</div>
+            <div class="slot-price">Đã đặt</div>
+          </div>
+          <div class="slot-card available" onclick="selectSlot(this)">
+            <div class="slot-time">16:00 – 17:00</div>
+            <div class="slot-price">320.000 đ</div>
+          </div>
+          <div class="slot-card available selected" onclick="selectSlot(this)">
+            <div class="slot-time">17:00 – 18:00</div>
+            <div class="slot-price">320.000 đ</div>
+          </div>
+          <div class="slot-card booked">
+            <div class="slot-time">18:00 – 19:00</div>
+            <div class="slot-price">Đã đặt</div>
+          </div>
+          <div class="slot-card booked">
+            <div class="slot-time">19:00 – 20:00</div>
+            <div class="slot-price">Đã đặt</div>
+          </div>
+          <div class="slot-card available" onclick="selectSlot(this)">
+            <div class="slot-time">20:00 – 21:00</div>
+            <div class="slot-price">320.000 đ</div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:16px; font-size:12px; color:var(--muted); font-weight:700; border-top:1px solid var(--line); padding-top:16px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="width:12px;height:12px;border-radius:3px;background:#f0fdf4;border:1px solid #86efac;"></div>
+            <span>Còn trống</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="width:12px;height:12px;border-radius:3px;background:#fef2f2;border:1px solid #fecaca;"></div>
+            <span>Đã đặt</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <div style="width:12px;height:12px;border-radius:3px;background:var(--green);"></div>
+            <span>Đang chọn</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function showCourtView(view){
+      document.getElementById('tabList').classList.toggle('active', view === 'list');
+      document.getElementById('tabDetail').classList.toggle('active', view === 'detail');
+      document.getElementById('courtListView').style.display = view === 'list' ? 'block' : 'none';
+      document.getElementById('courtDetailView').classList.toggle('active', view === 'detail');
+    }
+
+    function openCourtDetail(courtId){
+      showCourtView('detail');
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    function filterCourts(type, btn){
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cards = document.querySelectorAll('.court-card');
+      cards.forEach(c => {
+        if(type === 'all' || c.getAttribute('data-type') === type){
+          c.style.display = 'flex';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+
+    function selectDate(el){
+      document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    function selectSlot(el){
+      document.querySelectorAll('.slot-card.available').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    const toggleInspector = document.getElementById('toggleInspector');
+    if(toggleInspector){
+      toggleInspector.addEventListener('click',()=>{
+        const active = toggleInspector.classList.toggle('active');
+        document.body.classList.toggle('show-backend', active);
+      });
+    }
+  </script>
+</body>
+</html>

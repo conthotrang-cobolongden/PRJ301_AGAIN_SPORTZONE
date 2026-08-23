@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SportZone — Đăng nhập & Đăng ký tài khoản hệ thống đặt sân thể thao Tennis & Pickleball cao cấp." />
+  <title>SportZone — Đăng Nhập &amp; Đăng Ký Tài Khoản</title>
+  
+  <!-- Google Fonts: Be Vietnam Pro + Montserrat (100% Tiếng Việt Chuẩn) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root{
+      --ink:#0b1911;
+      --ink-soft:#14291e;
+      --green:#1b5e3b;
+      --green-light:#2f7c54;
+      --green-glow:#4ade80;
+      --gold:#caa54b;
+      --gold-light:#e9c875;
+      --gold-surface:rgba(202,165,75,.14);
+      --cream:#f7f4ed;
+      --paper:#fffdfa;
+      --muted:#5a6d61;
+      --line:rgba(11,25,17,.12);
+      --danger:#dc2626;
+      --danger-bg:#fef2f2;
+      --danger-border:#fecaca;
+      --shadow-sm:0 8px 24px rgba(11,25,17,.06);
+      --shadow:0 24px 60px rgba(11,25,17,.12);
+      --shadow-lg:0 36px 90px rgba(11,25,17,.18);
+      --radius-sm:12px;
+      --radius:22px;
+      --radius-lg:32px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:"Be Vietnam Pro",-apple-system,BlinkMacSystemFont,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(27,94,59,.25), transparent 45%),
+        radial-gradient(circle at 90% 80%, rgba(202,165,75,.18), transparent 45%),
+        linear-gradient(135deg, #07150e 0%, #0d2218 50%, #050d08 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:24px 16px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    a{text-decoration:none;color:inherit}
+    img{display:block;width:100%;height:100%;object-fit:cover}
+    button,input{font:inherit}
+
+    /* TYPOGRAPHY */
+    h1,h2,h3,h4,.font-heading{
+      font-family:"Montserrat","Be Vietnam Pro",sans-serif;
+      font-weight:800;
+      letter-spacing:-.025em;
+      margin:0;
+    }
+
+    /* BADGE PILLS */
+    .sz-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:5px 12px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .sz-badge-gold{background:var(--gold-surface);color:#917223;border:1px solid rgba(202,165,75,.35)}
+    .sz-badge-green{background:rgba(27,94,59,.12);color:var(--green);border:1px solid rgba(27,94,59,.25)}
+
+    /* BACKEND HIGHLIGHT OVERLAY */
+    .backend-tag{
+      display:none;
+      position:absolute;
+      top:-12px;
+      left:14px;
+      background:#d97706;
+      color:#fff;
+      font-size:10px;
+      font-weight:800;
+      padding:3px 9px;
+      border-radius:6px;
+      z-index:20;
+      letter-spacing:.04em;
+      box-shadow:0 4px 12px rgba(217,119,6,.4);
+      animation:pulseTag 2s infinite;
+    }
+    .show-backend .backend-tag{display:inline-flex}
+    .show-backend .backend-bound{
+      outline:2px dashed #d97706 !important;
+      outline-offset:3px;
+      position:relative;
+    }
+    @keyframes pulseTag{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.05)}
+    }
+
+    /* INSPECTOR CONTROL PANEL */
+    .inspector-bar{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      z-index:999;
+      background:rgba(11,25,17,.92);
+      backdrop-filter:blur(18px);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:8px 16px 8px 12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow-lg);
+      font-size:13px;
+      font-weight:700;
+    }
+    .toggle-switch{
+      position:relative;
+      width:44px;
+      height:24px;
+      background:rgba(255,255,255,.2);
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s ease;
+    }
+    .toggle-switch.active{background:var(--gold)}
+    .toggle-switch:after{
+      content:"";
+      position:absolute;
+      left:3px;
+      top:3px;
+      width:18px;
+      height:18px;
+      background:#fff;
+      border-radius:50%;
+      transition:.25s cubic-bezier(.2,.7,.2,1);
+    }
+    .toggle-switch.active:after{transform:translateX(20px)}
+
+    /* TOP BRAND BAR */
+    .top-home-link{
+      position:fixed;
+      top:24px;
+      left:28px;
+      z-index:50;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#fff;
+      font-weight:800;
+      font-size:14px;
+      background:rgba(11,25,17,.75);
+      border:1px solid rgba(255,255,255,.15);
+      backdrop-filter:blur(12px);
+      padding:9px 18px;
+      border-radius:999px;
+      transition:all .25s ease;
+    }
+    .top-home-link:hover{
+      background:var(--green);
+      border-color:var(--green-light);
+      transform:translateY(-2px);
+    }
+
+    /* MAIN AUTH WRAPPER */
+    .auth-container{
+      width:min(1180px,100%);
+      background:var(--paper);
+      border-radius:var(--radius-lg);
+      overflow:hidden;
+      box-shadow:var(--shadow-lg);
+      display:grid;
+      grid-template-columns:1.08fr 1fr;
+      position:relative;
+      border:1px solid rgba(255,255,255,.2);
+    }
+
+    /* LEFT HERO VISUAL PANEL */
+    .auth-hero{
+      position:relative;
+      background:#08160f;
+      padding:56px 48px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      color:#fff;
+      overflow:hidden;
+    }
+    .auth-hero-bg{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      opacity:.45;
+      transform:scale(1.05);
+      transition:transform 8s ease;
+    }
+    .auth-container:hover .auth-hero-bg{transform:scale(1.1)}
+    .auth-hero:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:2;
+      background:linear-gradient(180deg,rgba(7,20,13,.75) 0%,rgba(7,20,13,.9) 60%,#08160f 100%);
+    }
+    .auth-hero-content{
+      position:relative;
+      z-index:3;
+    }
+    .brand-logo{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      font-size:24px;
+      font-weight:900;
+      font-family:"Montserrat",sans-serif;
+      color:#fff;
+      margin-bottom:32px;
+    }
+    .brand-logo svg{width:42px;height:42px}
+    .brand-logo .zone{color:var(--green-glow)}
+
+    .hero-heading{
+      font-size:clamp(32px,3.2vw,44px);
+      line-height:1.15;
+      margin-bottom:16px;
+      color:#fff;
+    }
+    .hero-heading .gold{color:var(--gold-light)}
+    
+    .hero-desc{
+      font-size:15px;
+      color:#c5d8cc;
+      line-height:1.7;
+      margin-bottom:36px;
+      max-width:480px;
+    }
+
+    /* Trust Feature Checklist */
+    .auth-features{
+      display:grid;
+      gap:14px;
+      margin-bottom:40px;
+    }
+    .auth-feat-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-size:14px;
+      font-weight:700;
+      color:#e2ece5;
+    }
+    .auth-feat-item i{
+      width:24px;
+      height:24px;
+      border-radius:50%;
+      background:rgba(74,222,128,.18);
+      border:1px solid rgba(74,222,128,.35);
+      color:#4ade80;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:13px;
+      font-style:normal;
+      flex-shrink:0;
+    }
+
+    /* Quick Demo Account Autofill Box */
+    .demo-accounts-card{
+      background:rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      padding:18px 20px;
+      backdrop-filter:blur(14px);
+      margin-top:auto;
+    }
+    .demo-accounts-card .title{
+      font-size:11.5px;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:var(--gold-light);
+      margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+    .demo-pills{display:flex;flex-wrap:wrap;gap:8px}
+    .demo-pill{
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.18);
+      padding:6px 12px;
+      border-radius:8px;
+      font-size:11.5px;
+      font-weight:700;
+      color:#e2ece5;
+      cursor:pointer;
+      transition:all .2s ease;
+    }
+    .demo-pill:hover{
+      background:var(--green);
+      border-color:var(--green-light);
+      color:#fff;
+      transform:translateY(-2px);
+    }
+    .demo-pill span{color:var(--gold-light);font-weight:800}
+
+    /* RIGHT FORM PANEL */
+    .auth-form-panel{
+      padding:56px 48px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      background:#fff;
+    }
+
+    /* AUTH MODE SEGMENTED TABS */
+    .auth-tabs{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      background:var(--cream);
+      padding:5px;
+      border-radius:999px;
+      margin-bottom:32px;
+      border:1px solid var(--line);
+    }
+    .auth-tab-btn{
+      border:0;
+      background:transparent;
+      padding:10px 16px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:800;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .25s cubic-bezier(.2,.7,.2,1);
+      text-align:center;
+    }
+    .auth-tab-btn.active{
+      background:#fff;
+      color:var(--ink);
+      box-shadow:0 4px 14px rgba(11,25,17,.09);
+    }
+
+    /* FORM STYLES */
+    .auth-form-wrapper{display:none}
+    .auth-form-wrapper.active{display:block;animation:fadeInForm .35s ease}
+    @keyframes fadeInForm{
+      from{opacity:0;transform:translateY(10px)}
+      to{opacity:1;transform:none}
+    }
+
+    .form-title{
+      font-size:28px;
+      margin-bottom:8px;
+      color:var(--ink);
+    }
+    .form-sub{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:24px;
+      line-height:1.5;
+    }
+
+    /* ALERT ERROR MESSAGES */
+    .sz-alert{
+      padding:12px 16px;
+      border-radius:var(--radius-sm);
+      font-size:13.5px;
+      font-weight:600;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:20px;
+    }
+    .sz-alert-danger{
+      background:var(--danger-bg);
+      border:1px solid var(--danger-border);
+      color:var(--danger);
+    }
+    .sz-alert-success{
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      color:#15803d;
+    }
+
+    .form-group{
+      margin-bottom:18px;
+      position:relative;
+    }
+    .form-label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      color:#2b3c31;
+      margin-bottom:6px;
+    }
+    .input-wrapper{
+      position:relative;
+      display:flex;
+      align-items:center;
+    }
+    .form-input{
+      width:100%;
+      padding:12px 16px;
+      border-radius:var(--radius-sm);
+      border:1.5px solid var(--line);
+      background:var(--paper);
+      color:var(--ink);
+      font-size:14px;
+      font-weight:600;
+      outline:none;
+      transition:all .2s ease;
+    }
+    .form-input:focus{
+      border-color:var(--green);
+      background:#fff;
+      box-shadow:0 0 0 4px rgba(27,94,59,.12);
+    }
+    .form-input.is-invalid{
+      border-color:var(--danger);
+      background:#fff5f5;
+    }
+    .form-input.is-invalid:focus{
+      box-shadow:0 0 0 4px rgba(220,38,38,.12);
+    }
+    .invalid-feedback{
+      font-size:12px;
+      color:var(--danger);
+      font-weight:700;
+      margin-top:5px;
+      display:none;
+    }
+    .form-input.is-invalid ~ .invalid-feedback{display:block}
+
+    /* Password Toggle Icon */
+    .toggle-pass-btn{
+      position:absolute;
+      right:14px;
+      background:transparent;
+      border:0;
+      color:var(--muted);
+      cursor:pointer;
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:4px;
+    }
+    .toggle-pass-btn:hover{color:var(--ink)}
+
+    /* BUTTON SUBMIT */
+    .btn-submit{
+      width:100%;
+      padding:14px;
+      border-radius:999px;
+      background:linear-gradient(135deg,#1b5e3b 0%,#13472d 100%);
+      color:#fff;
+      border:0;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      margin-top:10px;
+      box-shadow:0 12px 28px rgba(27,94,59,.25);
+      transition:all .25s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn-submit:hover{
+      transform:translateY(-2px);
+      box-shadow:0 16px 36px rgba(27,94,59,.35);
+      background:linear-gradient(135deg,#24754b 0%,#185737 100%);
+    }
+
+    .form-switch-prompt{
+      margin-top:20px;
+      text-align:center;
+      font-size:13.5px;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .form-switch-prompt button{
+      background:transparent;
+      border:0;
+      color:var(--green);
+      font-weight:800;
+      cursor:pointer;
+      padding:0 4px;
+      text-decoration:underline;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:960px){
+      .auth-container{grid-template-columns:1fr}
+      .auth-hero{padding:40px 28px}
+      .auth-form-panel{padding:40px 28px}
+    }
+    @media(max-width:540px){
+      body{padding:12px}
+      .auth-hero{padding:32px 20px}
+      .auth-form-panel{padding:32px 20px}
+      .top-home-link{top:12px;left:12px;font-size:12.5px;padding:7px 14px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Return to Home Link -->
+  <a class="top-home-link" href="../home/sportzone-home-demo.html">
+    <span>← Trang chủ SportZone</span>
+  </a>
+
+  <!-- Floating Inspector Toggle for Backend Verification -->
+  <div class="inspector-bar" id="inspectorBar">
+    <div class="toggle-switch" id="toggleInspector" title="Bật/Tắt hiển thị dữ liệu Backend đổ vào"></div>
+    <span>👁 Xem dữ liệu Backend đổ vào (${...})</span>
+  </div>
+
+  <div class="auth-container">
+    
+    <!-- LEFT HERO VISUAL PANEL -->
+    <div class="auth-hero">
+      <img class="auth-hero-bg" src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?auto=format&fit=crop&w=1600&q=88" alt="SportZone Arena" />
+      
+      <div class="auth-hero-content">
+        <a class="brand-logo" href="../home/sportzone-home-demo.html">
+          <svg viewBox="0 0 48 48" role="img" aria-hidden="true">
+            <rect x="2" y="2" width="44" height="44" rx="14" fill="#0b1911"/>
+            <path d="M12 24h24M24 12v24" stroke="#caa54b" stroke-width="1.6" opacity=".9"/>
+            <path d="M16 14h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V16a2 2 0 0 1 2-2Z" fill="none" stroke="#fff" stroke-width="1.5" opacity=".9"/>
+            <circle cx="24" cy="24" r="3.5" fill="#1b5e3b" stroke="#fff" stroke-width="1.2"/>
+          </svg>
+          <span>Sport<span class="zone">Zone</span></span>
+        </a>
+
+        <h1 class="hero-heading" id="heroHeading">
+          Khung Giờ Vàng.<br>
+          <span class="gold">Sẵn Sàng Ra Sân.</span>
+        </h1>
+        
+        <p class="hero-desc" id="heroDesc">
+          Hệ thống tổ hợp 10 sân Tennis &amp; Pickleball đạt chuẩn quốc tế tại Khu CNC Hòa Lạc. Đặt sân tức thì trong 60s và tận hưởng trọn vẹn từng trận đấu.
+        </p>
+
+        <div class="auth-features">
+          <div class="auth-feat-item">
+            <i>✓</i> <span>100% Giữ chỗ theo thời gian thực — không lo trùng lịch</span>
+          </div>
+          <div class="auth-feat-item">
+            <i>✓</i> <span>Xem lịch 7 ngày liên tiếp &amp; chọn slot giờ linh hoạt</span>
+          </div>
+          <div class="auth-feat-item">
+            <i>✓</i> <span>Dịch vụ trọn gói thuê vợt, bóng nỉ &amp; nước uống tại quầy</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Demo Account Autofill (For testing Phase 2 Seed Data) -->
+      <div class="demo-accounts-card">
+        <div class="title">
+          <span>⚡ TÀI KHOẢN TEST NHANH (SEED DATA)</span>
+        </div>
+        <div class="demo-pills">
+          <button class="demo-pill" onclick="fillAccount('admin@sportzone.vn', 'Admin@123')">
+            <span>Admin:</span> admin@sportzone.vn
+          </button>
+          <button class="demo-pill" onclick="fillAccount('user1@sportzone.vn', 'User@123')">
+            <span>User 1:</span> user1@sportzone.vn
+          </button>
+          <button class="demo-pill" onclick="fillAccount('user3@sportzone.vn', 'User@123')">
+            <span>Frozen User:</span> user3 (Bị khóa)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT FORM PANEL -->
+    <div class="auth-form-panel">
+      
+      <!-- Segmented Mode Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthMode('login')">Đăng nhập</button>
+        <button class="auth-tab-btn" id="tabRegisterBtn" onclick="switchAuthMode('register')">Đăng ký tài khoản</button>
+      </div>
+
+      <!-- ==============================================
+           FORM 1: LOGIN (Khớp 100% Contract LoginServlet)
+           ============================================== -->
+      <div class="auth-form-wrapper active" id="loginWrapper">
+        <div class="form-title font-heading">Chào Mừng Trở Lại!</div>
+        <p class="form-sub">Nhập email và mật khẩu của bạn để truy cập hệ thống đặt sân.</p>
+
+        <!-- Simulated Backend Error Banner -->
+        <div class="sz-alert sz-alert-danger backend-bound" id="loginAlertBox" style="display:none;">
+          <span class="backend-tag">&lt;c:if test="${not empty errorMessage}"&gt;</span>
+          <span>⚠️ <span id="loginErrorText">Email hoặc mật khẩu không chính xác.</span></span>
+        </div>
+
+        <form id="loginForm" method="post" action="${ctx}/login" novalidate onsubmit="handleLoginSubmit(event)">
+          <!-- CSRF Token Hidden -->
+          <div class="backend-bound" style="margin-bottom:0">
+            <span class="backend-tag">name="csrfToken" value="${sessionScope.csrfToken}"</span>
+            <input type="hidden" name="csrfToken" value="demo-csrf-token-xyz789">
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="email" value="${email}"</span>
+            <label class="form-label" for="loginEmail">Email đăng nhập</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="email" id="loginEmail" name="email" placeholder="name@example.com" required autofocus>
+            </div>
+            <div class="invalid-feedback" id="loginEmailError">Vui lòng nhập đúng định dạng email</div>
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="password"</span>
+            <label class="form-label" for="loginPassword">Mật khẩu</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="password" id="loginPassword" name="password" placeholder="Nhập mật khẩu" required>
+              <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('loginPassword', this)">👁</button>
+            </div>
+            <div class="invalid-feedback" id="loginPassError">Mật khẩu không được để trống</div>
+          </div>
+
+          <button class="btn-submit backend-bound" type="submit">
+            <span class="backend-tag">POST ${ctx}/login</span>
+            <span>Đăng nhập hệ thống →</span>
+          </button>
+        </form>
+
+        <div class="form-switch-prompt">
+          Chưa có tài khoản SportZone? <button onclick="switchAuthMode('register')">Đăng ký ngay</button>
+        </div>
+      </div>
+
+      <!-- ===================================================
+           FORM 2: REGISTER (Khớp 100% Contract RegisterServlet)
+           =================================================== -->
+      <div class="auth-form-wrapper" id="registerWrapper">
+        <div class="form-title font-heading">Tạo Tài Khoản Mới</div>
+        <p class="form-sub">Đăng ký thành viên để bắt đầu giữ chỗ và theo dõi lịch thi đấu.</p>
+
+        <!-- Simulated General Error / Success -->
+        <div class="sz-alert sz-alert-danger backend-bound" id="registerAlertBox" style="display:none;">
+          <span class="backend-tag">&lt;c:if test="${not empty errorMessage}"&gt;</span>
+          <span>⚠️ <span id="registerErrorText">Email đã được sử dụng bởi tài khoản khác.</span></span>
+        </div>
+
+        <form id="registerForm" method="post" action="${ctx}/register" novalidate onsubmit="handleRegisterSubmit(event)">
+          <!-- CSRF Token Hidden -->
+          <div class="backend-bound" style="margin-bottom:0">
+            <span class="backend-tag">name="csrfToken" value="${sessionScope.csrfToken}"</span>
+            <input type="hidden" name="csrfToken" value="demo-csrf-token-xyz789">
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="fullName" (${fieldErrors.fullName})</span>
+            <label class="form-label" for="regFullName">Họ và tên</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="text" id="regFullName" name="fullName" placeholder="VD: Nguyễn Văn A" maxlength="100" required>
+            </div>
+            <div class="invalid-feedback" id="regFullNameError">Họ tên không được để trống</div>
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="email" (${fieldErrors.email})</span>
+            <label class="form-label" for="regEmail">Địa chỉ Email</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="email" id="regEmail" name="email" placeholder="name@example.com" maxlength="100" required>
+            </div>
+            <div class="invalid-feedback" id="regEmailError">Email không đúng định dạng</div>
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="phone" (${fieldErrors.phone})</span>
+            <label class="form-label" for="regPhone">Số điện thoại</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="tel" id="regPhone" name="phone" placeholder="VD: 0901234567" maxlength="20" required>
+            </div>
+            <div class="invalid-feedback" id="regPhoneError">Số điện thoại Việt Nam hợp lệ (10 số, đầu 03/05/07/08/09)</div>
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="password" (${fieldErrors.password})</span>
+            <label class="form-label" for="regPassword">Mật khẩu</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="password" id="regPassword" name="password" minlength="8" maxlength="64" placeholder="Tối thiểu 8 ký tự" required>
+              <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('regPassword', this)">👁</button>
+            </div>
+            <div class="invalid-feedback" id="regPasswordError">Mật khẩu phải từ 8 đến 64 ký tự</div>
+          </div>
+
+          <div class="form-group backend-bound">
+            <span class="backend-tag">name="confirmPassword" (${fieldErrors.confirmPassword})</span>
+            <label class="form-label" for="regConfirmPassword">Nhập lại mật khẩu</label>
+            <div class="input-wrapper">
+              <input class="form-input" type="password" id="regConfirmPassword" name="confirmPassword" minlength="8" maxlength="64" placeholder="Xác nhận lại mật khẩu" required>
+              <button type="button" class="toggle-pass-btn" onclick="togglePassVisibility('regConfirmPassword', this)">👁</button>
+            </div>
+            <div class="invalid-feedback" id="regConfirmPasswordError">Nhập lại mật khẩu không khớp</div>
+          </div>
+
+          <button class="btn-submit backend-bound" type="submit">
+            <span class="backend-tag">POST ${ctx}/register</span>
+            <span>Tạo tài khoản SportZone →</span>
+          </button>
+        </form>
+
+        <div class="form-switch-prompt">
+          Đã có tài khoản? <button onclick="switchAuthMode('login')">Đăng nhập</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Tab switching between Login and Register
+    function switchAuthMode(mode){
+      const loginTab = document.getElementById('tabLoginBtn');
+      const regTab = document.getElementById('tabRegisterBtn');
+      const loginWrapper = document.getElementById('loginWrapper');
+      const regWrapper = document.getElementById('registerWrapper');
+      const heroHeading = document.getElementById('heroHeading');
+      const heroDesc = document.getElementById('heroDesc');
+
+      if(mode === 'register'){
+        loginTab.classList.remove('active');
+        regTab.classList.add('active');
+        loginWrapper.classList.remove('active');
+        regWrapper.classList.add('active');
+        heroHeading.innerHTML = 'Gia Nhập.<br><span class="gold">Cộng Đồng Đẳng Cấp.</span>';
+        heroDesc.textContent = 'Trở thành thành viên SportZone để mở khóa đặc quyền đặt trước khung giờ vàng và tận hưởng ưu đãi sân bãi.';
+      } else {
+        regTab.classList.remove('active');
+        loginTab.classList.add('active');
+        regWrapper.classList.remove('active');
+        loginWrapper.classList.add('active');
+        heroHeading.innerHTML = 'Khung Giờ Vàng.<br><span class="gold">Sẵn Sàng Ra Sân.</span>';
+        heroDesc.textContent = 'Hệ thống tổ hợp 10 sân Tennis & Pickleball đạt chuẩn quốc tế tại Khu CNC Hòa Lạc. Đặt sân tức thì trong 60s và tận hưởng trọn vẹn từng trận đấu.';
+      }
+    }
+
+    // Quick Seed Account Autofill
+    function fillAccount(email, pass){
+      switchAuthMode('login');
+      const emailInput = document.getElementById('loginEmail');
+      const passInput = document.getElementById('loginPassword');
+      emailInput.value = email;
+      passInput.value = pass;
+      emailInput.focus();
+    }
+
+    // Toggle Password Visibility
+    function togglePassVisibility(inputId, btn){
+      const input = document.getElementById(inputId);
+      if(input.type === 'password'){
+        input.type = 'text';
+        btn.textContent = '🔒';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+
+    // Backend Inspector Toggle
+    const toggleInspector = document.getElementById('toggleInspector');
+    if(toggleInspector){
+      toggleInspector.addEventListener('click',()=>{
+        const active = toggleInspector.classList.toggle('active');
+        document.body.classList.toggle('show-backend', active);
+      });
+    }
+
+    // Client-side Validation according to U1 & Phase 2 contract rules
+    const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    const PHONE_RE = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
+
+    function handleLoginSubmit(e){
+      e.preventDefault();
+      const email = document.getElementById('loginEmail');
+      const pass = document.getElementById('loginPassword');
+      let valid = true;
+
+      if(!EMAIL_RE.test(email.value.trim())){
+        email.classList.add('is-invalid');
+        valid = false;
+      } else {
+        email.classList.remove('is-invalid');
+      }
+
+      if(!pass.value){
+        pass.classList.add('is-invalid');
+        valid = false;
+      } else {
+        pass.classList.remove('is-invalid');
+      }
+
+      if(valid){
+        alert('✅ [DEMO] Form Login hợp lệ! Sẽ gửi POST tới ${ctx}/login với email: ' + email.value);
+      }
+    }
+
+    function handleRegisterSubmit(e){
+      e.preventDefault();
+      const fullName = document.getElementById('regFullName');
+      const email = document.getElementById('regEmail');
+      const phone = document.getElementById('regPhone');
+      const pass = document.getElementById('regPassword');
+      const confirm = document.getElementById('regConfirmPassword');
+      let valid = true;
+
+      if(!fullName.value.trim()){
+        fullName.classList.add('is-invalid');
+        valid = false;
+      } else fullName.classList.remove('is-invalid');
+
+      if(!EMAIL_RE.test(email.value.trim())){
+        email.classList.add('is-invalid');
+        valid = false;
+      } else email.classList.remove('is-invalid');
+
+      const cleanPhone = phone.value.replace(/[\s-]/g, '');
+      if(!PHONE_RE.test(cleanPhone)){
+        phone.classList.add('is-invalid');
+        valid = false;
+      } else phone.classList.remove('is-invalid');
+
+      if(pass.value.length < 8 || pass.value.length > 64){
+        pass.classList.add('is-invalid');
+        valid = false;
+      } else pass.classList.remove('is-invalid');
+
+      if(confirm.value !== pass.value || !confirm.value){
+        confirm.classList.add('is-invalid');
+        valid = false;
+      } else confirm.classList.remove('is-invalid');
+
+      if(valid){
+        alert('✅ [DEMO] Form Register hợp lệ! Sẽ gửi POST tới ${ctx}/register với tên: ' + fullName.value);
+      }
+    }
+  </script>
+</body>
+</html>
