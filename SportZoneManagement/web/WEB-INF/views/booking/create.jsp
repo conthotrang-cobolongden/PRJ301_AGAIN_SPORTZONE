@@ -78,22 +78,22 @@
                                             <label class="sz-slot is-available">
                                                 <input class="sz-slot-radio" type="radio" name="slotId"
                                                        value="${s.timeSlotId}"
-                                                       data-start="<fmt:formatDate value='${s.startTime}' pattern='HH:mm'/>"
-                                                       data-end="<fmt:formatDate value='${s.endTime}' pattern='HH:mm'/>"
+                                                       data-start="${s.startTime}"
+                                                       data-end="${s.endTime}"
                                                        ${s.timeSlotId == selectedSlotId ? 'checked' : ''}>
-                                                <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                                <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                                 <span class="sz-slot-label">Trống</span>
                                             </label>
                                         </c:when>
                                         <c:when test="${s.status == 'Booked'}">
                                             <span class="sz-slot is-booked">
-                                                <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                                <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                                 <span class="sz-slot-label">Đã đặt</span>
                                             </span>
                                         </c:when>
                                         <c:otherwise>
                                             <span class="sz-slot is-closed">
-                                                <span class="sz-slot-time"><fmt:formatDate value="${s.startTime}" pattern="HH:mm"/></span>
+                                                <span class="sz-slot-time"><c:out value="${s.startTime}"/></span>
                                                 <span class="sz-slot-label">Đóng</span>
                                             </span>
                                         </c:otherwise>
@@ -125,15 +125,27 @@
                             <c:forEach var="sv" items="${serviceList}">
                                 <div class="sz-service-row" data-price="${sv.price}">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="serviceId"
-                                               value="${sv.serviceId}" id="svc${sv.serviceId}">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="serviceId"
+                                               value="${sv.serviceId}"
+                                               id="svc${sv.serviceId}"
+                                               ${not empty selectedServiceQuantities[sv.serviceId] ? 'checked' : ''}>
                                         <label class="form-check-label" for="svc${sv.serviceId}">
                                             <c:out value="${sv.serviceName}"/>
                                         </label>
                                     </div>
                                     <span class="sz-svc-price"><fmt:formatNumber value="${sv.price}" type="number" groupingUsed="true"/> đ</span>
-                                    <input class="form-control form-control-sm sz-qty" type="number" name="qty_${sv.serviceId}"
-                                           value="1" min="1" max="10" disabled aria-label="Số lượng <c:out value='${sv.serviceName}'/>">
+                                    <input class="form-control form-control-sm sz-qty"
+                                           type="number"
+                                           name="qty_${sv.serviceId}"
+                                           value="${empty selectedServiceQuantities[sv.serviceId]
+                                                    ? 1
+                                                    : selectedServiceQuantities[sv.serviceId]}"
+                                           min="1"
+                                           max="20"
+                                           ${empty selectedServiceQuantities[sv.serviceId] ? 'disabled' : ''}
+                                           aria-label="Số lượng dịch vụ">
                                 </div>
                             </c:forEach>
                         </c:when>
@@ -142,7 +154,18 @@
                         </c:otherwise>
                     </c:choose>
                 </div>
+                <div class="sz-card mb-4">
+                    <label class="form-label fw-bold" for="notes">
+                        Ghi chú
+                        <span class="text-muted fw-normal">(không bắt buộc)</span>
+                    </label>
 
+                    <textarea class="form-control"
+                              id="notes"
+                              name="notes"
+                              maxlength="255"
+                              rows="3"><c:out value="${param.notes}"/></textarea>
+                </div>
                 <button class="btn btn-sz btn-lg w-100" type="submit" ${sessionScope.frozen ? 'disabled' : ''}>
                     Xác nhận đặt sân
                 </button>
@@ -171,80 +194,86 @@
 
 <script>
 // Preview tổng tiền + đồng bộ ô slot được chọn (không thêm lib ngoài — plan 2.2)
-(function () {
-    var form = document.getElementById('szBookingForm');
-    if (!form) return;
-    var fmt = new Intl.NumberFormat('vi-VN');
-
-    function money(n) { return fmt.format(n) + ' đ'; }
-
-    function updateTotal() {
-        var courtPrice = parseFloat(form.getAttribute('data-court-price')) || 0;
-        var svcTotal = 0;
-        document.querySelectorAll('.sz-service-row').forEach(function (row) {
-            var cb = row.querySelector('input[type="checkbox"]');
-            var qty = row.querySelector('.sz-qty');
-            if (cb.checked) {
-                var q = Math.max(1, parseInt(qty.value, 10) || 1);
-                svcTotal += (parseFloat(row.getAttribute('data-price')) || 0) * q;
-            }
-        });
-        document.getElementById('szSumCourtPrice').textContent = money(courtPrice);
-        document.getElementById('szSumService').textContent = money(svcTotal);
-        document.getElementById('szSumTotal').textContent = money(courtPrice + svcTotal);
-    }
-
-    function updateSlotSummary() {
-        var checked = form.querySelector('.sz-slot-radio:checked');
-        document.querySelectorAll('label.sz-slot').forEach(function (l) { l.classList.remove('is-selected'); });
-        if (checked) {
-            checked.closest('label').classList.add('is-selected');
-            document.getElementById('szSumSlot').textContent =
-                checked.getAttribute('data-start') + '–' + checked.getAttribute('data-end');
-        } else {
-            document.getElementById('szSumSlot').textContent = '—';
-        }
-    }
-
-    function updateCourtSummary() {
-        var sel = document.querySelector('select[name="courtId"]');
-        var dateInput = document.querySelector('input[name="date"]');
-        if (sel && sel.selectedIndex >= 0) {
-            document.getElementById('szSumCourt').textContent =
-                sel.options[sel.selectedIndex].textContent.split(' — ')[0].trim();
-        }
-        if (dateInput && dateInput.value) {
-            var p = dateInput.value.split('-');
-            document.getElementById('szSumDate').textContent = p[2] + '/' + p[1] + '/' + p[0];
-        }
-    }
-
-    form.addEventListener('change', function (e) {
-        var t = e.target;
-        if (t.classList.contains('sz-slot-radio')) updateSlotSummary();
-        if (t.type === 'checkbox') {
-            var qty = t.closest('.sz-service-row').querySelector('.sz-qty');
-            qty.disabled = !t.checked;
-        }
-        updateTotal();
-    });
-
-    // Feedback khi submit (UX guideline: Submit Feedback)
-    form.addEventListener('submit', function (e) {
-        if (!form.querySelector('.sz-slot-radio:checked')) {
-            e.preventDefault();
-            alert('Vui lòng chọn một khung giờ trống.');
+    (function () {
+        var form = document.getElementById('szBookingForm');
+        if (!form)
             return;
-        }
-        var btn = form.querySelector('button[type="submit"]');
-        btn.disabled = true;
-        btn.textContent = 'Đang xử lý…';
-    });
+        var fmt = new Intl.NumberFormat('vi-VN');
 
-    updateCourtSummary();
-    updateSlotSummary();
-    updateTotal();
-})();
+        function money(n) {
+            return fmt.format(n) + ' đ';
+        }
+
+        function updateTotal() {
+            var courtPrice = parseFloat(form.getAttribute('data-court-price')) || 0;
+            var svcTotal = 0;
+            document.querySelectorAll('.sz-service-row').forEach(function (row) {
+                var cb = row.querySelector('input[type="checkbox"]');
+                var qty = row.querySelector('.sz-qty');
+                if (cb.checked) {
+                    var q = Math.max(1, parseInt(qty.value, 10) || 1);
+                    svcTotal += (parseFloat(row.getAttribute('data-price')) || 0) * q;
+                }
+            });
+            document.getElementById('szSumCourtPrice').textContent = money(courtPrice);
+            document.getElementById('szSumService').textContent = money(svcTotal);
+            document.getElementById('szSumTotal').textContent = money(courtPrice + svcTotal);
+        }
+
+        function updateSlotSummary() {
+            var checked = form.querySelector('.sz-slot-radio:checked');
+            document.querySelectorAll('label.sz-slot').forEach(function (l) {
+                l.classList.remove('is-selected');
+            });
+            if (checked) {
+                checked.closest('label').classList.add('is-selected');
+                document.getElementById('szSumSlot').textContent =
+                        checked.getAttribute('data-start') + '–' + checked.getAttribute('data-end');
+            } else {
+                document.getElementById('szSumSlot').textContent = '—';
+            }
+        }
+
+        function updateCourtSummary() {
+            var sel = document.querySelector('select[name="courtId"]');
+            var dateInput = document.querySelector('input[name="date"]');
+            if (sel && sel.selectedIndex >= 0) {
+                document.getElementById('szSumCourt').textContent =
+                        sel.options[sel.selectedIndex].textContent.split(' — ')[0].trim();
+            }
+            if (dateInput && dateInput.value) {
+                var p = dateInput.value.split('-');
+                document.getElementById('szSumDate').textContent = p[2] + '/' + p[1] + '/' + p[0];
+            }
+        }
+
+        form.addEventListener('change', function (e) {
+            var t = e.target;
+            if (t.classList.contains('sz-slot-radio'))
+                updateSlotSummary();
+            if (t.type === 'checkbox') {
+                var qty = t.closest('.sz-service-row').querySelector('.sz-qty');
+                qty.disabled = !t.checked;
+            }
+            updateTotal();
+        });
+
+        // Feedback khi submit (UX guideline: Submit Feedback)
+        form.addEventListener('submit', function (e) {
+            if (!form.querySelector('.sz-slot-radio:checked')) {
+                e.preventDefault();
+                alert('Vui lòng chọn một khung giờ trống.');
+                return;
+            }
+            var btn = form.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Đang xử lý…';
+        });
+
+        updateCourtSummary();
+        updateSlotSummary();
+        updateTotal();
+    })();
 </script>
 
 <jsp:include page="/WEB-INF/views/layout/footer.jsp"/>

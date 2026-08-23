@@ -120,7 +120,7 @@
 | U10 | Create booking (court + date + time slot + service if any). Does **not** create an invoice | Tạo booking (sân + ngày + khung giờ + dịch vụ nếu có). **Không** tạo hóa đơn |
 | U11 | View my bookings (upcoming / history) | Xem booking của tôi (sắp tới / lịch sử) |
 | U12 | View my booking detail | Xem chi tiết booking của tôi |
-| U13 | Cancel my booking (within allowed policy) | Hủy booking của tôi (trong thời hạn cho phép) |
+| U13 | User booking cancellation | **Không triển khai hiện tại — user không được hủy booking** |
 
 > User cannot confirm / complete / no-show bookings — Admin only.  
 > User không xác nhận / hoàn thành / no-show — chỉ Admin.
@@ -171,7 +171,7 @@
 | 2 | Manage own profile | Quản lý hồ sơ cá nhân |
 | 3 | Browse courts & available slots | Xem sân & khung giờ trống |
 | 4 | Create booking | Tạo đặt sân |
-| 5 | View / cancel own bookings | Xem / hủy booking của mình |
+| 5 | View own bookings | Xem booking của mình |
 | 6 | View own invoices & payment status | Xem hóa đơn & trạng thái thanh toán của mình |
 
 ---
@@ -193,7 +193,7 @@ Luồng hóa đơn:
 2. A27 tạo Invoice khi bắt đầu thu — mặc định **Unpaid**.  
 3. Hết hạn chưa trả + đã có HĐ → giữ **Unpaid**. Chưa có HĐ → hủy Booking, không có dòng Unpaid.  
 4. A28 + A29: Admin chốt **Paid** + method.  
-5. A23/U13 hủy booking: nếu có HĐ thì A30 set invoice **Cancelled**.
+5. A23 Admin hủy booking: nếu có HĐ thì A30 set invoice **Cancelled**. User không có quyền hủy.
 
 ---
 

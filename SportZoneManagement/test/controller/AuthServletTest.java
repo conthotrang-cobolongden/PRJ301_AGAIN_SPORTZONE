@@ -19,10 +19,13 @@ import utils.AppConstants;
 import utils.CsrfUtil;
 import utils.Views;
 
-/** Main-method tests for the login HTTP flow using only servlet API proxies. */
+/**
+ * Main-method tests for the login HTTP flow using only servlet API proxies.
+ */
 public final class AuthServletTest {
 
-    private AuthServletTest() { }
+    private AuthServletTest() {
+    }
 
     public static void main(String[] args) throws Exception {
         testLoginGetCreatesCsrfAndForwardsToViewsLogin();
@@ -84,7 +87,7 @@ public final class AuthServletTest {
         require(authService.calls == 0,
                 "Invalid CSRF must return before authentication");
         require(!fixture.requestedParameters.contains("email")
-                        && !fixture.requestedParameters.contains("password"),
+                && !fixture.requestedParameters.contains("password"),
                 "Invalid CSRF must return before reading credentials");
         require(!fixture.sessionData.containsKey(AppConstants.SESSION_ACCOUNT),
                 "Invalid CSRF must not authenticate the request");
@@ -143,8 +146,12 @@ public final class AuthServletTest {
                 "Successful login must store frozen state through SessionUtil");
         require(!fixture.sessionData.containsKey(AppConstants.SESSION_REDIRECT_AFTER_LOGIN),
                 "Successful login must consume redirectAfterLogin exactly once");
-        require("/SportZone/profile?tab=security".equals(fixture.redirectLocation),
-                "Saved servlet-local target must be prefixed with the context path");
+        require(
+                "/SportZone/account-locked".equals(
+                        fixture.redirectLocation
+                ),
+                "Frozen login must ignore saved target and redirect to locked page"
+        );
     }
 
     private static void testLoginSuccessDefaultsToHomeForAdminAndUser()
@@ -212,10 +219,10 @@ public final class AuthServletTest {
         require(authService.registerDao.calls == 0,
                 "Invalid register CSRF must not call the DAO");
         require(!fixture.requestedParameters.contains("fullName")
-                        && !fixture.requestedParameters.contains("email")
-                        && !fixture.requestedParameters.contains("phone")
-                        && !fixture.requestedParameters.contains("password")
-                        && !fixture.requestedParameters.contains("confirmPassword"),
+                && !fixture.requestedParameters.contains("email")
+                && !fixture.requestedParameters.contains("phone")
+                && !fixture.requestedParameters.contains("password")
+                && !fixture.requestedParameters.contains("confirmPassword"),
                 "Invalid register CSRF must return before reading form fields");
     }
 
@@ -245,7 +252,7 @@ public final class AuthServletTest {
         require("0123".equals(fixture.requestAttributes.get("phone")),
                 "Invalid registration must preserve phone");
         require(!fixture.requestAttributes.containsKey("password")
-                        && !fixture.requestAttributes.containsKey("confirmPassword"),
+                && !fixture.requestAttributes.containsKey("confirmPassword"),
                 "Registration errors must never retain either password field");
         require(dao.calls == 0,
                 "Syntactically invalid registration must not call the DAO");
@@ -274,7 +281,7 @@ public final class AuthServletTest {
         require(Views.REGISTER.equals(fixture.forwardedPath),
                 "Duplicate insert must return to Views.REGISTER");
         require(!fixture.requestAttributes.containsKey("password")
-                        && !fixture.requestAttributes.containsKey("confirmPassword"),
+                && !fixture.requestAttributes.containsKey("confirmPassword"),
                 "Duplicate errors must never retain either password field");
         require(dao.insertCalls == 1,
                 "Duplicate race must be raised by the insert path");
@@ -347,23 +354,44 @@ public final class AuthServletTest {
     }
 
     private static Object defaultValue(Class<?> type) {
-        if (!type.isPrimitive()) return null;
-        if (type == boolean.class) return false;
-        if (type == byte.class) return (byte) 0;
-        if (type == short.class) return (short) 0;
-        if (type == int.class) return 0;
-        if (type == long.class) return 0L;
-        if (type == float.class) return 0F;
-        if (type == double.class) return 0D;
-        if (type == char.class) return (char) 0;
+        if (!type.isPrimitive()) {
+            return null;
+        }
+        if (type == boolean.class) {
+            return false;
+        }
+        if (type == byte.class) {
+            return (byte) 0;
+        }
+        if (type == short.class) {
+            return (short) 0;
+        }
+        if (type == int.class) {
+            return 0;
+        }
+        if (type == long.class) {
+            return 0L;
+        }
+        if (type == float.class) {
+            return 0F;
+        }
+        if (type == double.class) {
+            return 0D;
+        }
+        if (type == char.class) {
+            return (char) 0;
+        }
         return null;
     }
 
     private static void require(boolean condition, String message) {
-        if (!condition) throw new AssertionError(message);
+        if (!condition) {
+            throw new AssertionError(message);
+        }
     }
 
     private static final class TestLoginServlet extends LoginServlet {
+
         TestLoginServlet(AuthService authService) {
             super(authService);
         }
@@ -380,6 +408,7 @@ public final class AuthServletTest {
     }
 
     private static final class TestRegisterServlet extends RegisterServlet {
+
         TestRegisterServlet(AuthService authService) {
             super(authService);
         }
@@ -396,6 +425,7 @@ public final class AuthServletTest {
     }
 
     private static final class TestLogoutServlet extends LogoutServlet {
+
         void get(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
             super.doGet(request, response);
@@ -403,6 +433,7 @@ public final class AuthServletTest {
     }
 
     private static final class FakeAuthService extends AuthService {
+
         private final FakeRegistrationDAO registerDao;
         private Account result;
         private int calls;
@@ -436,6 +467,7 @@ public final class AuthServletTest {
     }
 
     private static final class FakeRegistrationDAO extends AccountDAO {
+
         private int calls;
         private int insertCalls;
         private Account idResult;
@@ -471,6 +503,7 @@ public final class AuthServletTest {
     }
 
     private static final class Fixture {
+
         private final Map<String, Object> sessionData = new HashMap<>();
         private final Map<String, Object> requestAttributes = new HashMap<>();
         private final Map<String, String> parameters = new HashMap<>();

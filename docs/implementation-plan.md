@@ -3,7 +3,7 @@
 **Môn:** PRJ301 — Assignment cá nhân  
 **Sinh viên:** Nguyễn Hoàng Tùng (SE203366)  
 **Hệ thống:** Quản lý tổ hợp sân Tennis + Pickleball  
-**Trạng thái hiện hành (18/08):** P1 đã được dựng lại và verify trên `feature/foundation`; bước tiếp theo là review/merge rồi dựng P2 Auth trên `feature/auth`. Code P2–P4 ngày 17/08 chỉ còn là lịch sử tham khảo.
+**Trạng thái hiện hành (23/08):** P1–P5 đã hoàn tất và verify; bước tiếp theo là P6 Hóa đơn phía User. P5 hiện hành gồm đặt/xem booking, hiển thị hạng thành viên và khóa toàn bộ ứng dụng đối với account `Frozen`; user không có chức năng hủy booking.
 **Ngày soạn:** 2026-08-17  
 
 Tài liệu chức năng: [`admin-user-features.md`](admin-user-features.md)  
@@ -94,7 +94,6 @@ JSP nằm dưới `WEB-INF/views/` — client không gọi JSP trực tiếp, ch
 | `GET/POST /profile` `GET/POST /password` | User/Admin | U4 U5 U6 |
 | `GET/POST /booking/create` | User | U10 |
 | `GET /bookings` `GET /booking?id=` | User | U11 U12 |
-| `POST /booking/cancel` | User | U13 |
 | `GET /invoices` `GET /invoice?id=` | User | U14 U15 U16 U18 |
 | `POST /invoice/notice` | User | U17 |
 | `GET /admin` | Admin | A3 |
@@ -114,25 +113,17 @@ JSP nằm dưới `WEB-INF/views/` — client không gọi JSP trực tiếp, ch
 2. **A27** tạo tối đa 1 HĐ / booking (`UNIQUE BookingID`). Mặc định `Unpaid`, `PaymentMethod = NULL`.
 3. `Unpaid` / `Paid` / `Cancelled` **chỉ** nằm trên `Invoices.PaymentStatus`.
 4. Hết hạn + đã có HĐ → giữ `Unpaid`. Chưa có HĐ → hủy booking, không invent dòng Unpaid.
-5. Hủy booking (A23 / U13): nếu có HĐ thì set invoice `Cancelled` (A30) trong cùng transaction.
+5. Admin hủy booking (A23): nếu có HĐ thì set invoice `Cancelled` (A30) trong cùng transaction. User không có quyền hủy booking.
 6. `Bookings` **không có `CourtID`**. Sân của booking luôn suy ra qua `Bookings.TimeSlotID → TimeSlots.CourtID`; backend không được tin `courtId` từ form để ghi booking.
 7. Snapshot giá: `CourtPriceAtOrder`, `PriceAtOrder`, `TotalAmount = CourtPriceAtOrder + ServiceTotalAtOrder`.
 8. Chống double-book: transaction + bắt lỗi unique index `UQ_Bookings_Slot_Active`.
-9. Account `Frozen` đăng nhập được (xem hồ sơ / HĐ cũ) nhưng **không** đặt / không báo chuyển khoản.
+9. Account `Frozen` xác thực được nhưng chỉ được vào trang `/account-locked`, `/logout` và tài nguyên `/assets/*`; không được vào `/home` hay bất kỳ chức năng nghiệp vụ nào.
 10. CourtTypes + số sân cố định. Admin **không** tạo/xóa loại sân, **không** tạo/xóa sân.
 11. User không Confirm / Complete / NoShow.
 
-### Chính sách hủy (đề xuất — cần duyệt)
+### Chính sách hủy hiện hành
 
-| Điều kiện | Kết quả |
-|-----------|---------|
-| Status `Pending` hoặc `Confirmed` | Được hủy |
-| `Completed` / `Cancelled` / `NoShow` | Không |
-| Slot đã bắt đầu (`SlotDate + StartTime <= now`) | Không |
-| Còn ≥ **2 giờ** trước giờ bắt đầu | User hủy được |
-| < 2 giờ | Chỉ Admin hủy (A23) |
-
-Có HĐ `Paid` rồi thì User **không** tự hủy; Admin hủy thì HĐ → `Cancelled` (không hoàn tiền trong scope bài — ghi note).
+User không được hủy booking. Chức năng hủy chỉ thuộc luồng quản trị A23; nếu booking đã có hóa đơn thì Admin đồng thời chuyển hóa đơn sang `Cancelled` trong cùng transaction.
 
 ---
 
@@ -146,7 +137,7 @@ P0 Ảnh ERD
       └─ P2 Auth
            ├─ P3 Xem sân / slot          (public)
            └─ P4 Hồ sơ user
-                └─ P5 Đặt / hủy sân      (cốt lõi)
+                └─ P5 Đặt / xem booking  (cốt lõi)
                      ├─ P6 Hóa đơn user
                      └─ P7 Admin catalog (user / sân / slot / DV)
                           └─ P8 Admin vận hành (booking + HĐ + báo cáo)
@@ -213,7 +204,7 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 - Session: `account` (object), không lưu password
 - `AuthFilter`: chặn URL cần login → redirect `/login`
 - `RoleFilter`: `/admin/*` chỉ Admin
-- Frozen: login **được**; flag `frozen` trên session để P5 chặn đặt sân
+- Frozen: xác thực **được** nhưng bị cách ly tại `/account-locked`; không truy cập `/home` hoặc chức năng nghiệp vụ
 - Register: validate server **và** client (U1)
 
 #### FE
@@ -222,7 +213,7 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 - Nav: Guest = Login/Register; User/Admin = tên + Logout
 - Redirect sau login: Admin → `/admin`, User → `/home`
 
-**Done khi:** 4 account seed login đúng; Frozen login được nhưng sẽ không đặt được (P5); User gõ `/admin` → 403; logout hết session.
+**Done khi:** 4 account seed login đúng; Frozen xác thực xong bị chuyển tới trang khóa và không vào được `/home`; User gõ `/admin` → 403; logout hết session.
 
 **Chưa làm:** đổi mật khẩu, sửa profile (P4).
 
@@ -265,7 +256,7 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 
 ---
 
-### Phase 5 — Đặt sân & hủy — U10 U11 U12 U13  *(cốt lõi)*
+### Phase 5 — Đặt sân & xem booking — U10 U11 U12  *(cốt lõi)*
 
 #### BE (transaction bắt buộc)
 
@@ -280,23 +271,23 @@ P3 và P4 có thể song song sau P2. P6 và P7 có thể song song sau P5.
 7. Slot → `Booked`
 8. Unique index conflict → rollback, báo “khung giờ vừa được đặt”
 
-`BookingService.cancelByUser(...)`:
-
-- Chỉ booking của chính user
-- Áp chính sách hủy mục 3
-- Status → `Cancelled`, slot → `Available` nếu không còn booking active
-- Phase này chưa có HĐ → chưa đụng invoice; P6/P8 bổ sung A30
-
 `BookingDAO`: listMine (upcoming / history), getDetail (kèm services + invoice nếu có)
+
+Hạng thành viên hiển thị trên profile:
+
+- Tổng chi tiêu lấy từ `Invoices.FinalAmount` có `PaymentStatus = 'Paid'`, theo `PaidAt`.
+- Mốc hiện hành: MEMBER `< 1.000.000`, SILVER `>= 1.000.000`, PLATINUM `>= 2.000.000`, VIP `>= 5.000.000`.
+- Hạng hiển thị là mức cao hơn giữa kết quả tháng trước và tháng hiện tại; số tiền tích lũy hiển thị là chi tiêu tháng hiện tại.
+- Chưa có khuyến mãi/quyền lợi theo hạng và không thay đổi schema database.
 
 #### FE
 
 - Form đặt: sân + ngày + slot + checkbox dịch vụ + tổng tiền preview
 - `bookings/list.jsp`: tab sắp tới / lịch sử, badge status
 - `bookings/detail.jsp`: sân, giờ, tiền, dịch vụ, “chưa có hóa đơn”
-- Nút hủy + confirm; ẩn khi ngoài policy
+- Không hiển thị hành động hủy cho user
 
-**Done khi:** user1 đặt slot trống → Pending, **không** có dòng Invoices; đặt trùng slot → lỗi; Frozen không đặt; hủy đúng policy trả slot về Available.
+**Done khi:** user1 đặt slot trống → Pending, **không** có dòng Invoices; đặt trùng slot → lỗi; Frozen không vào được ứng dụng; user chỉ xem danh sách/chi tiết booking của chính mình; profile hiển thị đúng hạng và chi tiêu tháng.
 
 ---
 
@@ -410,7 +401,7 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 - Validate server mọi form (độ dài cột schema)
 - Thông báo lỗi SQL unique (email, phone, slot)
 - Không lộ stack trace ra user
-- Frozen / role / ownership (user không xem booking người khác)
+- Frozen quarantine / role / ownership (user không xem booking người khác)
 
 #### FE
 
@@ -438,7 +429,8 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 | U4 U5 U6 Profile / password | 4 |
 | U7 U8 U9 Courts / slots | 3 |
 | U10 Create booking (no invoice) | 5 |
-| U11 U12 U13 My bookings / cancel | 5 |
+| U11 U12 My bookings / detail | 5 |
+| U13 User cancel booking | Không triển khai — user không được hủy |
 | U14–U18 Invoices / notice | 6 |
 | U19 Home | 1 khung, 3 hoàn thiện |
 
@@ -465,12 +457,12 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 3. Xem sân, lọc Pickleball, xem slot  
 4. Đặt sân + 1 dịch vụ → Pending, **không** có HĐ  
 5. Đặt trùng slot → báo lỗi  
-6. User hủy trước 2 giờ → slot Available  
+6. User xem danh sách/chi tiết booking của mình, không có nút hủy
 7. Admin Confirm → Complete  
 8. Admin lập HĐ → Unpaid → Paid Cash  
 9. User xem HĐ của mình, không thấy HĐ người khác  
-10. Hủy booking đã có HĐ → HĐ Cancelled  
-11. Freeze user → không đặt được  
+10. Admin hủy booking đã có HĐ → HĐ Cancelled
+11. Freeze user → đăng nhập xong chỉ thấy trang khóa, không vào `/home`
 12. Report doanh thu chỉ tính Paid  
 13. In hóa đơn ra được (print view)
 
@@ -485,7 +477,7 @@ Và vòng hủy: đặt → Admin hủy → không HĐ; đặt → lập HĐ →
 | D3 | Hash | Giữ SHA-256 khớp seed | Đổi BCrypt + update seed |
 | D4 | UI kit | Bootstrap 5 CDN | CSS thuần |
 | D5 | Ảnh sân | URL text, không upload | Upload `multipart` |
-| D6 | Policy hủy User | ≥ 2 giờ trước giờ chơi | 0 giờ / 1 giờ / chỉ Pending |
+| D6 | Policy hủy User | **Đã chốt: không cho user hủy** | Chỉ Admin xử lý hủy ở A23 |
 | D7 | U17 khi chưa có HĐ | Ghi `Bookings.Notes`, Admin mới A27 | Tự tạo HĐ Unpaid giúp Admin |
 | D8 | Hard-delete service/slot | Soft: `IsActive=0` / `Closed` | DELETE nếu chưa dùng |
 | D9 | Ngôn ngữ UI | Tiếng Việt, mã status EN trong DB | Toàn EN |

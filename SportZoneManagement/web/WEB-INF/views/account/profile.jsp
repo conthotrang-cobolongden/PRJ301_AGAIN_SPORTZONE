@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%-- U4: Xem hồ sơ + U5: Cập nhật name/phone/email — UI theo demo kit C10 --%>
 <c:set var="pageTitle" value="Hồ sơ cá nhân — SportZone" scope="request"/>
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
@@ -39,9 +40,48 @@
                 <p class="text-muted small mb-3">
                     Thành viên từ <c:out value="${memberSince}"/>
                 </p>
-                <div class="sz-kv"><dt>Email</dt><dd><c:out value="${sessionScope.account.email}"/></dd></div>
-                <div class="sz-kv"><dt>Số điện thoại</dt><dd><c:out value="${sessionScope.account.phone}"/></dd></div>
-                <a class="btn btn-sz-outline btn-sm mt-3" href="${ctx}/password">Đổi mật khẩu</a>
+                <div class="sz-kv">
+                    <dt>Email</dt>
+                    <dd><c:out value="${sessionScope.account.email}"/></dd>
+                </div>
+
+                <div class="sz-kv">
+                    <dt>Số điện thoại</dt>
+                    <dd><c:out value="${sessionScope.account.phone}"/></dd>
+                </div>
+
+                <c:if test="${sessionScope.account.roleName == 'User'}">
+                    <hr class="my-4">
+
+                    <div class="text-start">
+                        <p class="section-label mb-2">Hạng thành viên</p>
+
+                        <p class="mb-2">
+                            <span class="sz-badge sz-badge-dark">
+                                <c:out value="${membershipSummary.tier}"/>
+                            </span>
+                        </p>
+
+                        <p class="small mb-2">
+                            Chi tiêu tháng này:
+                            <strong>
+                                <fmt:formatNumber
+                                    value="${membershipSummary.currentMonthSpent}"
+                                    pattern="#,##0"/>
+                                đ
+                            </strong>
+                        </p>
+
+                        <p class="text-muted small mb-0">
+                            Ưu đãi theo hạng thành viên sẽ được phát triển trong tương lai.
+                        </p>
+                    </div>
+                </c:if>
+
+                <a class="btn btn-sz-outline btn-sm mt-3"
+                   href="${ctx}/password">
+                    Đổi mật khẩu
+                </a>
             </div>
         </div>
 

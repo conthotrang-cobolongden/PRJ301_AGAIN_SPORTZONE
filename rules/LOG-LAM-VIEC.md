@@ -4,6 +4,45 @@
 > Ai làm người đó ghi, không sửa entry của người kia.
 
 ---
+## [2026-08-23 17:33] — CODEX — Hoàn tất Phase 5 Đặt sân và hạng thành viên
+
+**Task:** Chốt Phase 5, đồng bộ tài liệu/log tiến độ và commit trước khi chuyển sang Phase 6.
+
+**Trạng thái:** Xong — regression batch, AuthServletTest và FrozenAccountFilterTest đều pass.
+
+### Đã làm
+- [x] Hoàn tất U10 tạo booking bằng transaction: kiểm tra account/slot/sân, snapshot giá, insert booking + dịch vụ, chuyển slot sang `Booked`, không tạo Invoice và rollback khi trùng slot.
+- [x] Hoàn tất U11–U12: danh sách và chi tiết booking có ownership check; bỏ toàn bộ hành động hủy phía user theo quyết định hiện hành.
+- [x] Hiển thị hạng MEMBER/SILVER/PLATINUM/VIP và chi tiêu tháng trên profile từ tổng `Invoices.FinalAmount` đã `Paid`; chưa có khuyến mãi/quyền lợi và không đổi database.
+- [x] Cách ly account `Frozen`: sau đăng nhập chuyển thẳng tới trang báo khóa; chỉ cho `/account-locked`, `/logout`, `/assets/*`, chặn `/home` và các chức năng khác.
+- [x] Đồng bộ `implementation-plan.md`, `admin-user-features.md`, quy tắc nghiệp vụ và `tien-do.md` theo phạm vi đã chốt.
+- [x] Verify mới trước commit: `Phase5RegressionBatchTest PASSED`; `AuthServletTest PASSED`; `FrozenAccountFilterTest PASSED`.
+
+### File đã tạo / sửa
+| File | Loại | Tóm tắt thay đổi |
+|------|------|------------------|
+| `SportZoneManagement/src/java/{controller,dao,filter,model,service,utils}/**` | Mới/Sửa | Booking U10–U12, membership display và Frozen quarantine |
+| `SportZoneManagement/web/WEB-INF/views/booking/*.jsp` | Sửa | Form đặt, danh sách và chi tiết booking không có hủy user |
+| `SportZoneManagement/web/WEB-INF/views/account/profile.jsp` | Sửa | Hiển thị hạng và chi tiêu tháng |
+| `SportZoneManagement/web/WEB-INF/views/error/account-locked.jsp` | Mới | Trang báo tài khoản bị khóa |
+| `SportZoneManagement/web/WEB-INF/web.xml` | Sửa | Mapping booking, locked page và Frozen filter |
+| `SportZoneManagement/test/**` | Mới/Sửa | Test membership, persistence, service, web, regression và Frozen auth |
+| `docs/implementation-plan.md`, `docs/admin-user-features.md`, `docs/tien-do.md` | Sửa | Đồng bộ scope Phase 5 hiện hành và bước tiếp theo Phase 6 |
+| `rules/QUY-TAC-LAM-VIEC.md`, `rules/LOG-LAM-VIEC.md` | Sửa | Đồng bộ rule Frozen và ghi log bàn giao |
+
+### Chưa làm / tồn đọng
+- Phase 6 hóa đơn phía User U14–U18 chưa triển khai.
+- Khuyến mãi/quyền lợi theo hạng thành viên để phát triển tương lai.
+
+### Ghi chú cho model còn lại
+- Không khôi phục `/booking/cancel` hoặc nút hủy phía user; hủy booking chỉ thuộc luồng Admin A23 ở Phase 8.
+- `Invoices` là nguồn chi tiêu thật cho membership; chỉ cộng dòng `Paid` theo `PaidAt`.
+- Frozen account không được xem profile/hóa đơn cũ theo rule mới; filter cách ly toàn bộ app ngoài whitelist.
+
+### Cần người dùng quyết định
+- Không.
+
+---
 ## [2026-08-23 16:08] — CODEX — Hoàn tất Phase 4 Hồ sơ cá nhân
 
 **Task:** Triển khai Phase 4 theo Code Guidance Mode: U4 xem hồ sơ, U5 cập nhật hồ sơ và U6 đổi mật khẩu dùng chung cho User/Admin.

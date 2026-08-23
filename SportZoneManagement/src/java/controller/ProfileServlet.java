@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Account;
+import service.MembershipService;
 import service.ProfileService;
 import utils.AppConstants;
 import utils.CsrfUtil;
@@ -22,48 +24,93 @@ public class ProfileServlet extends HttpServlet {
 
     private static final DateTimeFormatter MEMBER_SINCE_FORMAT
             = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private final ProfileService profileService;
+    private final MembershipService membershipService;
 
     public ProfileServlet() {
-        this(new ProfileService());
+        this(
+                new ProfileService(),
+                new MembershipService()
+        );
     }
 
     ProfileServlet(ProfileService profileService) {
+        this(
+                profileService,
+                new MembershipService()
+        );
+    }
+
+    ProfileServlet(
+            ProfileService profileService,
+            MembershipService membershipService
+    ) {
         if (profileService == null) {
-            throw new IllegalArgumentException("ProfileService must not be null");
+            throw new IllegalArgumentException(
+                    "ProfileService must not be null"
+            );
         }
+
+        if (membershipService == null) {
+            throw new IllegalArgumentException(
+                    "MembershipService must not be null"
+            );
+        }
+
         this.profileService = profileService;
+        this.membershipService = membershipService;
     }
 
     @Override
-    protected void doGet(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws ServletException, IOException {
         Account currentAccount = currentAccount(request);
+
         if (currentAccount == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED
+            );
             return;
         }
 
         CsrfUtil.ensureToken(request.getSession());
         request.setAttribute("account", currentAccount);
+
         bindMemberSince(request, currentAccount);
+        bindMembership(request, currentAccount);
+
         if ("1".equals(request.getParameter("updated"))) {
-            request.setAttribute("success", "Cập nhật hồ sơ thành công.");
+            request.setAttribute(
+                    "success",
+                    "Cập nhật hồ sơ thành công."
+            );
         }
-        request.getRequestDispatcher(Views.PROFILE).forward(request, response);
+
+        request.getRequestDispatcher(Views.PROFILE)
+                .forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) throws ServletException, IOException {
         if (!CsrfUtil.isValid(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            response.sendError(
+                    HttpServletResponse.SC_FORBIDDEN
+            );
             return;
         }
 
         Account currentAccount = currentAccount(request);
+
         if (currentAccount == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED
+            );
             return;
         }
 
@@ -72,54 +119,123 @@ public class ProfileServlet extends HttpServlet {
         String phone = request.getParameter("phone");
 
         ProfileService.UpdateProfileResult result;
+
         try {
-            result = profileService.updateProfile(currentAccount.getAccountID(),
-                    fullName, email, phone);
+            result = profileService.updateProfile(
+                    currentAccount.getAccountID(),
+                    fullName,
+                    email,
+                    phone
+            );
         } catch (SQLException exception) {
             if ("23000".equals(exception.getSQLState())) {
-                LinkedHashMap<String, String> errors = new LinkedHashMap<>();
-                errors.put("email", "Email hoặc số điện thoại đã được sử dụng");
-                renderErrors(request, response, currentAccount,
-                        fullName, email, phone, errors);
+                LinkedHashMap<String, String> errors
+                        = new LinkedHashMap<>();
+
+                errors.put(
+                        "email",
+                        "Email hoặc số điện thoại đã được sử dụng"
+                );
+
+                renderErrors(
+                        request,
+                        response,
+                        currentAccount,
+                        fullName,
+                        email,
+                        phone,
+                        errors
+                );
                 return;
             }
+
             throw new ServletException(exception);
         }
 
         if (!result.isSuccess()) {
-            renderErrors(request, response, currentAccount,
-                    fullName, email, phone, result.getFieldErrors());
+            renderErrors(
+                    request,
+                    response,
+                    currentAccount,
+                    fullName,
+                    email,
+                    phone,
+                    result.getFieldErrors()
+            );
             return;
         }
 
         SessionUtil.storeLoggedInAccount(
-                request.getSession(), result.getAccount());
-        response.sendRedirect(request.getContextPath() + "/profile?updated=1");
+                request.getSession(),
+                result.getAccount()
+        );
+
+        response.sendRedirect(
+                request.getContextPath()
+                + "/profile?updated=1"
+        );
     }
 
-    private Account currentAccount(HttpServletRequest request) {
+    private Account currentAccount(
+            HttpServletRequest request
+    ) {
         HttpSession session = request.getSession(false);
         return SessionUtil.getLoggedInAccount(session);
     }
 
-    private void renderErrors(HttpServletRequest request,
-            HttpServletResponse response, Account currentAccount,
-            String fullName, String email, String phone,
-            Map<String, String> errors) throws ServletException, IOException {
+    private void renderErrors(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Account currentAccount,
+            String fullName,
+            String email,
+            String phone,
+            Map<String, String> errors
+    ) throws ServletException, IOException {
         Account formAccount = copyForForm(currentAccount);
+
         formAccount.setFullName(fullName);
         formAccount.setEmail(email);
         formAccount.setPhone(phone);
 
         request.setAttribute("account", formAccount);
-        request.setAttribute(AppConstants.ATTRIBUTE_FIELD_ERRORS, errors);
+        request.setAttribute(
+                AppConstants.ATTRIBUTE_FIELD_ERRORS,
+                errors
+        );
+
         bindMemberSince(request, currentAccount);
+        bindMembership(request, currentAccount);
+
         CsrfUtil.ensureToken(request.getSession());
-        request.getRequestDispatcher(Views.PROFILE).forward(request, response);
+
+        request.getRequestDispatcher(Views.PROFILE)
+                .forward(request, response);
+    }
+
+    private void bindMembership(
+            HttpServletRequest request,
+            Account account
+    ) throws ServletException {
+        try {
+            request.setAttribute(
+                    "membershipSummary",
+                    membershipService.getSummary(
+                            account.getAccountID(),
+                            LocalDate.now()
+                    )
+            );
+        } catch (SQLException exception) {
+            throw new ServletException(
+                    "Cannot load membership summary",
+                    exception
+            );
+        }
     }
 
     private Account copyForForm(Account source) {
         Account copy = new Account();
+
         copy.setAccountID(source.getAccountID());
         copy.setRoleID(source.getRoleID());
         copy.setRoleName(source.getRoleName());
@@ -129,13 +245,20 @@ public class ProfileServlet extends HttpServlet {
         copy.setFullName(source.getFullName());
         copy.setEmail(source.getEmail());
         copy.setPhone(source.getPhone());
+
         return copy;
     }
 
-    private void bindMemberSince(HttpServletRequest request, Account account) {
+    private void bindMemberSince(
+            HttpServletRequest request,
+            Account account
+    ) {
         if (account.getCreatedAt() != null) {
-            request.setAttribute("memberSince",
-                    account.getCreatedAt().format(MEMBER_SINCE_FORMAT));
+            request.setAttribute(
+                    "memberSince",
+                    account.getCreatedAt()
+                            .format(MEMBER_SINCE_FORMAT)
+            );
         }
     }
 }

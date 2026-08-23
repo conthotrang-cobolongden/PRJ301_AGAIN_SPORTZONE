@@ -15,11 +15,23 @@
 | Logic ERD (tài liệu) | **Xong — v3 hiện hành** | [`docs/erd-file/erd.md`](erd-file/erd.md); schema SQL là nguồn chân lý |
 | Ảnh ERD nộp bài | **Có bản v3** | `docs/erd-file/final_erd_2045_18072026.png/.svg` + file nguồn `.vpp` |
 | Context diagram | Chưa có file riêng | Flow đã tóm tắt trong features + ERD v3 |
-| Java web (Servlet / JSP / Filter) | **P1–P4 đã dựng lại và verify** | Phase 4 trên branch `codex/phase4`: targeted tests, Clean and Build và 12/12 Tomcat smoke đều pass |
+| Java web (Servlet / JSP / Filter) | **P1–P5 đã dựng lại và verify** | Phase 5 trên branch `codex/phase4-profile`: regression batch và FrozenAccountFilterTest đều pass |
 | Phase 2 — Auth & phân quyền | **Xong — verify 2026-08-22 23:23** | A1, A2, U1, U2, U3; login/register/logout, CSRF, AuthFilter và RoleFilter |
 | Phase 3 — Xem sân & lịch | **Xong — verify 2026-08-23** | U7, U8, U9 và count sân U19; `/courts`, `/court`, lịch 7 ngày |
 | Phase 4 — Hồ sơ (U4–U6) | **Xong — verify 2026-08-23** | Profile dùng chung User/Admin, cập nhật thông tin, đổi mật khẩu, CSRF và session refresh |
-| Phase 5–9 | Chưa bắt đầu | Tiếp theo là Phase 5 đặt và hủy sân U10–U13 |
+| Phase 5 — Đặt sân, xem booking, hạng thành viên | **Xong — verify 2026-08-23** | U10–U12; user không được hủy; membership chỉ hiển thị; Frozen bị cách ly khỏi ứng dụng |
+| Phase 6–9 | Chưa bắt đầu | Tiếp theo là Phase 6 hóa đơn phía User U14–U18 |
+
+---
+## 2026-08-23 (17:33) — Hoàn tất Phase 5 Đặt sân và hạng thành viên
+
+- Branch: `codex/phase4-profile`.
+- Hoàn tất U10: tạo booking trong transaction, snapshot giá sân/dịch vụ, khóa slot và không tạo Invoice.
+- Hoàn tất U11–U12: user xem danh sách/chi tiết booking của chính mình; không có chức năng hủy booking theo quyết định hiện hành.
+- Profile hiển thị tổng chi tiêu tháng từ Invoice `Paid` và hạng MEMBER/SILVER/PLATINUM/VIP; chưa áp dụng khuyến mãi hay quyền lợi, không đổi schema database.
+- Account `Frozen` xác thực xong bị chuyển tới trang khóa; chỉ được truy cập `/account-locked`, `/logout`, `/assets/*`, không vào được `/home` hay chức năng nghiệp vụ.
+- Verify mới trước commit: `Phase5RegressionBatchTest PASSED`; `AuthServletTest PASSED`; `FrozenAccountFilterTest PASSED`.
+- Việc tiếp theo: Phase 6 hóa đơn phía User U14–U18.
 
 ---
 ## 2026-08-23 (16:08) — Hoàn tất Phase 4 Hồ sơ cá nhân
