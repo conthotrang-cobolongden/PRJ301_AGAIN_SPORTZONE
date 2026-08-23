@@ -5,7 +5,7 @@
 
 ## Objective
 
-Treat every HTML file under `design-system/sportzone/**` as the final visual source of truth. Port that interface into the production JSP application without redesigning, simplifying, reordering, or removing visual sections.
+Treat every page-specific HTML file under `design-system/sportzone/**`, except `design-system/sportzone/preview/**`, as the final visual source of truth. Port that interface into the production JSP application without redesigning, simplifying, reordering, or removing visual sections.
 
 The only intended difference between demo and production is data binding: hard-coded demo values become existing EL/JSTL expressions, request/session attributes, query parameters, and form values.
 
@@ -13,6 +13,7 @@ The only intended difference between demo and production is data binding: hard-c
 
 - Preserve layout, sections, component structure, colors, fonts, spacing, sizing, animation, responsive behavior, header, footer, cards, forms, tables, and content placement from the matching design HTML.
 - Do not reinterpret, optimize, or take inspiration from the design. Copy it faithfully.
+- Completely ignore `design-system/sportzone/preview/**`; it is a reference compilation and is not a design source for this implementation.
 - Preserve all backend contracts: routes, HTTP methods, form actions, input names, parameter names, hidden fields, CSRF, request/session attributes, EL bean properties, JSTL business conditions, authorization, and JavaScript hooks.
 - Do not modify Java, SQL, `web.xml`, dependencies, build configuration, or environment configuration.
 - Never ship demo business data as production data.
