@@ -18,6 +18,7 @@ public class Booking {
     private BigDecimal serviceTotalAtOrder;
     private BigDecimal totalAmount;
     private String status;
+    private LocalDateTime checkInAt;
     private String notes;
     private String cancelReason;
     private LocalDateTime bookingDate;
@@ -30,6 +31,8 @@ public class Booking {
     private LocalTime startTime;
     private LocalTime endTime;
     private String paymentStatus;
+    private String accountName;
+    private String accountRoleName;
 
     public Booking() {
     }
@@ -104,6 +107,14 @@ public class Booking {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCheckInAt() {
+        return checkInAt;
+    }
+
+    public void setCheckInAt(LocalDateTime checkInAt) {
+        this.checkInAt = checkInAt;
     }
 
     public String getNotes() {
@@ -200,6 +211,22 @@ public class Booking {
 
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public String getAccountRoleName() {
+        return accountRoleName;
+    }
+
+    public void setAccountRoleName(String accountRoleName) {
+        this.accountRoleName = accountRoleName;
     }
 
     public int getBookingId() {

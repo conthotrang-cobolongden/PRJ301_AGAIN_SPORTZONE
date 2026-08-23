@@ -90,6 +90,61 @@ public class TimeSlotDAO {
         return slots;
     }
 
+    public GenerationResult generateWeek(LocalDate monday)
+            throws SQLException {
+        String sql = ";WITH Days AS ("
+                + "SELECT CAST(? AS DATE) AS SlotDate,0 AS DayOffset "
+                + "UNION ALL SELECT DATEADD(DAY,1,SlotDate),DayOffset+1 "
+                + "FROM Days WHERE DayOffset<6), Hours AS ("
+                + "SELECT CAST(N'06:00:00' AS TIME) StartTime,CAST(N'07:00:00' AS TIME) EndTime "
+                + "UNION ALL SELECT N'07:00:00',N'08:00:00' "
+                + "UNION ALL SELECT N'08:00:00',N'09:00:00' "
+                + "UNION ALL SELECT N'16:00:00',N'17:00:00' "
+                + "UNION ALL SELECT N'17:00:00',N'18:00:00' "
+                + "UNION ALL SELECT N'18:00:00',N'19:00:00' "
+                + "UNION ALL SELECT N'19:00:00',N'20:00:00' "
+                + "UNION ALL SELECT N'20:00:00',N'21:00:00') "
+                + "INSERT INTO TimeSlots(CourtID,SlotDate,StartTime,EndTime,Status) "
+                + "SELECT c.CourtID,d.SlotDate,h.StartTime,h.EndTime,"
+                + "CASE WHEN c.Status=N'Available' THEN N'Available' ELSE N'Closed' END "
+                + "FROM Courts c CROSS JOIN Days d CROSS JOIN Hours h "
+                + "WHERE c.IsActive=1 AND NOT EXISTS (SELECT 1 FROM TimeSlots existing "
+                + "WHERE existing.CourtID=c.CourtID AND existing.SlotDate=d.SlotDate "
+                + "AND existing.StartTime=h.StartTime) OPTION(MAXRECURSION 7)";
+        try (Connection connection = DBUtils.getConnection()) {
+            int oldIsolation = connection.getTransactionIsolation();
+            connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            connection.setAutoCommit(false);
+            try {
+                int created;
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setDate(1, java.sql.Date.valueOf(monday));
+                    created = statement.executeUpdate();
+                }
+                connection.commit();
+                return new GenerationResult(created, Math.max(0, 560 - created));
+            } catch (SQLException exception) {
+                connection.rollback();
+                throw exception;
+            } finally {
+                connection.setAutoCommit(true);
+                connection.setTransactionIsolation(oldIsolation);
+            }
+        }
+    }
+
+    public static final class GenerationResult {
+        private final int created;
+        private final int skipped;
+
+        public GenerationResult(int created, int skipped) {
+            this.created = created;
+            this.skipped = skipped;
+        }
+        public int getCreated() { return created; }
+        public int getSkipped() { return skipped; }
+    }
+
     /**
      * Map mot dong TimeSlots sang model TimeSlot.
      *

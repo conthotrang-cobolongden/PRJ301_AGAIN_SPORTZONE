@@ -30,10 +30,13 @@ public class BookingDAO {
             + "b.ServiceTotalAtOrder, "
             + "b.TotalAmount, "
             + "b.Status, "
+            + "b.CheckInAt, "
             + "b.Notes, "
             + "b.CancelReason, "
             + "b.BookingDate, "
             + "b.UpdatedAt, "
+            + "a.FullName AS RawAccountName, "
+            + "r.RoleName AS AccountRoleName, "
             + "c.CourtName, "
             + "ct.TypeName, "
             + "LOWER(ct.TypeName) AS TypeSlug, "
@@ -43,6 +46,8 @@ public class BookingDAO {
             + "ts.EndTime, "
             + "i.PaymentStatus "
             + "FROM Bookings b "
+            + "INNER JOIN Accounts a ON b.AccountID=a.AccountID "
+            + "INNER JOIN Roles r ON a.RoleID=r.RoleID "
             + "INNER JOIN TimeSlots ts "
             + "ON b.TimeSlotID = ts.TimeSlotID "
             + "INNER JOIN Courts c "
@@ -468,6 +473,10 @@ public class BookingDAO {
         booking.setStatus(
                 resultSet.getString("Status")
         );
+        Timestamp checkInAt = resultSet.getTimestamp("CheckInAt");
+        if (checkInAt != null) {
+            booking.setCheckInAt(checkInAt.toLocalDateTime());
+        }
         booking.setNotes(
                 resultSet.getString("Notes")
         );
@@ -536,6 +545,11 @@ public class BookingDAO {
         booking.setPaymentStatus(
                 resultSet.getString("PaymentStatus")
         );
+        String roleName = resultSet.getString("AccountRoleName");
+        booking.setAccountRoleName(roleName);
+        booking.setAccountName("Admin".equals(roleName)
+                ? "Khách vãng lai"
+                : resultSet.getString("RawAccountName"));
 
         return booking;
     }

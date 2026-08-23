@@ -156,6 +156,7 @@ CREATE TABLE Bookings (
     TotalAmount         DECIMAL(18,0)     NOT NULL,
 
     Status              NVARCHAR(30)      NOT NULL CONSTRAINT DF_Bookings_Status DEFAULT (N'Pending'),
+    CheckInAt           DATETIME          NULL,
     Notes               NVARCHAR(255)     NULL,
     CancelReason        NVARCHAR(255)     NULL,
     BookingDate         DATETIME          NOT NULL CONSTRAINT DF_Bookings_BookingDate DEFAULT (GETDATE()),
@@ -170,7 +171,7 @@ CREATE TABLE Bookings (
         AND TotalAmount = CourtPriceAtOrder + ServiceTotalAtOrder
     ),
     CONSTRAINT CK_Bookings_Status CHECK (
-        Status IN (N'Pending', N'Confirmed', N'Completed', N'Cancelled', N'NoShow')
+        Status IN (N'Pending', N'Confirmed', N'CheckedIn', N'Completed', N'Cancelled', N'NoShow')
     )
 );
 GO
@@ -188,7 +189,7 @@ SET QUOTED_IDENTIFIER ON;
 GO
 CREATE UNIQUE INDEX UQ_Bookings_Slot_Active
 ON Bookings (TimeSlotID)
-WHERE Status IN (N'Pending', N'Confirmed', N'Completed', N'NoShow');
+WHERE Status IN (N'Pending', N'Confirmed', N'CheckedIn', N'Completed', N'NoShow');
 GO
 
 -- SCHEMA_CONTRACT_BOOKINGS_V3:
