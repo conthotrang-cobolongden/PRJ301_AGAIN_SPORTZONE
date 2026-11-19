@@ -44,4 +44,5 @@
     </c:otherwise>
 </c:choose>
 <c:if test="${sessionScope.frozen}"><div class="alert alert-warning sz-frozen-banner mb-0 rounded-0 text-center border-0" role="alert"><i class="bi bi-exclamation-triangle-fill me-2"></i>Tài khoản đang bị khóa — vui lòng đăng xuất hoặc liên hệ hỗ trợ.</div></c:if>
+<c:if test="${not empty demoNotice}"><div class="alert alert-warning mb-0 rounded-0 text-center" role="status"><c:out value="${demoNotice}"/></div></c:if>
 <main class="sz-main">

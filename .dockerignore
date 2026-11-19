@@ -1,0 +1,8 @@
+*
+!SportZoneManagement/
+!SportZoneManagement/src/
+!SportZoneManagement/src/java/
+!SportZoneManagement/src/java/**
+!SportZoneManagement/web/
+!SportZoneManagement/web/**
+SportZoneManagement/web/WEB-INF/classes/

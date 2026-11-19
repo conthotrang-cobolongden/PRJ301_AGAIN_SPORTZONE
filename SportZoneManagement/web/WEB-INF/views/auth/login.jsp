@@ -23,6 +23,9 @@
         <div class="auth-form-wrapper active">
             <div class="form-title font-heading">Chào Mừng Trở Lại!</div>
             <p class="form-sub">Nhập email và mật khẩu của bạn để truy cập hệ thống đặt sân.</p>
+            <c:if test="${sessionScope.demoMode}">
+                <p class="form-sub">Bản demo: user@sportzone.demo hoặc admin@sportzone.demo<br>Mật khẩu: <strong>demo</strong>. Dữ liệu chỉ để minh họa.</p>
+            </c:if>
             <c:if test="${not empty errorMessage}"><div class="sz-alert sz-alert-danger"><span>⚠️ <c:out value="${errorMessage}"/></span></div></c:if>
             <form id="loginForm" method="post" action="${ctx}/MainController?action=login" novalidate>
                 <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">

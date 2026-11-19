@@ -1,5 +1,18 @@
 # SportZone Management
 
+## Bản demo không cần database trên Render
+
+Repo có chế độ demo hiển thị các trang JSP với dữ liệu mẫu, dùng để giới thiệu giao diện. Các thao tác thay đổi không được lưu; đây không phải hệ thống đặt sân hay thanh toán thật. Khi chạy thông thường, ứng dụng vẫn dùng SQL Server. Dockerfile ở thư mục gốc bật chế độ demo bằng `DEMO_MODE=true`.
+
+Tài khoản demo (thông tin cũng được hiển thị tại trang đăng nhập):
+
+- Khách hàng: `user@sportzone.demo` / `demo`
+- Quản trị: `admin@sportzone.demo` / `demo`
+
+Để triển khai demo, push các thay đổi lên GitHub, đăng nhập [Render](https://dashboard.render.com/), chọn **New → Web Service**, kết nối repo này và chọn **Language: Docker**. Để Root Directory mặc định là thư mục gốc repo và đặt biến môi trường `PORT=8080` trong phần cấu hình của Render, sau đó chọn gói và tạo Web Service. Render sẽ dùng `Dockerfile`, build ứng dụng và cấp link `onrender.com`. Gói miễn phí có thể tạm dừng khi không có người truy cập.
+
+Nếu chạy demo bằng Tomcat trên máy, đặt biến môi trường `DEMO_MODE=true` trước khi khởi động Tomcat rồi build/deploy lại ứng dụng. Không bật chế độ này cho ứng dụng sử dụng dữ liệu thật.
+
 SportZone Management là ứng dụng web quản lý và đặt sân thể thao dành cho tổ hợp **Tennis** và **Pickleball**. Hệ thống hỗ trợ khách hàng xem lịch sân, đặt sân, chọn dịch vụ đi kèm, thanh toán giả lập và theo dõi hóa đơn; đồng thời cung cấp khu vực quản trị để quản lý sân, khung giờ, booking, check-in và doanh thu.
 
 ## Công nghệ sử dụng
